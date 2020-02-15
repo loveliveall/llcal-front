@@ -19,4 +19,17 @@ module.exports = {
       },
     },
   },
+  rules: {
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      multiline: {
+        delimiter: 'comma',
+        requireLast: true,
+      },
+      singleline: {
+        delimiter: 'comma',
+        requireLast: true,
+      },
+    }],
+  },
 };
