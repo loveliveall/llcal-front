@@ -20,6 +20,14 @@ module.exports = {
     },
   },
   rules: {
+    "import/prefer-default-export": "off",
+    "max-len": ["error", {
+      code: 120,
+      tabWidth: 2,
+      ignoreComments: true,
+    }],
+    "react/prop-types": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/member-delimiter-style": ["error", {
       multiline: {
@@ -31,5 +39,6 @@ module.exports = {
         requireLast: true,
       },
     }],
+    "@typescript-eslint/no-explicit-any": "off",
   },
 };
