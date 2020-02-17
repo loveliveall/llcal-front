@@ -42,6 +42,11 @@ const MonthView: React.FC<MonthViewProps> = ({
 }) => {
   const classes = useStyles();
 
+  React.useEffect(() => {
+    // Fire initial resize event on first mount to get ref of rendered DOM
+    window.dispatchEvent(new Event('resize'));
+  }, []);
+
   const monthStart = startOfMonth(currDate);
   const rangeStart = subDays(monthStart, monthStart.getDay()); // inclusive, sunday means 0
   return (

@@ -9,11 +9,16 @@ import Box from '@material-ui/core/Box';
 import { ICalendarEvent } from '../utils/types';
 import { getEventsInRange } from '../utils/utils';
 
+import WeekEventRow from './WeekEventRow';
+
 const useStyles = makeStyles((theme) => {
   const headerMarginUnit = 0.5;
   const circleDiameter = `calc(${theme.spacing(headerMarginUnit / 2)}px + ${theme.typography.body2.lineHeight}em)`;
   return createStyles({
     row: {
+      display: 'flex',
+      position: 'relative',
+      overflow: 'hidden',
       flex: '1 1 0%',
       borderBottom: `1px solid ${theme.palette.divider}`,
     },
@@ -68,10 +73,11 @@ const WeekRow: React.FC<WeekRowProps> = ({
     ...event,
     visibleStart: event.startTime < rangeStart ? rangeStart : event.startTime,
     visibleEnd: rangeEnd <= event.endTime ? rangeEnd : event.endTime,
-  }));
-  console.log(targetEvents);
+  })); // TODO: Sort events.
+  // 1. Multi day events - earlier startdate comes first, than follow single day events rule
+  // 2. Single day events - allday comes first, than earlier starttime comes first
   return (
-    <Box display="flex" position="relative" className={classes.row}>
+    <div className={classes.row}>
       {/* Cell display */}
       <Box display="flex" position="absolute" width="100%" top={0} left={0} bottom={0}>
         {new Array(7).fill(null).map((_, idx) => {
@@ -92,20 +98,10 @@ const WeekRow: React.FC<WeekRowProps> = ({
           );
         })}
       </Box>
-      {/* TODO: implement event row */}
       <Box display="flex" className={classes.eventOverlay}>
-        {new Array(7).fill(null).map((_, idx) => {
-          const cellDate = addDays(rangeStart, idx);
-          return (
-            <Box key={Math.random()}>
-              <div>
-                {`Test Event name ooooh yeah ${cellDate.getTime()}`}
-              </div>
-            </Box>
-          );
-        })}
+        <WeekEventRow rangeStart={rangeStart} targetEvents={targetEvents} />
       </Box>
-    </Box>
+    </div>
   );
 };
 
