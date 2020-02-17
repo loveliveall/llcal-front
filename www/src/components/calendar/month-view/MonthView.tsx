@@ -14,10 +14,15 @@ import WeekRow from './WeekRow';
 const useStyles = makeStyles((theme) => createStyles({
   root: {
     height: '100%',
+    borderLeft: `1px solid ${theme.palette.divider}`,
+  },
+  row: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   headerCell: {
     flex: '1 1 0%',
-    border: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${theme.palette.divider}`,
     textAlign: 'center',
   },
   headerText: {
@@ -42,7 +47,7 @@ const MonthView: React.FC<MonthViewProps> = ({
   return (
     <Box display="flex" flexDirection="column" className={classes.root}>
       {/* Date Header */}
-      <Box display="flex" flexDirection="row">
+      <Box display="flex" flexDirection="row" className={classes.row}>
         {WEEKDAY_SHORT_NAMES.map((weekdayName) => (
           <Box key={Math.random()} className={classes.headerCell}>
             <div className={classes.headerText}>{weekdayName}</div>

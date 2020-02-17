@@ -15,10 +15,11 @@ const useStyles = makeStyles((theme) => {
   return createStyles({
     row: {
       flex: '1 1 0%',
+      borderBottom: `1px solid ${theme.palette.divider}`,
     },
     cell: {
       flex: '1 1 0%',
-      border: `1px solid ${theme.palette.divider}`,
+      borderRight: `1px solid ${theme.palette.divider}`,
       textAlign: 'center',
       zIndex: -1,
     },
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => {
       fontWeight: 'inherit',
     },
     eventOverlay: {
-      marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border 1px, top/bot margin, line-height
+      marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
     },
   });
 });
@@ -63,13 +64,17 @@ const WeekRow: React.FC<WeekRowProps> = ({
 
   const now = new Date();
   const rangeEnd = addDays(rangeStart, 7); // Exlusive
-  const targetEvents = getEventsInRange(events, rangeStart, rangeEnd);
+  const targetEvents = getEventsInRange(events, rangeStart, rangeEnd).map((event) => ({
+    ...event,
+    visibleStart: event.startTime < rangeStart ? rangeStart : event.startTime,
+    visibleEnd: rangeEnd <= event.endTime ? rangeEnd : event.endTime,
+  }));
   console.log(targetEvents);
   return (
     <Box display="flex" position="relative" className={classes.row}>
       {/* Cell display */}
       <Box display="flex" position="absolute" width="100%" top={0} left={0} bottom={0}>
-        {new Array(7).fill(null).map((__, idx) => {
+        {new Array(7).fill(null).map((_, idx) => {
           const cellDate = addDays(rangeStart, idx);
           const isToday = isSameDay(cellDate, now);
           const isTargetMonth = isSameMonth(cellDate, currDate);
@@ -89,7 +94,16 @@ const WeekRow: React.FC<WeekRowProps> = ({
       </Box>
       {/* TODO: implement event row */}
       <Box display="flex" className={classes.eventOverlay}>
-        Sample event row
+        {new Array(7).fill(null).map((_, idx) => {
+          const cellDate = addDays(rangeStart, idx);
+          return (
+            <Box key={Math.random()}>
+              <div>
+                {`Test Event name ooooh yeah ${cellDate.getTime()}`}
+              </div>
+            </Box>
+          );
+        })}
       </Box>
     </Box>
   );
