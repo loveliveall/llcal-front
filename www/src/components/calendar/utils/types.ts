@@ -6,3 +6,10 @@ export interface ICalendarEvent {
   colorCode: string,
   [key: string]: any,
 }
+
+export interface ISingleEventRenderInfo {
+  event: ICalendarEvent,
+  startSlotIdx: number, // -1 means do not render this event. It only holds context
+  slotCount: number,
+}
+export type TMonthEventGrid = (ISingleEventRenderInfo | null)[][];

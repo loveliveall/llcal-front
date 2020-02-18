@@ -1,6 +1,7 @@
 import { ICalendarEvent } from './types';
 
 export function getEventsInRange(events: ICalendarEvent[], rangeStart: Date, rangeEnd: Date) {
+  // inclusive, exclusive
   return events.filter((event) => (
     (event.startTime < rangeEnd && rangeStart < event.endTime)
     || (event.startTime === event.endTime && rangeStart <= event.startTime && event.startTime < rangeEnd)
