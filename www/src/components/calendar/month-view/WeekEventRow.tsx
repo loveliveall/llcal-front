@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme) => createStyles({
     margin: '1px 3px 1px 2px',
     borderRadius: theme.spacing(0.5),
     padding: '1px',
-    paddingLeft: '4px',
+    paddingLeft: theme.spacing(0.75),
+    paddingRight: theme.spacing(0.75),
   },
 }));
 
@@ -30,11 +31,9 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  // TODO: FIX TRUNCATION LOGIC
   // Async setState does not be batched. Merge into one state for batch updating
   const [heightInfo, setHeightInfo] = React.useState({
     offset: 0,
-    scroll: 0,
     item: 0, // This value will be calculated on overflow
   });
   const ref = React.useRef<HTMLDivElement>(null);
@@ -49,7 +48,6 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
         if (cur === null) {
           setHeightInfo({
             offset: 0,
-            scroll: 0,
             item: 0,
           });
         } else {
@@ -58,7 +56,6 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
           const itemHeight = rowCount !== 0 && offsetHeight < scrollHeight ? scrollHeight / rowCount : 0;
           setHeightInfo((prev) => ({
             offset: offsetHeight,
-            scroll: prev.scroll === 0 ? scrollHeight : prev.scroll,
             item: prev.item === 0 ? itemHeight : prev.item,
           }));
         }
@@ -70,12 +67,11 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
     };
   }, []);
   const sliceRowAt = (() => {
-    const { offset, scroll, item } = heightInfo;
+    const { offset, item } = heightInfo;
     if (item === 0) return -1;
+    const visibleCount = Math.floor(offset / item);
     const totalRow = eventRenderGrid.length;
-    // Value of n that satisfies (scroll - n * singleItemHeight < offset - singleItemHeight)
-    const omitCount = Math.ceil((scroll - offset) / item + 1);
-    return Math.max(totalRow - omitCount, 0);
+    return visibleCount >= totalRow ? totalRow : Math.max(visibleCount - 1, 0);
   })();
   console.log(heightInfo);
   console.log(sliceRowAt);
