@@ -5,6 +5,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { TMonthEventGrid } from '../utils/types';
+import { getTimeString } from '../utils/utils';
 
 const useStyles = makeStyles((theme) => createStyles({
   root: {
@@ -12,11 +13,24 @@ const useStyles = makeStyles((theme) => createStyles({
     width: '100%',
   },
   eventInstance: {
-    margin: '1px 3px 1px 2px',
+    display: 'flex',
+    alignItems: 'center',
+    margin: '1px',
+    marginRight: '2px',
     borderRadius: theme.spacing(0.5),
     padding: '1px',
     paddingLeft: theme.spacing(0.75),
     paddingRight: theme.spacing(0.75),
+  },
+  eventCircle: {
+    display: 'inline-block',
+    borderRadius: theme.spacing(1),
+    border: `${theme.spacing(0.5)}px solid`,
+    marginRight: theme.spacing(0.25),
+  },
+  eventText: {
+    display: 'inline-block',
+    marginLeft: '1px',
   },
 }));
 
@@ -73,8 +87,6 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
     const totalRow = eventRenderGrid.length;
     return visibleCount >= totalRow ? totalRow : Math.max(visibleCount - 1, 0);
   })();
-  console.log(heightInfo);
-  console.log(sliceRowAt);
   return (
     <div ref={ref} className={classes.root}>
       {(sliceRowAt === -1 ? eventRenderGrid : eventRenderGrid.slice(0, sliceRowAt)).map((row) => (
@@ -83,15 +95,30 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             if (instance === null) return <Box key={Math.random()} width={1 / 7} />; // Render empty slot
             if (instance.startSlotIdx === -1) return null; // Do not render
             const { event } = instance;
+            const isNotBlock = instance.slotCount === 1 && !event.allDay;
+            const eventPrefix = !event.allDay ? `${getTimeString(event.startTime)} ` : '';
+            const eventText = `${eventPrefix}${event.title}`;
             return (
               <Box key={Math.random()} width={instance.slotCount / 7}>
-                <Box className={classes.eventInstance} style={{ backgroundColor: event.colorCode }}>
+                <Box
+                  className={classes.eventInstance}
+                  style={{ backgroundColor: isNotBlock ? 'transparent' : event.colorCode }}
+                >
+                  {isNotBlock && (
+                    <div
+                      className={classes.eventCircle}
+                      style={{ borderColor: event.colorCode }}
+                    />
+                  )}
                   <Typography
-                    noWrap
+                    className={classes.eventText}
                     variant="body2"
-                    style={{ color: theme.palette.getContrastText(event.colorCode) }}
+                    style={isNotBlock ? undefined : {
+                      color: theme.palette.getContrastText(event.colorCode),
+                    }}
+                    noWrap
                   >
-                    {event.title}
+                    {eventText}
                   </Typography>
                 </Box>
               </Box>

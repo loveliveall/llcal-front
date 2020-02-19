@@ -80,9 +80,9 @@ const WeekRow: React.FC<WeekRowProps> = ({
     const startSlotIdx = differenceInCalendarDays(visibleStart, rangeStart);
     const slotCount = (() => {
       const midnightRevision = isMidnight(event.endTime) ? -1 : 0;
-      const fullCount = differenceInCalendarDays(event.endTime, visibleStart) + 1 - midnightRevision;
-      const maxAvailCount = differenceInCalendarDays(rangeEnd, visibleStart); // rangeEnd is midnight. +1-1 = 0.
-      return Math.min(fullCount, maxAvailCount);
+      const fullCount = differenceInCalendarDays(event.endTime, visibleStart) + 1 + midnightRevision;
+      const maxAvailCount = differenceInCalendarDays(rangeEnd, visibleStart);
+      return Math.max(Math.min(fullCount, maxAvailCount), 1);
     })();
     return {
       event,

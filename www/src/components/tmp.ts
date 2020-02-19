@@ -197,9 +197,9 @@ export const mockEvents = [
   },
   {
     title: '니지가사키 동호회 유닛 앨범 발매',
-    allDay: true,
+    allDay: false,
     startTime: new Date(2020, 1, 12, 0, 0),
-    endTime: new Date(2020, 1, 12, 12, 0),
+    endTime: new Date(2020, 1, 12, 0, 0),
     colorCode: '#33B679',
   },
   {
