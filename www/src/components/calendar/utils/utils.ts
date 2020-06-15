@@ -5,7 +5,7 @@ function padWithZero(n: number, digit: number) {
   return `${'0'.repeat(Math.max(digit - str.length, 0))}${str}`;
 }
 
-export function getEventsInRange(events: ICalendarEvent[], rangeStart: Date, rangeEnd: Date) {
+export function getEventsInRange(events: ICalendarEvent[], rangeStart: Date, rangeEnd: Date): ICalendarEvent[] {
   // inclusive, exclusive
   return events.filter((event) => (
     (event.startTime < rangeEnd && rangeStart < event.endTime)
@@ -13,7 +13,7 @@ export function getEventsInRange(events: ICalendarEvent[], rangeStart: Date, ran
   ));
 }
 
-export function getTimeString(date: Date) {
+export function getTimeString(date: Date): string {
   return `${padWithZero(date.getHours(), 2)}:${padWithZero(date.getMinutes(), 2)}`;
 }
 

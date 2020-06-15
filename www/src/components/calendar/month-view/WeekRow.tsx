@@ -149,7 +149,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
               <Box display="flex" justifyContent="center">
                 <span
                   className={`${isToday ? classes.todayDate : classes.otherDate}
-                   ${!isTargetMonth && classes.diffMonthDate}`}
+                    ${!isTargetMonth && classes.diffMonthDate}`}
                 >
                   {cellDate.getDate()}
                 </span>

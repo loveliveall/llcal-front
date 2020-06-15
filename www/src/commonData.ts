@@ -12,7 +12,7 @@ interface IEventCategoryRawData {
 interface IEventCategoryData extends IEventCategoryRawData, IID<number> {}
 interface IEventCategory extends IEventCategoryRawData, IID<string> {}
 
-/* eslint-disable object-curly-newline */
+/* eslint-disable object-curly-newline, max-len */
 const eventCategoryListData: IEventCategoryData[] = [
   { id: 5, name: '정기 방송 일정', description: '정기적으로 진행하는 라디오 등의 방송 일정', colorHex: '#ad1457', frozen: false },
   { id: 1, name: '온라인 이벤트', description: '정기 방송은 아니지만 라디오, TV 방송 등 공개적으로 시청 가능한 유형의 이벤트', colorHex: '#e67c73', frozen: false },
