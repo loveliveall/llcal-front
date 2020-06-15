@@ -124,9 +124,29 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
               </Box>
             );
           })}
-          {/* Need truncation indicator */}
         </Box>
       ))}
+      <Box display="flex" width={1}>
+        {sliceRowAt !== -1 && new Array(7).fill(null).map((_, idx) => {
+          const invisibleCount = eventRenderGrid.slice(sliceRowAt).reduce(
+            (acc, curr) => acc + (curr[idx] !== null ? 1 : 0), 0,
+          );
+          if (invisibleCount === 0) return <Box key={Math.random()} width={1 / 7} />;
+          return (
+            <Box key={Math.random()} width={1 / 7}>
+              <Box className={classes.eventInstance}>
+                <Typography
+                  className={classes.eventText}
+                  variant="body2"
+                  noWrap
+                >
+                  {`+${invisibleCount} more`}
+                </Typography>
+              </Box>
+            </Box>
+          );
+        })}
+      </Box>
     </div>
   );
 };
