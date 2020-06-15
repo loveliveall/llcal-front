@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => createStyles({
     padding: '1px',
     paddingLeft: theme.spacing(0.75),
     paddingRight: theme.spacing(0.75),
+    cursor: 'pointer',
+    '&:hover': {
+      boxShadow: 'inset 0px 0px 0px 1000px rgba(0, 0, 0, 0.1)',
+    },
   },
   eventCircle: {
     display: 'inline-block',

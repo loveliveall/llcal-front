@@ -139,7 +139,17 @@ const WeekRow: React.FC<WeekRowProps> = ({
   return (
     <div className={classes.row}>
       {/* Cell display */}
-      <Box display="flex" position="absolute" width="100%" top={0} left={0} bottom={0}>
+      <Box
+        display="flex"
+        position="absolute"
+        style={{
+          pointerEvents: 'none', // Ignore pointer events for absolute-position element
+        }}
+        width="100%"
+        top={0}
+        left={0}
+        bottom={0}
+      >
         {new Array(7).fill(null).map((_, idx) => {
           const cellDate = addDays(rangeStart, idx);
           const isToday = isSameDay(cellDate, now);
