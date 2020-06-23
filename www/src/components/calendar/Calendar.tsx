@@ -4,18 +4,18 @@ import MonthView from './month-view/MonthView';
 
 import { ICalendarEvent } from './utils/types';
 
-interface IOwnProps {
-  events: ICalendarEvent[],
+interface IOwnProps<TEvent extends ICalendarEvent> {
+  events: TEvent[],
   currDate: Date,
   view: 'month' | 'week' | 'day' | 'agenda',
 }
-type CalendarProps = IOwnProps;
+type CalendarProps<TEvent extends ICalendarEvent> = IOwnProps<TEvent>;
 
-const Calendar: React.FC<CalendarProps> = ({
+function Calendar<TEvent extends ICalendarEvent>({
   events, currDate, view,
-}) => {
+}: CalendarProps<TEvent>): React.ReactElement | null {
   if (view === 'month') return <MonthView events={events} currDate={currDate} />;
   return null;
-};
+}
 
 export default Calendar;

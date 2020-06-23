@@ -4,7 +4,6 @@ export interface ICalendarEvent {
   startTime: Date,
   endTime: Date,
   colorCode: string,
-  [key: string]: any,
 }
 
 export interface ISingleEventRenderInfo {
