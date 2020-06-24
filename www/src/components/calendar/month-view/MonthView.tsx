@@ -33,12 +33,13 @@ const useStyles = makeStyles((theme) => createStyles({
 
 interface IOwnProps {
   events: ICalendarEvent[],
+  onEventClick: (event: ICalendarEvent) => void,
   currDate: Date,
 }
 type MonthViewProps = IOwnProps;
 
 const MonthView: React.FC<MonthViewProps> = ({
-  events, currDate,
+  events, currDate, onEventClick,
 }) => {
   const classes = useStyles();
 
@@ -64,6 +65,7 @@ const MonthView: React.FC<MonthViewProps> = ({
         <WeekRow
           key={Math.random()}
           events={events}
+          onEventClick={onEventClick}
           rangeStart={addDays(rangeStart, 7 * idx)}
           currDate={currDate}
         />

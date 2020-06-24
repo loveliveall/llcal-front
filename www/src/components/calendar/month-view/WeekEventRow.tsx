@@ -4,7 +4,7 @@ import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
-import { TMonthEventGrid } from '../utils/types';
+import { TMonthEventGrid, ICalendarEvent } from '../utils/types';
 import { getTimeString } from '../utils/utils';
 
 const useStyles = makeStyles((theme) => createStyles({
@@ -40,11 +40,12 @@ const useStyles = makeStyles((theme) => createStyles({
 
 interface IOwnProps {
   eventRenderGrid: TMonthEventGrid,
+  onEventClick: (event: ICalendarEvent) => void,
 }
 type WeekEventRowProps = IOwnProps;
 
 const WeekEventRow: React.FC<WeekEventRowProps> = ({
-  eventRenderGrid,
+  eventRenderGrid, onEventClick,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -107,6 +108,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
                 <Box
                   className={classes.eventInstance}
                   style={{ backgroundColor: isNotBlock ? 'transparent' : event.colorCode }}
+                  onClick={() => onEventClick(event)}
                 >
                   {isNotBlock && (
                     <div

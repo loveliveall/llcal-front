@@ -64,12 +64,13 @@ const useStyles = makeStyles((theme) => {
 interface IOwnProps {
   rangeStart: Date,
   events: ICalendarEvent[],
+  onEventClick: (event: ICalendarEvent) => void,
   currDate: Date,
 }
 type WeekRowProps = IOwnProps;
 
 const WeekRow: React.FC<WeekRowProps> = ({
-  rangeStart, events, currDate,
+  rangeStart, events, currDate, onEventClick,
 }) => {
   const classes = useStyles();
 
@@ -169,7 +170,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
         })}
       </Box>
       <Box display="flex" className={classes.eventOverlay}>
-        <WeekEventRow eventRenderGrid={eventRenderGrid} />
+        <WeekEventRow eventRenderGrid={eventRenderGrid} onEventClick={onEventClick} />
       </Box>
     </div>
   );

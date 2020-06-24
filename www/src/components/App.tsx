@@ -6,7 +6,11 @@ import { mockEvents } from './tmp';
 
 const App: React.FC = () => (
   <div style={{ height: '100vh' }}>
-    <Calendar events={mockEvents} view="month" currDate={new Date(2020, 1, 19)} />
+    <Calendar
+      events={mockEvents}
+      view="month"
+      currDate={new Date(2020, 1, 19)}
+    />
   </div>
 );
 
