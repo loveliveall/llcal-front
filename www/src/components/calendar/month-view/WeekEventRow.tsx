@@ -1,40 +1,18 @@
 import React from 'react';
 
-import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 
-import { TMonthEventGrid, ICalendarEvent } from '../utils/types';
-import { getTimeString } from '../utils/utils';
+import SingleEvent from './SingleEvent';
+import { useCommonStyles } from './styles';
+import { TMonthEventGrid, ICalendarEvent, ISingleEventRenderInfo } from '../utils/types';
 
-const useStyles = makeStyles((theme) => createStyles({
+const useStyles = makeStyles(() => createStyles({
   root: {
     overflow: 'hidden',
     width: '100%',
-  },
-  eventInstance: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '1px',
-    marginRight: '2px',
-    borderRadius: theme.spacing(0.5),
-    padding: '1px',
-    paddingLeft: theme.spacing(0.75),
-    paddingRight: theme.spacing(0.75),
-    cursor: 'pointer',
-    '&:hover': {
-      boxShadow: 'inset 0px 0px 0px 1000px rgba(0, 0, 0, 0.1)',
-    },
-  },
-  eventCircle: {
-    display: 'inline-block',
-    borderRadius: theme.spacing(1),
-    border: `${theme.spacing(0.5)}px solid`,
-    marginRight: theme.spacing(0.25),
-  },
-  eventText: {
-    display: 'inline-block',
-    marginLeft: '1px',
   },
 }));
 
@@ -48,8 +26,15 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
   eventRenderGrid, onEventClick,
 }) => {
   const classes = useStyles();
-  const theme = useTheme();
+  const classesCommon = useCommonStyles();
 
+  const [morePopup, setMorePopup] = React.useState<{
+    anchorEl: HTMLDivElement | null,
+    eventGrid: ISingleEventRenderInfo[],
+  }>({
+    anchorEl: null,
+    eventGrid: [],
+  });
   // Async setState does not be batched. Merge into one state for batch updating
   const [heightInfo, setHeightInfo] = React.useState({
     offset: 0,
@@ -101,48 +86,39 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             if (instance.startSlotIdx === -1) return null; // Do not render
             const { event } = instance;
             const isNotBlock = instance.slotCount === 1 && !event.allDay;
-            const eventPrefix = !event.allDay ? `${getTimeString(event.startTime)} ` : '';
-            const eventText = `${eventPrefix}${event.title}`;
             return (
               <Box key={Math.random()} width={instance.slotCount / 7}>
-                <Box
-                  className={classes.eventInstance}
-                  style={{ backgroundColor: isNotBlock ? 'transparent' : event.colorCode }}
-                  onClick={() => onEventClick(event)}
-                >
-                  {isNotBlock && (
-                    <div
-                      className={classes.eventCircle}
-                      style={{ borderColor: event.colorCode }}
-                    />
-                  )}
-                  <Typography
-                    className={classes.eventText}
-                    variant="body2"
-                    style={isNotBlock ? undefined : {
-                      color: theme.palette.getContrastText(event.colorCode),
-                    }}
-                    noWrap
-                  >
-                    {eventText}
-                  </Typography>
-                </Box>
+                <SingleEvent event={event} isBlock={!isNotBlock} onEventClick={onEventClick} />
               </Box>
             );
           })}
         </Box>
       ))}
+      {/* `more` button */}
       <Box display="flex" width={1}>
         {sliceRowAt !== -1 && new Array(7).fill(null).map((_, idx) => {
+          const reactKey = `button-wrapper-${idx}`;
           const invisibleCount = eventRenderGrid.slice(sliceRowAt).reduce(
             (acc, curr) => acc + (curr[idx] !== null ? 1 : 0), 0,
           );
-          if (invisibleCount === 0) return <Box key={Math.random()} width={1 / 7} />;
+          if (invisibleCount === 0) return <Box key={reactKey} width={1 / 7} />;
+          const onMoreClick = (event: React.MouseEvent<HTMLDivElement>) => {
+            const thisDayEvents = eventRenderGrid.map((r) => r[idx]).filter(
+              (i): i is ISingleEventRenderInfo => i !== null,
+            );
+            setMorePopup({
+              anchorEl: event.currentTarget,
+              eventGrid: thisDayEvents,
+            });
+          };
           return (
-            <Box key={Math.random()} width={1 / 7}>
-              <Box className={classes.eventInstance}>
+            <Box key={reactKey} width={1 / 7}>
+              <Box
+                className={classesCommon.eventInstance}
+                onClick={onMoreClick}
+              >
                 <Typography
-                  className={classes.eventText}
+                  className={classesCommon.eventText}
                   variant="body2"
                   noWrap
                 >
@@ -153,6 +129,41 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
           );
         })}
       </Box>
+      {/* `more` popover */}
+      <Popover
+        open={morePopup.anchorEl !== null}
+        anchorEl={morePopup.anchorEl}
+        onClose={() => setMorePopup((prev) => ({
+          anchorEl: null,
+          eventGrid: prev.eventGrid,
+        }))}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+        style={{
+          width: '20%',
+        }}
+      >
+        <Box padding={1}>
+          {morePopup.eventGrid.map((instance) => {
+            const { event } = instance;
+            const isNotBlock = instance.slotCount === 1 && !event.allDay;
+            return (
+              <SingleEvent
+                key={Math.random()}
+                event={event}
+                isBlock={!isNotBlock}
+                onEventClick={onEventClick}
+              />
+            );
+          })}
+        </Box>
+      </Popover>
     </div>
   );
 };
