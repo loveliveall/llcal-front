@@ -4,10 +4,10 @@ export const useCommonStyles = makeStyles((theme) => ({
   eventInstance: {
     display: 'flex',
     alignItems: 'center',
-    margin: `${1}px`,
-    marginRight: `${2}px`,
+    margin: theme.spacing(0.125),
+    marginRight: theme.spacing(0.25),
     borderRadius: theme.spacing(0.5),
-    padding: `${1}px`,
+    padding: theme.spacing(0.125),
     paddingLeft: theme.spacing(0.75),
     paddingRight: theme.spacing(0.75),
     cursor: 'pointer',
@@ -17,7 +17,7 @@ export const useCommonStyles = makeStyles((theme) => ({
   },
   eventText: {
     display: 'inline-block',
-    marginLeft: `${1}px`,
+    marginLeft: theme.spacing(0.125),
     fontSize: theme.typography.fontSize,
   },
 }));
