@@ -13,17 +13,19 @@ const useStyles = makeStyles(() => ({
   root: {
     overflow: 'hidden',
     width: '100%',
+    zIndex: 0,
   },
 }));
 
 interface IOwnProps {
+  isMobile: boolean,
   eventRenderGrid: TMonthEventGrid,
   onEventClick: (event: ICalendarEvent) => void,
 }
 type WeekEventRowProps = IOwnProps;
 
 const WeekEventRow: React.FC<WeekEventRowProps> = ({
-  eventRenderGrid, onEventClick,
+  isMobile, eventRenderGrid, onEventClick,
 }) => {
   const classes = useStyles();
   const classesCommon = useCommonStyles();
@@ -67,6 +69,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
     };
     window.addEventListener('resize', resizeHandler);
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('resize', resizeHandler);
     };
   }, []);
@@ -88,7 +91,12 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             const isNotBlock = instance.slotCount === 1 && !event.allDay;
             return (
               <Box key={Math.random()} width={instance.slotCount / 7}>
-                <SingleEvent event={event} isBlock={!isNotBlock} onEventClick={onEventClick} />
+                <SingleEvent
+                  isMobile={isMobile}
+                  event={event}
+                  isBlock={!isNotBlock}
+                  onEventClick={onEventClick}
+                />
               </Box>
             );
           })}
@@ -156,6 +164,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             return (
               <SingleEvent
                 key={Math.random()}
+                isMobile={isMobile}
                 event={event}
                 isBlock={!isNotBlock}
                 onEventClick={onEventClick}

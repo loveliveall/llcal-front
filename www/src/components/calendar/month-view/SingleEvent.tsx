@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface OwnProps {
+  isMobile: boolean,
   event: ICalendarEvent,
   isBlock: boolean,
   onEventClick: (event: ICalendarEvent) => void,
@@ -25,22 +26,22 @@ interface OwnProps {
 type SingleEventProps = OwnProps;
 
 const SingleEvent: React.FC<SingleEventProps> = ({
-  event, isBlock, onEventClick,
+  isMobile, event, isBlock, onEventClick,
 }) => {
   const classes = useStyles();
   const classesCommon = useCommonStyles();
   const theme = useTheme();
 
-  const eventPrefix = !event.allDay ? `${getTimeString(event.startTime)} ` : '';
+  const eventPrefix = (!event.allDay && !isMobile) ? `${getTimeString(event.startTime)} ` : '';
   const eventText = `${eventPrefix}${event.title}`;
   return (
     <Box
       key={Math.random()}
       className={classesCommon.eventInstance}
-      style={{ backgroundColor: isBlock ? event.colorCode : 'transparent' }}
+      style={{ backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent' }}
       onClick={() => onEventClick(event)}
     >
-      {!isBlock && (
+      {(!isBlock && !isMobile) && (
         <div
           className={classes.eventCircle}
           style={{ borderColor: event.colorCode }}
@@ -49,7 +50,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({
       <Typography
         className={classesCommon.eventText}
         variant="body2"
-        style={isBlock ? {
+        style={(isBlock || isMobile) ? {
           color: theme.palette.getContrastText(event.colorCode),
         } : undefined}
         noWrap

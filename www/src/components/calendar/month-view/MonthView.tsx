@@ -5,6 +5,7 @@ import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
 import { ICalendarEvent } from '../utils/types';
 import { WEEKDAY_SHORT_NAMES } from '../utils/utils';
@@ -32,16 +33,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IOwnProps {
+  isMobile?: boolean,
   events: ICalendarEvent[],
   onEventClick: (event: ICalendarEvent) => void,
+  onMonthDateClick: (date: Date) => void,
   currDate: Date,
 }
 type MonthViewProps = IOwnProps;
 
 const MonthView: React.FC<MonthViewProps> = ({
-  events, currDate, onEventClick,
+  isMobile, events, currDate, onEventClick, onMonthDateClick,
 }) => {
   const classes = useStyles();
+  const isMobileInternal = isMobile === undefined ? false : isMobile;
 
   React.useEffect(() => {
     // Fire initial resize event on first mount to get ref of rendered DOM
@@ -56,7 +60,13 @@ const MonthView: React.FC<MonthViewProps> = ({
       <Box display="flex" flexDirection="row" className={classes.row}>
         {WEEKDAY_SHORT_NAMES.map((weekdayName) => (
           <Box key={Math.random()} className={classes.headerCell}>
-            <div className={classes.headerText}>{weekdayName}</div>
+            <Typography
+              className={classes.headerText}
+              component="div"
+              variant="body2"
+            >
+              {weekdayName}
+            </Typography>
           </Box>
         ))}
       </Box>
@@ -64,8 +74,10 @@ const MonthView: React.FC<MonthViewProps> = ({
       {new Array(6).fill(null).map((_, idx) => (
         <WeekRow
           key={Math.random()}
+          isMobile={isMobileInternal}
           events={events}
           onEventClick={onEventClick}
+          onMonthDateClick={onMonthDateClick}
           rangeStart={addDays(rangeStart, 7 * idx)}
           currDate={currDate}
         />
