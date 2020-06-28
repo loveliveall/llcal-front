@@ -3,7 +3,7 @@ import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import startOfMonth from 'date-fns/startOfMonth';
 
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
 import { ICalendarEvent } from '../utils/types';
@@ -11,7 +11,7 @@ import { WEEKDAY_SHORT_NAMES } from '../utils/utils';
 
 import WeekRow from './WeekRow';
 
-const useStyles = makeStyles((theme) => createStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     borderLeft: `1px solid ${theme.palette.divider}`,

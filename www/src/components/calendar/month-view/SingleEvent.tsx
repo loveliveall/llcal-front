@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles, createStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
@@ -8,7 +8,7 @@ import { useCommonStyles } from './styles';
 import { ICalendarEvent } from '../utils/types';
 import { getTimeString } from '../utils/utils';
 
-const useStyles = makeStyles((theme) => createStyles({
+const useStyles = makeStyles((theme) => ({
   eventCircle: {
     display: 'inline-block',
     borderRadius: theme.spacing(1),

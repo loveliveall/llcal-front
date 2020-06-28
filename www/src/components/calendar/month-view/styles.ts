@@ -1,6 +1,6 @@
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-export const useCommonStyles = makeStyles((theme) => createStyles({
+export const useCommonStyles = makeStyles((theme) => ({
   eventInstance: {
     display: 'flex',
     alignItems: 'center',

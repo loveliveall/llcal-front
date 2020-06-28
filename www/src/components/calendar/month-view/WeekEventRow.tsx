@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
@@ -9,7 +9,7 @@ import SingleEvent from './SingleEvent';
 import { useCommonStyles } from './styles';
 import { TMonthEventGrid, ICalendarEvent, ISingleEventRenderInfo } from '../utils/types';
 
-const useStyles = makeStyles(() => createStyles({
+const useStyles = makeStyles(() => ({
   root: {
     overflow: 'hidden',
     width: '100%',

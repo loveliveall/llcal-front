@@ -6,7 +6,7 @@ import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import isSameDay from 'date-fns/isSameDay';
 import isSameMonth from 'date-fns/isSameMonth';
 
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
 import { ICalendarEvent, TMonthEventGrid, ISingleEventRenderInfo } from '../utils/types';
@@ -19,7 +19,7 @@ const isMidnight = (date: Date) => date.getHours() === 0 && date.getMinutes() ==
 const useStyles = makeStyles((theme) => {
   const headerMarginUnit = 0.5;
   const circleDiameter = `calc(${theme.spacing(headerMarginUnit / 2)}px + ${theme.typography.body2.lineHeight}em)`;
-  return createStyles({
+  return {
     row: {
       display: 'flex',
       position: 'relative',
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => {
       width: '100%',
       marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
     },
-  });
+  };
 });
 
 interface IOwnProps {
