@@ -53,7 +53,6 @@ const SingleEvent: React.FC<SingleEventProps> = ({
         style={(isBlock || isMobile) ? {
           color: theme.palette.getContrastText(event.colorCode),
         } : undefined}
-        noWrap
       >
         {eventText}
       </Typography>

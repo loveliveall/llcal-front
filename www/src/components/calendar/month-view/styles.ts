@@ -19,5 +19,8 @@ export const useCommonStyles = makeStyles((theme) => ({
     display: 'inline-block',
     marginLeft: theme.spacing(0.125),
     fontSize: theme.typography.fontSize,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'clip',
   },
 }));

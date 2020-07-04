@@ -128,7 +128,6 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
                 <Typography
                   className={classesCommon.eventText}
                   variant="body2"
-                  noWrap
                 >
                   {`+${invisibleCount} more`}
                 </Typography>
