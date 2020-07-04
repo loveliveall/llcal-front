@@ -1,4 +1,7 @@
 import React from 'react';
+import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
+
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
 
@@ -28,12 +31,21 @@ function Calendar<TEvent extends ICalendarEvent>({
     },
   });
 
+  const normalizedEvents = events.map((event) => {
+    if (!event.allDay) return event;
+    return {
+      ...event,
+      startTime: startOfDay(event.startTime),
+      endTime: endOfDay(event.endTime),
+    };
+  });
+
   if (view === 'month') {
     return (
       <>
         <Hidden smDown>
           <MonthView
-            events={events}
+            events={normalizedEvents}
             currDate={currDate}
             onEventClick={onEventClickInternal}
             onMonthDateClick={onMonthDateClickInternal}
@@ -43,7 +55,7 @@ function Calendar<TEvent extends ICalendarEvent>({
           <ThemeProvider theme={mobileMonthViewTheme}>
             <MonthView
               isMobile
-              events={events}
+              events={normalizedEvents}
               currDate={currDate}
               onEventClick={onEventClickInternal}
               onMonthDateClick={onMonthDateClickInternal}
