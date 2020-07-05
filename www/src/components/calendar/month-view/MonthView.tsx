@@ -4,7 +4,6 @@ import subDays from 'date-fns/subDays';
 import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { ICalendarEvent } from '../utils/types';
@@ -14,10 +13,14 @@ import WeekRow from './WeekRow';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: 'flex',
+    flexDirection: 'column',
     height: '100%',
     borderLeft: `1px solid ${theme.palette.divider}`,
   },
   row: {
+    display: 'flex',
+    flexDirection: 'row',
     borderTop: `1px solid ${theme.palette.divider}`,
     borderBottom: `1px solid ${theme.palette.divider}`,
   },
@@ -55,11 +58,11 @@ const MonthView: React.FC<MonthViewProps> = ({
   const monthStart = startOfMonth(currDate);
   const rangeStart = subDays(monthStart, monthStart.getDay()); // inclusive, sunday means 0
   return (
-    <Box display="flex" flexDirection="column" className={classes.root}>
+    <div className={classes.root}>
       {/* Date Header */}
-      <Box display="flex" flexDirection="row" className={classes.row}>
+      <div className={classes.row}>
         {WEEKDAY_SHORT_NAMES.map((weekdayName) => (
-          <Box key={Math.random()} className={classes.headerCell}>
+          <div key={weekdayName} className={classes.headerCell}>
             <Typography
               className={classes.headerText}
               component="div"
@@ -67,13 +70,13 @@ const MonthView: React.FC<MonthViewProps> = ({
             >
               {weekdayName}
             </Typography>
-          </Box>
+          </div>
         ))}
-      </Box>
+      </div>
       {/* Date Row */}
       {new Array(6).fill(null).map((_, idx) => (
         <WeekRow
-          key={Math.random()}
+          key={`${currDate}-${idx}`} // eslint-disable-line react/no-array-index-key
           isMobile={isMobileInternal}
           events={events}
           onEventClick={onEventClick}
@@ -82,7 +85,7 @@ const MonthView: React.FC<MonthViewProps> = ({
           currDate={currDate}
         />
       ))}
-    </Box>
+    </div>
   );
 };
 

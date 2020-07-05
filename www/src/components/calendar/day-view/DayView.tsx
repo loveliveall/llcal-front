@@ -3,7 +3,6 @@ import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 
 import TimeIndicator from './TimeIndicator';
 import FullDayEvent from './FullDayEvent';
@@ -37,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   timeCell: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     height: `calc(${getCellHeightCalc(theme)})`,
+    width: '100%',
   },
   topGutter: {
     height: `calc(${theme.typography.body2.lineHeight}em / 2)`,
@@ -83,7 +83,7 @@ const DayView: React.FC<DayViewPorps> = ({
           <div className={classes.fullEvent}>
             {fullDayEventsInfo.map((item) => (
               <FullDayEvent
-                key={Math.random()}
+                key={JSON.stringify(item)}
                 event={item.event}
                 currDate={currDate}
                 onEventClick={onEventClick}
@@ -111,8 +111,8 @@ const DayView: React.FC<DayViewPorps> = ({
             />
           ))}
           {/* Draw time line */}
-          {new Array(24).fill(null).map(() => (
-            <Box key={Math.random()} className={classes.timeCell} width={1} />
+          {new Array(24).fill(null).map((_, idx) => (
+            <div key={idx} className={classes.timeCell} /> // eslint-disable-line react/no-array-index-key
           ))}
         </div>
       </div>

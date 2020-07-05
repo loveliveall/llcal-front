@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
@@ -9,11 +9,21 @@ import SingleEvent from './SingleEvent';
 import { useCommonStyles } from './styles';
 import { TMonthEventGrid, ICalendarEvent, ISingleEventRenderInfo } from '../utils/types';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     overflow: 'hidden',
     width: '100%',
     zIndex: 0,
+  },
+  singleRow: {
+    display: 'flex',
+    width: '100%',
+  },
+  singleSlot: {
+    width: `${100 / 7}%`,
+  },
+  pad: {
+    padding: theme.spacing(1),
   },
 }));
 
@@ -83,27 +93,32 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
   return (
     <div ref={ref} className={classes.root}>
       {(sliceRowAt === -1 ? eventRenderGrid : eventRenderGrid.slice(0, sliceRowAt)).map((row) => (
-        <Box key={Math.random()} display="flex" width={1}>
+        <div key={JSON.stringify(row)} className={classes.singleRow}>
           {row.map((instance) => {
-            if (instance === null) return <Box key={Math.random()} width={1 / 7} />; // Render empty slot
+            if (instance === null) return <div key={Math.random()} className={classes.singleSlot} />; // Render empty slot
             if (instance.startSlotIdx === -1) return null; // Do not render
             const { event } = instance;
             const isNotBlock = instance.slotCount === 1 && !event.allDay;
             return (
-              <Box key={Math.random()} width={instance.slotCount / 7}>
+              <div
+                key={JSON.stringify(instance)}
+                style={{
+                  width: `${(100 * instance.slotCount) / 7}%`,
+                }}
+              >
                 <SingleEvent
                   isMobile={isMobile}
                   event={event}
                   isBlock={!isNotBlock}
                   onEventClick={onEventClick}
                 />
-              </Box>
+              </div>
             );
           })}
-        </Box>
+        </div>
       ))}
       {/* `more` button */}
-      <Box display="flex" width={1}>
+      <div className={classes.singleRow}>
         {sliceRowAt !== -1 && new Array(7).fill(null).map((_, idx) => {
           const reactKey = `button-wrapper-${idx}`;
           const invisibleCount = eventRenderGrid.slice(sliceRowAt).reduce(
@@ -120,7 +135,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             });
           };
           return (
-            <Box key={reactKey} width={1 / 7}>
+            <div key={reactKey} className={classes.singleSlot}>
               <Box
                 className={classesCommon.eventInstance}
                 onClick={onMoreClick}
@@ -132,10 +147,10 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
                   {`+${invisibleCount} more`}
                 </Typography>
               </Box>
-            </Box>
+            </div>
           );
         })}
-      </Box>
+      </div>
       {/* `more` popover */}
       <Popover
         open={morePopup.anchorEl !== null}
@@ -156,13 +171,13 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
           width: '20%',
         }}
       >
-        <Box padding={1}>
+        <div className={classes.pad}>
           {morePopup.eventGrid.map((instance) => {
             const { event } = instance;
             const isNotBlock = instance.slotCount === 1 && !event.allDay;
             return (
               <SingleEvent
-                key={Math.random()}
+                key={JSON.stringify(instance)}
                 isMobile={isMobile}
                 event={event}
                 isBlock={!isNotBlock}
@@ -170,7 +185,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
               />
             );
           })}
-        </Box>
+        </div>
       </Popover>
     </div>
   );

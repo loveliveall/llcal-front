@@ -28,6 +28,18 @@ const useStyles = makeStyles((theme) => {
       flex: '1 1 0%',
       borderBottom: `1px solid ${theme.palette.divider}`,
     },
+    cellFrame: {
+      display: 'flex',
+      position: 'absolute',
+      width: '100%',
+      top: 0,
+      left: 0,
+      bottom: 0,
+    },
+    cellWrap: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
     cell: {
       flex: '1 1 0%',
       borderRight: `1px solid ${theme.palette.divider}`,
@@ -55,6 +67,7 @@ const useStyles = makeStyles((theme) => {
       fontWeight: 'inherit',
     },
     eventOverlay: {
+      display: 'flex',
       width: '100%',
       fontSize: theme.typography.body2.fontSize, // Let line-height em work correctly
       marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
@@ -143,25 +156,15 @@ const WeekRow: React.FC<WeekRowProps> = ({
   return (
     <div className={classes.row}>
       {/* Cell display */}
-      <Box
-        display="flex"
-        position="absolute"
-        width="100%"
-        top={0}
-        left={0}
-        bottom={0}
-      >
+      <div className={classes.cellFrame}>
         {new Array(7).fill(null).map((_, idx) => {
           const cellDate = addDays(rangeStart, idx);
           const isToday = isSameDay(cellDate, now);
           const isTargetMonth = isSameMonth(cellDate, currDate);
           const onClick = () => onMonthDateClick(cellDate);
           return (
-            <Box key={Math.random()} className={`${classes.cell} ${!isTargetMonth && classes.diffMonthCell}`}>
-              <Box
-                display="flex"
-                justifyContent="center"
-              >
+            <div key={cellDate.toISOString()} className={`${classes.cell} ${!isTargetMonth && classes.diffMonthCell}`}>
+              <div className={classes.cellWrap}>
                 <Typography
                   className={`${isToday ? classes.todayDate : classes.otherDate}
                     ${!isTargetMonth && classes.diffMonthDate}`}
@@ -174,28 +177,20 @@ const WeekRow: React.FC<WeekRowProps> = ({
                 >
                   {cellDate.getDate()}
                 </Typography>
-              </Box>
-            </Box>
+              </div>
+            </div>
           );
         })}
-      </Box>
+      </div>
       {/* Dummy overlay for mobile click */}
       {isMobile && (
-        <Box
-          display="flex"
-          position="absolute"
-          width="100%"
-          top={0}
-          left={0}
-          bottom={0}
-          zIndex={1}
-        >
+        <div className={classes.cellFrame} style={{ zIndex: 1 }}>
           {new Array(7).fill(null).map((_, idx) => {
             const cellDate = addDays(rangeStart, idx);
             const onClick = () => onMonthDateClick(cellDate);
             return (
               <Box
-                key={Math.random()}
+                key={cellDate.toISOString()}
                 width={1 / 7}
                 onClick={onClick}
                 style={{
@@ -204,15 +199,15 @@ const WeekRow: React.FC<WeekRowProps> = ({
               />
             );
           })}
-        </Box>
+        </div>
       )}
-      <Box display="flex" className={classes.eventOverlay}>
+      <div className={classes.eventOverlay}>
         <WeekEventRow
           isMobile={isMobile}
           eventRenderGrid={eventRenderGrid}
           onEventClick={onEventClick}
         />
-      </Box>
+      </div>
     </div>
   );
 };
