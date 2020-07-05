@@ -6,7 +6,7 @@ import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
-import { getCellHeightCalc } from './styles';
+import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
 import { ICalendarEvent } from '../utils/types';
 
 function hhmmDisplay(date: Date): string {
@@ -78,9 +78,9 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
           color: theme.palette.getContrastText(event.colorCode),
         }}
       >
-        {`${event.title}${duration < 60 ? `, ${timeString}` : ''}`}
+        {`${event.title}${duration < SINGLE_LINE_MINUTE * 2 ? `, ${timeString}` : ''}`}
       </Typography>
-      {duration >= 60 && (
+      {duration >= SINGLE_LINE_MINUTE * 2 && (
         <Typography
           className={classes.eventText}
           variant="body2"
