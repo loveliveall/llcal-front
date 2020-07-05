@@ -70,6 +70,7 @@ const App: React.FC = () => {
     <DrawerContent
       currView={currView}
       setCurrView={setCurrView}
+      setMobileDrawerOpen={setMobileOpen}
     />
   );
 
