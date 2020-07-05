@@ -7,6 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 
 import Calendar, { ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
+import DrawerContent from '@/components/app-frame/DrawerContent';
 
 import { mockEvents } from './tmp';
 
@@ -51,7 +52,7 @@ const App: React.FC = () => {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
-  const [currView] = React.useState<ViewType>('month');
+  const [currView, setCurrView] = React.useState<ViewType>('month');
 
   React.useEffect(() => {
     window.dispatchEvent(new Event('resize'));
@@ -60,9 +61,13 @@ const App: React.FC = () => {
   const toggleMobileDrawer = () => {
     setMobileOpen(!mobileOpen);
   };
-  // const onViewSelect = (view: ViewType) => {
-  //   setCurrView(view);
-  // };
+
+  const drawer = (
+    <DrawerContent
+      currView={currView}
+      setCurrView={setCurrView}
+    />
+  );
 
   return (
     <div className={classes.root}>
@@ -87,7 +92,7 @@ const App: React.FC = () => {
               keepMounted: true,
             }}
           >
-            Test Drawer
+            {drawer}
           </Drawer>
         </Hidden>
         <Hidden smDown>
@@ -99,7 +104,7 @@ const App: React.FC = () => {
             open
           >
             <div className={classes.toolbar} />
-            Test 2 Drawer
+            {drawer}
           </Drawer>
         </Hidden>
       </nav>
