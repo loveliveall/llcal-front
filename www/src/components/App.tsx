@@ -9,9 +9,10 @@ import Calendar, { ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
 
+import { VA_FILTER_DEFAULT } from './defaults';
 import { mockEvents } from './tmp';
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 280;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,6 +54,7 @@ const App: React.FC = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
   const [currView, setCurrView] = React.useState<ViewType>('month');
+  const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
 
   React.useEffect(() => {
     window.dispatchEvent(new Event('resize'));
@@ -70,6 +72,8 @@ const App: React.FC = () => {
     <DrawerContent
       currView={currView}
       setCurrView={setCurrView}
+      vaFilter={vaFilter}
+      setVAFilter={setVAFilter}
       setMobileDrawerOpen={setMobileOpen}
     />
   );

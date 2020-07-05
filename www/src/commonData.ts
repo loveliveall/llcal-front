@@ -133,9 +133,9 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 27, name: '쿠스노키 토모리', character: '유키 세츠나', groupId: 3, colorHex: '#d81c2f' },
   { id: 28, name: '사시데 마리아', character: '엠마 베르데', groupId: 3, colorHex: '#7dc62b' },
   { id: 29, name: '타나카 치에미', character: '텐노지 리나', groupId: 3, colorHex: '#969fb5' },
-  { id: 31, name: '사쿠라가와 메구', character: '키라 츠바사', groupId: 4, colorHex: '#9a9a9a' }, // Colorhex unknown
-  { id: 32, name: '오오하시 아유루', character: '유키 안쥬', groupId: 4, colorHex: '#9a9a9a' }, // Colorhex unknown
-  { id: 33, name: '마츠나가 마호', character: '토도 에레나', groupId: 4, colorHex: '#9a9a9a' }, // Colorhex unknown
+  { id: 31, name: '사쿠라가와 메구', character: '키라 츠바사', groupId: 4, colorHex: '' }, // Colorhex unknown
+  { id: 32, name: '오오하시 아유루', character: '유키 안쥬', groupId: 4, colorHex: '' }, // Colorhex unknown
+  { id: 33, name: '마츠나가 마호', character: '토도 에레나', groupId: 4, colorHex: '' }, // Colorhex unknown
   { id: 41, name: '타노 아사미', character: '카즈노 세이라', groupId: 5, colorHex: '#87ceeb' },
   { id: 42, name: '사토 히나타', character: '카즈노 리아', groupId: 5, colorHex: '#eeede6' },
 ];
@@ -143,14 +143,16 @@ export const voiceActorList: IVoiceActor[] = [
 
 interface IGroupInfoRaw {
   name: string,
+  colorHex: string,
 }
 
 interface IGroupInfo extends IGroupInfoRaw, IID<number> {}
 
+// Color code from https://lovelive-as.bushimo.jp/member/
 export const groupInfoList: IGroupInfo[] = [
-  { id: 1, name: 'µ\'s' },
-  { id: 2, name: 'Aqours' },
-  { id: 3, name: '니지동' },
-  { id: 4, name: 'A-RISE' },
-  { id: 5, name: 'Saint Snow' },
+  { id: 1, name: 'µ\'s', colorHex: '#e93398' },
+  { id: 2, name: 'Aqours', colorHex: '#019fe8' },
+  { id: 3, name: '니지동', colorHex: '#ffc94a' },
+  { id: 4, name: 'A-RISE', colorHex: '' }, // Colorhex unknown
+  { id: 5, name: 'Saint Snow', colorHex: '' }, // Colorhex unknown
 ];

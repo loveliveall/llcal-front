@@ -10,7 +10,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ViewDayIcon from '@material-ui/icons/ViewDay';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
+import VACheckList from '@/components/common/VACheckList';
 import { ViewType } from '@/components/calendar';
+
+import { VACheckState } from '../types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -24,12 +27,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface IOwnProps {
   currView: ViewType,
   setCurrView: React.Dispatch<React.SetStateAction<ViewType>>,
+  vaFilter: VACheckState,
+  setVAFilter: (newFilter: VACheckState) => void,
   setMobileDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }
 type DrawerContentProps = IOwnProps;
 
 const DrawerContent: React.FC<DrawerContentProps> = ({
-  currView, setCurrView, setMobileDrawerOpen,
+  currView, setCurrView, vaFilter, setVAFilter, setMobileDrawerOpen,
 }) => {
   const classes = useStyles();
   const VIEW_TYPE_MENU: Record<ViewType, {
@@ -77,6 +82,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         })}
       </List>
       <Divider />
+      <VACheckList
+        checkState={vaFilter}
+        setCheckState={setVAFilter}
+      />
     </div>
   );
 };
