@@ -10,12 +10,14 @@ import DayView from './day-view/DayView';
 
 import { ICalendarEvent } from './utils/types';
 
+export type ViewType = 'month' | 'day'; // TODO: Add agenda view & may be week view..?
+
 interface IOwnProps<TEvent extends ICalendarEvent> {
   events: TEvent[],
   onEventClick?: (event: TEvent) => void,
   onMonthDateClick?: (date: Date) => void,
   currDate: Date,
-  view: 'month' | 'week' | 'day' | 'agenda',
+  view: ViewType,
 }
 type CalendarProps<TEvent extends ICalendarEvent> = IOwnProps<TEvent>;
 
