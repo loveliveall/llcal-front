@@ -23,6 +23,7 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
 
   const fullLength = differenceInCalendarDays(event.endTime, event.startTime) + 1;
   const currLength = differenceInCalendarDays(currDate, event.startTime) + 1;
+  const prefix = fullLength === 1 ? '' : `(${currLength}/${fullLength}) `;
   return (
     <Box
       className={commonClasses.eventInstance}
@@ -36,7 +37,7 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
           color: theme.palette.getContrastText(event.colorCode),
         }}
       >
-        {`(${currLength}/${fullLength}) ${event.title}`}
+        {`${prefix}${event.title}`}
       </Typography>
     </Box>
   );

@@ -67,7 +67,7 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
       height={`calc(${getCellHeightCalc(theme)} / 60 * ${duration})`}
       style={{
         border: `${theme.spacing(0.125)}px solid ${event.colorCode}`,
-        backgroundColor: event.colorCode,
+        backgroundColor: `${event.colorCode}c0`,
       }}
       onClick={() => onEventClick(event)}
     >
