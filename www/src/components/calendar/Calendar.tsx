@@ -6,6 +6,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
 
 import MonthView from './month-view/MonthView';
+import DayView from './day-view/DayView';
 
 import { ICalendarEvent } from './utils/types';
 
@@ -63,6 +64,15 @@ function Calendar<TEvent extends ICalendarEvent>({
           </ThemeProvider>
         </Hidden>
       </>
+    );
+  }
+  if (view === 'day') {
+    return (
+      <DayView
+        currDate={currDate}
+        events={normalizedEvents}
+        onEventClick={onEventClickInternal}
+      />
     );
   }
   return null;
