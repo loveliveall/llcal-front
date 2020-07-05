@@ -36,7 +36,6 @@ const SingleEvent: React.FC<SingleEventProps> = ({
   const eventText = `${eventPrefix}${event.title}`;
   return (
     <Box
-      key={Math.random()}
       className={classesCommon.eventInstance}
       style={{ backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent' }}
       onClick={() => onEventClick(event)}
