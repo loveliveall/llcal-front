@@ -2,7 +2,7 @@ import React from 'react';
 import startOfDay from 'date-fns/startOfDay';
 import endOfDay from 'date-fns/endOfDay';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
 
 import MonthView from './month-view/MonthView';
@@ -24,10 +24,13 @@ type CalendarProps<TEvent extends ICalendarEvent> = IOwnProps<TEvent>;
 function Calendar<TEvent extends ICalendarEvent>({
   events, currDate, view, onEventClick, onMonthDateClick,
 }: CalendarProps<TEvent>): React.ReactElement | null {
+  const theme = useTheme();
+
   const onEventClickInternal = (event: ICalendarEvent) => onEventClick && onEventClick(event as TEvent);
   const onMonthDateClickInternal = (date: Date) => onMonthDateClick && onMonthDateClick(date);
   const MOBILE_MONTH_SCALING = 0.75;
   const mobileMonthViewTheme = createMuiTheme({
+    ...theme,
     spacing: 8 * MOBILE_MONTH_SCALING, // https://material-ui.com/customization/spacing/
     typography: {
       fontSize: 14 * MOBILE_MONTH_SCALING, // https://material-ui.com/customization/typography/#font-size
