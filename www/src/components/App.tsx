@@ -61,6 +61,10 @@ const App: React.FC = () => {
   const toggleMobileDrawer = () => {
     setMobileOpen(!mobileOpen);
   };
+  const onMonthDateClick = (date: Date) => {
+    setCurrDate(date);
+    setCurrView('day');
+  };
 
   const drawer = (
     <DrawerContent
@@ -115,6 +119,7 @@ const App: React.FC = () => {
             events={mockEvents}
             currDate={currDate}
             view={currView}
+            onMonthDateClick={onMonthDateClick}
           />
         </div>
       </main>
