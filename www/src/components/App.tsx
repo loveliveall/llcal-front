@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   desktopLeftIcon: {
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('md')]: { // https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/IconButton/IconButton.js#L36
       marginLeft: -12,
       '$sizeSmall&': {
         marginLeft: -3,
@@ -57,16 +57,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(1),
   },
   toolbar: theme.mixins.toolbar,
   calendarWrapper: {
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(3)}px)`,
+    overflow: 'hidden',
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
+    [theme.breakpoints.down('xs')]: {
+      height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
+    },
     [theme.breakpoints.up('md')]: {
-      width: `calc(100vw - ${DRAWER_WIDTH}px - ${theme.spacing(2)}px)`,
+      width: `calc(100vw - ${DRAWER_WIDTH}px)`,
     },
     [theme.breakpoints.down('sm')]: {
-      width: `calc(100vw - ${theme.spacing(2)}px)`,
+      width: '100vw',
     },
   },
 }));
@@ -76,6 +79,10 @@ const App: React.FC = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
   const [currView] = React.useState<ViewType>('month');
+
+  React.useEffect(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, [currDate, currView]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
