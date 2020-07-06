@@ -7,6 +7,7 @@ import subMonths from 'date-fns/subMonths';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -73,6 +74,16 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
     if (currView === 'day') return `${month}.${day}.(${weekday})`;
     return '';
   })();
+  const prevDateTooltip = (() => {
+    if (currView === 'month') return '이전 달';
+    if (currView === 'day') return '이전 날';
+    return '';
+  })();
+  const nextDateTooltip = (() => {
+    if (currView === 'month') return '다음 달';
+    if (currView === 'day') return '다음 날';
+    return '';
+  })();
 
   return (
     <Toolbar>
@@ -85,28 +96,34 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
       >
         <MenuIcon />
       </IconButton>
-      <IconButton
-        className={classes.desktopLeftIcon}
-        color="inherit"
-        aria-label="show today"
-        onClick={onTodayClick}
-      >
-        <TodayIcon />
-      </IconButton>
-      <IconButton
-        color="inherit"
-        aria-label="prev day"
-        onClick={handlePrevDate}
-      >
-        <ChevronLeftIcon />
-      </IconButton>
-      <IconButton
-        color="inherit"
-        aria-label="next day"
-        onClick={handleNextDate}
-      >
-        <ChevronRightIcon />
-      </IconButton>
+      <Tooltip title="오늘">
+        <IconButton
+          className={classes.desktopLeftIcon}
+          color="inherit"
+          aria-label="show today"
+          onClick={onTodayClick}
+        >
+          <TodayIcon />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title={prevDateTooltip}>
+        <IconButton
+          color="inherit"
+          aria-label="prev day"
+          onClick={handlePrevDate}
+        >
+          <ChevronLeftIcon />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title={nextDateTooltip}>
+        <IconButton
+          color="inherit"
+          aria-label="next day"
+          onClick={handleNextDate}
+        >
+          <ChevronRightIcon />
+        </IconButton>
+      </Tooltip>
       <Typography
         variant="h6"
       >
