@@ -13,7 +13,12 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { VACheckState } from '@/components/types';
-import { isGroupChecked, isGroupIndeterminate } from '@/components/utils';
+import {
+  isGroupChecked,
+  isGroupIndeterminate,
+  isAllChecked,
+  isAllIndeterminate,
+} from '@/components/utils';
 
 import { voiceActorList, groupInfoList } from '@/commonData';
 
@@ -62,6 +67,13 @@ const VACheckList: React.FC<VACheckListProps> = ({
       }), {}),
     });
   };
+  const onAllToggle = () => {
+    const allChecked = isAllChecked(checkState);
+    setCheckState(voiceActorList.reduce((acc, curr) => ({
+      ...acc,
+      [curr.id]: !allChecked,
+    }), {}));
+  };
   const onSubListToggle = (groupId: number) => {
     setSubListOpen({
       ...subListOpen,
@@ -71,6 +83,26 @@ const VACheckList: React.FC<VACheckListProps> = ({
 
   return (
     <List component="nav" dense>
+      <ListItem
+        button
+        onClick={onAllToggle}
+      >
+        <Checkbox
+          color="primary"
+          onChange={onAllToggle}
+          checked={isAllChecked(checkState)}
+          indeterminate={isAllIndeterminate(checkState)}
+          edge="start"
+          disableRipple
+        />
+        <ListItemText
+          className={classes.spaced}
+          primary="전체 선택"
+          primaryTypographyProps={{
+            variant: 'body2',
+          }}
+        />
+      </ListItem>
       {groupInfoList.map((groupInfo) => {
         const groupId = groupInfo.id;
         return (
