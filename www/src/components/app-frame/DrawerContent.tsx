@@ -6,6 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
 import ViewDayIcon from '@material-ui/icons/ViewDay';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
@@ -21,6 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   denseIcon: {
     minWidth: theme.spacing(5),
+  },
+  sectionHeader: {
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(1),
   },
 }));
 
@@ -82,6 +87,13 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         })}
       </List>
       <Divider />
+      <Typography
+        className={classes.sectionHeader}
+        color="inherit"
+        variant="h6"
+      >
+        성우/캐릭터 필터
+      </Typography>
       <VACheckList
         checkState={vaFilter}
         setCheckState={setVAFilter}
