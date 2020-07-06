@@ -8,6 +8,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 
+import SearchIcon from '@material-ui/icons/Search';
+import SendIcon from '@material-ui/icons/Send';
 import ViewDayIcon from '@material-ui/icons/ViewDay';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
@@ -85,6 +87,34 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             </ListItem>
           );
         })}
+        <ListItem
+          button
+          // TODO: Add onClick handler
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            <SearchIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="검색"
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItem>
+        <ListItem
+          button
+          // TODO: Add onClick handler
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            <SendIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="일정 추가 요청 보내기"
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItem>
       </List>
       <Divider />
       <Typography
