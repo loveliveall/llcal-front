@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IOwnProps {
-  isMobile?: boolean,
+  isMobile: boolean,
   events: ICalendarEvent[],
   onEventClick: (event: ICalendarEvent) => void,
   onMonthDateClick: (date: Date) => void,
@@ -48,7 +48,6 @@ const MonthView: React.FC<MonthViewProps> = ({
   isMobile, events, currDate, onEventClick, onMonthDateClick,
 }) => {
   const classes = useStyles();
-  const isMobileInternal = isMobile === undefined ? false : isMobile;
 
   React.useEffect(() => {
     // Fire initial resize event on first mount to get ref of rendered DOM
@@ -77,7 +76,7 @@ const MonthView: React.FC<MonthViewProps> = ({
       {new Array(6).fill(null).map((_, idx) => (
         <WeekRow
           key={`${currDate}-${idx}`} // eslint-disable-line react/no-array-index-key
-          isMobile={isMobileInternal}
+          isMobile={isMobile}
           events={events}
           onEventClick={onEventClick}
           onMonthDateClick={onMonthDateClick}

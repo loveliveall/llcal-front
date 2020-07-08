@@ -3,6 +3,7 @@ import startOfDay from 'date-fns/startOfDay';
 import endOfDay from 'date-fns/endOfDay';
 
 import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Hidden from '@material-ui/core/Hidden';
 
 import MonthView from './month-view/MonthView';
@@ -25,6 +26,7 @@ function Calendar<TEvent extends ICalendarEvent>({
   events, currDate, view, onEventClick, onMonthDateClick,
 }: CalendarProps<TEvent>): React.ReactElement | null {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const onEventClickInternal = (event: ICalendarEvent) => onEventClick && onEventClick(event as TEvent);
   const onMonthDateClickInternal = (date: Date) => onMonthDateClick && onMonthDateClick(date);
@@ -48,27 +50,15 @@ function Calendar<TEvent extends ICalendarEvent>({
 
   if (view === 'month') {
     return (
-      <>
-        <Hidden smDown>
-          <MonthView
-            events={normalizedEvents}
-            currDate={currDate}
-            onEventClick={onEventClickInternal}
-            onMonthDateClick={onMonthDateClickInternal}
-          />
-        </Hidden>
-        <Hidden mdUp>
-          <ThemeProvider theme={mobileMonthViewTheme}>
-            <MonthView
-              isMobile
-              events={normalizedEvents}
-              currDate={currDate}
-              onEventClick={onEventClickInternal}
-              onMonthDateClick={onMonthDateClickInternal}
-            />
-          </ThemeProvider>
-        </Hidden>
-      </>
+      <ThemeProvider theme={isMobile ? mobileMonthViewTheme : theme}>
+        <MonthView
+          isMobile={isMobile}
+          events={normalizedEvents}
+          currDate={currDate}
+          onEventClick={onEventClickInternal}
+          onMonthDateClick={onMonthDateClickInternal}
+        />
+      </ThemeProvider>
     );
   }
   if (view === 'day') {
