@@ -8,11 +8,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
+import { getTimeString } from '../utils/utils';
 import { ICalendarEvent } from '../utils/types';
-
-function hhmmDisplay(date: Date): string {
-  return `${`0${date.getHours()}`.slice(-2)}:${`0${date.getMinutes()}`.slice(-2)}`;
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   eventInstance: {
@@ -52,11 +49,11 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
   const nextDayStart = addDays(dayStart, 1);
   const minFromDayStart = differenceInMinutes(visibleStart, dayStart); // in minutes
   const duration = differenceInMinutes(visibleEnd, visibleStart); // in minutes
-  const startTimeStr = event.startTime < dayStart ? '' : hhmmDisplay(event.startTime);
+  const startTimeStr = event.startTime < dayStart ? '' : getTimeString(event.startTime);
   const endTimeStr = (() => {
     if (event.endTime > nextDayStart) return ''; // Event continues to next day
     if (event.endTime.getTime() === nextDayStart.getTime()) return '24:00'; // Exceptional case to display 24:00
-    return hhmmDisplay(event.endTime);
+    return getTimeString(event.endTime);
   })();
   const timeString = startTimeStr === endTimeStr ? startTimeStr : `${startTimeStr} - ${endTimeStr}`;
   return (
