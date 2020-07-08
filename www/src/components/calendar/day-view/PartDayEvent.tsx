@@ -1,4 +1,5 @@
 import React from 'react';
+import addDays from 'date-fns/addDays';
 import differenceInMinutes from 'date-fns/differenceInMinutes';
 import startOfDay from 'date-fns/startOfDay';
 
@@ -48,15 +49,16 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
   const theme = useTheme();
 
   const dayStart = startOfDay(visibleStart);
+  const nextDayStart = addDays(dayStart, 1);
   const minFromDayStart = differenceInMinutes(visibleStart, dayStart); // in minutes
   const duration = differenceInMinutes(visibleEnd, visibleStart); // in minutes
-  const startTimeString = event.startTime < visibleStart ? '' : hhmmDisplay(visibleStart);
-  const endTimeString = (() => {
-    if (visibleEnd < event.endTime) return '';
-    if (dayStart.getDate() !== visibleEnd.getDate()) return '24:00';
-    return hhmmDisplay(visibleEnd);
+  const startTimeStr = event.startTime < dayStart ? '' : hhmmDisplay(event.startTime);
+  const endTimeStr = (() => {
+    if (event.endTime > nextDayStart) return ''; // Event continues to next day
+    if (event.endTime.getTime() === nextDayStart.getTime()) return '24:00'; // Exceptional case to display 24:00
+    return hhmmDisplay(event.endTime);
   })();
-  const timeString = `${startTimeString} - ${endTimeString}`;
+  const timeString = startTimeStr === endTimeStr ? startTimeStr : `${startTimeStr} - ${endTimeStr}`;
   return (
     <Box
       className={classes.eventInstance}
