@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
+import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
 import ViewDayIcon from '@material-ui/icons/ViewDay';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
@@ -48,6 +49,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     label: string,
     icon: typeof ViewDayIcon,
   }> = {
+    agenda: {
+      label: '일정 목록 보기',
+      icon: ViewAgendaIcon,
+    },
     day: {
       label: '일간 일정 보기',
       icon: ViewDayIcon,

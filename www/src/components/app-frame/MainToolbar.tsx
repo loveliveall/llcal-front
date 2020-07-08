@@ -51,14 +51,14 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
 
   const onTodayClick = () => setCurrDate(new Date());
   const handleNextDate = () => {
-    if (currView === 'month') {
+    if (currView === 'month' || currView === 'agenda') {
       setCurrDate(addMonths(currDate, 1));
     } else if (currView === 'day') {
       setCurrDate(addDays(currDate, 1));
     }
   };
   const handlePrevDate = () => {
-    if (currView === 'month') {
+    if (currView === 'month' || currView === 'agenda') {
       setCurrDate(subMonths(currDate, 1));
     } else if (currView === 'day') {
       setCurrDate(subDays(currDate, 1));
@@ -70,17 +70,17 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
     const month = `0${currDate.getMonth() + 1}`.slice(-2);
     const day = `0${currDate.getDate()}`.slice(-2);
     const weekday = ['일', '월', '화', '수', '목', '금', '토'][currDate.getDay()];
-    if (currView === 'month') return `${currDate.getMonth() + 1}월`;
+    if (currView === 'month' || currView === 'agenda') return `${currDate.getMonth() + 1}월`;
     if (currView === 'day') return `${month}.${day}.(${weekday})`;
     return '';
   })();
   const prevDateTooltip = (() => {
-    if (currView === 'month') return '이전 달';
+    if (currView === 'month' || currView === 'agenda') return '이전 달';
     if (currView === 'day') return '이전 날';
     return '';
   })();
   const nextDateTooltip = (() => {
-    if (currView === 'month') return '다음 달';
+    if (currView === 'month' || currView === 'agenda') return '다음 달';
     if (currView === 'day') return '다음 날';
     return '';
   })();

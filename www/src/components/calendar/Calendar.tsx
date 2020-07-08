@@ -4,14 +4,14 @@ import endOfDay from 'date-fns/endOfDay';
 
 import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Hidden from '@material-ui/core/Hidden';
 
 import MonthView from './month-view/MonthView';
 import DayView from './day-view/DayView';
+import AgendaView from './agenda-view/AgendaView';
 
 import { ICalendarEvent } from './utils/types';
 
-export type ViewType = 'month' | 'day'; // TODO: Add agenda view & may be week view..?
+export type ViewType = 'month' | 'day' | 'agenda'; // TODO: Add week view..?
 
 interface IOwnProps<TEvent extends ICalendarEvent> {
   events: TEvent[],
@@ -64,6 +64,16 @@ function Calendar<TEvent extends ICalendarEvent>({
   if (view === 'day') {
     return (
       <DayView
+        currDate={currDate}
+        events={normalizedEvents}
+        onEventClick={onEventClickInternal}
+      />
+    );
+  }
+  if (view === 'agenda') {
+    return (
+      <AgendaView
+        isMobile={isMobile}
         currDate={currDate}
         events={normalizedEvents}
         onEventClick={onEventClickInternal}
