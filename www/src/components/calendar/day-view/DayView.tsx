@@ -66,8 +66,8 @@ const DayView: React.FC<DayViewPorps> = ({
   }).map((event) => ({
     event,
     fullDay: event.allDay || (event.startTime <= dayStart && dayEnd <= event.endTime),
-    start: event.startTime <= dayStart ? dayStart : event.startTime,
-    end: dayEnd <= event.endTime ? dayEnd : event.endTime,
+    visibleStart: event.startTime <= dayStart ? dayStart : event.startTime,
+    visibleEnd: dayEnd <= event.endTime ? dayEnd : event.endTime,
   }));
   const fullDayEventsInfo = visibleEventsInfo.filter((item) => item.fullDay);
   const partDayEventsInfo = visibleEventsInfo.filter((item) => !item.fullDay);
@@ -100,10 +100,10 @@ const DayView: React.FC<DayViewPorps> = ({
         <div className={classes.timeGrid}>
           {partDayRenderInfo.map((info) => (
             <PartDayEvent
-              key={`${info.start}-${info.colIdx}`}
+              key={`${info.visibleStart}-${info.colIdx}`}
               event={info.event}
-              start={info.start}
-              end={info.end}
+              visibleStart={info.visibleStart}
+              visibleEnd={info.visibleEnd}
               colIdx={info.colIdx}
               colCount={info.colCount}
               fullColCount={info.fullColCount}

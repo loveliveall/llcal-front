@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IOwnProps {
   event: ICalendarEvent,
-  start: Date,
-  end: Date,
+  visibleStart: Date,
+  visibleEnd: Date,
   colIdx: number,
   colCount: number,
   fullColCount: number,
@@ -42,19 +42,19 @@ interface IOwnProps {
 type PartDayEventProps = IOwnProps;
 
 const PartDayEvent: React.FC<PartDayEventProps> = ({
-  event, start, end, colIdx, colCount, fullColCount, onEventClick,
+  event, visibleStart, visibleEnd, colIdx, colCount, fullColCount, onEventClick,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const dayStart = startOfDay(start);
-  const minFromDayStart = differenceInMinutes(start, dayStart); // in minutes
-  const duration = differenceInMinutes(end, start); // in minutes
-  const startTimeString = event.startTime < start ? '' : hhmmDisplay(start);
+  const dayStart = startOfDay(visibleStart);
+  const minFromDayStart = differenceInMinutes(visibleStart, dayStart); // in minutes
+  const duration = differenceInMinutes(visibleEnd, visibleStart); // in minutes
+  const startTimeString = event.startTime < visibleStart ? '' : hhmmDisplay(visibleStart);
   const endTimeString = (() => {
-    if (end < event.endTime) return '';
-    if (dayStart.getDate() !== end.getDate()) return '24:00';
-    return hhmmDisplay(end);
+    if (visibleEnd < event.endTime) return '';
+    if (dayStart.getDate() !== visibleEnd.getDate()) return '24:00';
+    return hhmmDisplay(visibleEnd);
   })();
   const timeString = `${startTimeString} - ${endTimeString}`;
   return (
