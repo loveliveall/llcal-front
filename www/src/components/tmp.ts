@@ -105,6 +105,13 @@ export const mockEvents = [
     colorCode: '#AD1457',
   },
   {
+    title: 'TestWOT',
+    allDay: false,
+    startTime: new Date(2020, 1, 9, 0, 0),
+    endTime: new Date(2020, 1, 9, 0, 0),
+    colorCode: '#AD1457',
+  },
+  {
     title: '세가 콜라보 카페 러브라이브! 시리즈 9th ANNIVERSARY feat. 러브라이브! 페스',
     allDay: true,
     startTime: new Date(2019, 11, 21),

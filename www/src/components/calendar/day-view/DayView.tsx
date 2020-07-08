@@ -1,13 +1,18 @@
 import React from 'react';
 import addDays from 'date-fns/addDays';
+import addMinutes from 'date-fns/addMinutes';
+import differenceInMinutes from 'date-fns/differenceInMinutes';
+import maxDate from 'date-fns/max';
+import minDate from 'date-fns/min';
 import startOfDay from 'date-fns/startOfDay';
+import subMinutes from 'date-fns/subMinutes';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import TimeIndicator from './TimeIndicator';
 import FullDayEvent from './FullDayEvent';
 import PartDayEvent from './PartDayEvent';
-import { getCellHeightCalc } from './styles';
+import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
 import { getRenderInfo } from './algorithm';
 
 import { getEventsInRange } from '../utils/utils';
@@ -63,12 +68,34 @@ const DayView: React.FC<DayViewPorps> = ({
     if (a.endTime > b.endTime) return -1;
     if (a.endTime < b.endTime) return 1;
     return 0;
-  }).map((event) => ({
-    event,
-    fullDay: event.allDay || (event.startTime <= dayStart && dayEnd <= event.endTime),
-    visibleStart: event.startTime <= dayStart ? dayStart : event.startTime,
-    visibleEnd: dayEnd <= event.endTime ? dayEnd : event.endTime,
-  }));
+  }).map((event) => {
+    const visibleStart = maxDate([event.startTime, dayStart]);
+    const visibleEnd = minDate([event.endTime, dayEnd]);
+    // Ensure that each event has at least SINGLE_LINE_MINUTE duration of visible instance
+    const adjusted = (() => {
+      if (differenceInMinutes(visibleEnd, visibleStart) >= SINGLE_LINE_MINUTE) {
+        // Already has longer visible instance
+        return {
+          start: visibleStart,
+          end: visibleEnd,
+        };
+      }
+      // Shorter visible instance
+      // Preserve start as far as possible
+      const start = minDate([subMinutes(dayEnd, SINGLE_LINE_MINUTE), visibleStart]);
+      const end = addMinutes(start, SINGLE_LINE_MINUTE);
+      return {
+        start,
+        end,
+      };
+    })();
+    return {
+      event,
+      fullDay: event.allDay || (event.startTime <= dayStart && dayEnd <= event.endTime),
+      visibleStart: adjusted.start,
+      visibleEnd: adjusted.end,
+    };
+  });
   const fullDayEventsInfo = visibleEventsInfo.filter((item) => item.fullDay);
   const partDayEventsInfo = visibleEventsInfo.filter((item) => !item.fullDay);
   const partDayRenderInfo = getRenderInfo(partDayEventsInfo);

@@ -9,7 +9,8 @@ export function getEventsInRange(events: ICalendarEvent[], rangeStart: Date, ran
   // inclusive, exclusive
   return events.filter((event) => (
     (event.startTime < rangeEnd && rangeStart < event.endTime)
-    || (event.startTime === event.endTime && rangeStart <= event.startTime && event.startTime < rangeEnd)
+    || (event.startTime.getTime() === event.endTime.getTime()
+        && rangeStart <= event.startTime && event.startTime < rangeEnd)
   ));
 }
 
