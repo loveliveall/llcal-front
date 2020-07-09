@@ -98,7 +98,6 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             if (instance === null) return <div key={Math.random()} className={classes.singleSlot} />; // Render empty slot
             if (instance.startSlotIdx === -1) return null; // Do not render
             const { event } = instance;
-            const isNotBlock = instance.slotCount === 1 && !event.allDay;
             return (
               <div
                 key={JSON.stringify(instance)}
@@ -109,7 +108,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
                 <SingleEvent
                   isMobile={isMobile}
                   event={event}
-                  isBlock={!isNotBlock}
+                  isBlock={instance.isBlock}
                   onEventClick={onEventClick}
                 />
               </div>
@@ -174,13 +173,12 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
         <div className={classes.pad}>
           {morePopup.eventGrid.map((instance) => {
             const { event } = instance;
-            const isNotBlock = instance.slotCount === 1 && !event.allDay;
             return (
               <SingleEvent
                 key={JSON.stringify(instance)}
                 isMobile={isMobile}
                 event={event}
-                isBlock={!isNotBlock}
+                isBlock={instance.isBlock}
                 onEventClick={onEventClick}
               />
             );

@@ -1,7 +1,6 @@
 import React from 'react';
 import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
-import endOfDay from 'date-fns/endOfDay';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import isSameDay from 'date-fns/isSameDay';
 import isSameMonth from 'date-fns/isSameMonth';
@@ -101,33 +100,44 @@ const WeekRow: React.FC<WeekRowProps> = ({
       const maxAvailCount = differenceInCalendarDays(rangeEnd, visibleStart);
       return Math.max(Math.min(fullCount, maxAvailCount), 1);
     })();
+    const dayDiff = differenceInCalendarDays(event.endTime, event.startTime);
+    // Event is not block if a) it is not allday event and b) it resides in 00:00 - 24:00 in a same day
+    const isNotBlock = !event.allDay && (dayDiff === 0 || (dayDiff === 1 && isMidnight(event.endTime)));
     return {
       event,
       startSlotIdx,
       slotCount,
+      isBlock: !isNotBlock,
     };
   }).sort((a, b) => {
-    // 0. Multiday event wins single day event
-    if (a.slotCount > 1 && b.slotCount === 1) return -1;
-    if (a.slotCount === 1 && b.slotCount > 1) return 1;
-    // Both events have same multiday/singleday parity
+    // 0. Block style event wins non-block style event
+    if (a.isBlock && !b.isBlock) return -1;
+    if (!a.isBlock && b.isBlock) return 1;
+    // Both events have same block/non-block parity
+    // 1. If visible segment starts first, it wins
+    if (a.startSlotIdx < b.startSlotIdx) return -1;
+    if (a.startSlotIdx > b.startSlotIdx) return 1;
+    // 2. Tie breaker: Longer visible segment wins
+    if (a.slotCount > b.slotCount) return -1;
+    if (a.slotCount < b.slotCount) return 1;
+    // Now from here, two events visually occupies the same dates
     const aEvent = a.event;
     const bEvent = b.event;
     const aStartTime = aEvent.allDay ? startOfDay(aEvent.startTime) : aEvent.startTime;
     const bStartTime = bEvent.allDay ? startOfDay(bEvent.startTime) : bEvent.startTime;
-    // 1. Earlier starttime comes first
+    // 3. Tie breaker: Earlier starttime comes first
     if (aStartTime < bStartTime) return -1;
     if (aStartTime > bStartTime) return 1;
-    // 2. Tie breaker: Longer event comes first, i.e. later endtime comes first
-    const aEndTime = aEvent.allDay ? endOfDay(aEvent.endTime) : aEvent.endTime;
-    const bEndTime = bEvent.allDay ? endOfDay(bEvent.endTime) : bEvent.endTime;
+    // 4. Tie breaker: Longer event comes first, i.e. later endtime comes first
+    const aEndTime = aEvent.allDay ? startOfDay(addDays(aEvent.endTime, 1)) : aEvent.endTime;
+    const bEndTime = bEvent.allDay ? startOfDay(addDays(aEvent.endTime, 1)) : bEvent.endTime;
     if (aEndTime > bEndTime) return -1;
     if (aEndTime < bEndTime) return 1;
-    // 3. Tie breaker: same start/end time. Allday event wins
+    // 5. Tie breaker: same start/end time. Allday event wins
     if (aEvent.allDay) return -1;
     return 1;
   }).reduce((acc, curr) => {
-    const { startSlotIdx, slotCount } = curr;
+    const { startSlotIdx, slotCount, isBlock } = curr;
     const emptySlotIdx = acc.findIndex((row) => row[startSlotIdx] === null);
     const fillRow = (row: (ISingleEventRenderInfo | null)[]) => row.map((value, idx) => {
       if (startSlotIdx === idx) {
@@ -135,6 +145,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
           event: curr.event,
           startSlotIdx,
           slotCount,
+          isBlock,
         };
       }
       if (startSlotIdx < idx && idx < startSlotIdx + slotCount) {
@@ -142,6 +153,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
           event: curr.event,
           startSlotIdx: -1, // Not render this event. Hold it for context
           slotCount: 0,
+          isBlock,
         };
       }
       return value;

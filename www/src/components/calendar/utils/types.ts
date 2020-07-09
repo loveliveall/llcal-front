@@ -10,5 +10,6 @@ export interface ISingleEventRenderInfo {
   event: ICalendarEvent,
   startSlotIdx: number, // -1 means do not render this event. It only holds context
   slotCount: number,
+  isBlock: boolean,
 }
 export type TMonthEventGrid = (ISingleEventRenderInfo | null)[][];
