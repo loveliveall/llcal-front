@@ -31,19 +31,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: DRAWER_WIDTH,
   },
   content: {
-    flexGrow: 1,
+    flex: '1 1 100%',
+    [theme.breakpoints.up('md')]: {
+      maxWidth: `calc(100% - ${DRAWER_WIDTH}px)`,
+    },
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '100%',
+    },
   },
   toolbar: theme.mixins.toolbar,
   calendarWrapper: {
     height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
     [theme.breakpoints.down('xs')]: {
       height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
-    },
-    [theme.breakpoints.up('md')]: {
-      width: `calc(100vw - ${DRAWER_WIDTH}px)`,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100vw',
     },
   },
 }));

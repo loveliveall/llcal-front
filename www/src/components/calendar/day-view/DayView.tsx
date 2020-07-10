@@ -20,8 +20,7 @@ import { ICalendarEvent } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    overflow: 'auto',
-    height: '100%',
+    width: '100%',
   },
   flex: {
     display: 'flex',
@@ -31,11 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: theme.spacing(7),
   },
   fullEvent: {
-    width: `calc(100% - ${theme.spacing(7)}px)`,
+    flex: '1 1 100%',
+    maxWidth: `calc(100% - ${theme.spacing(7)}px)`,
+  },
+  topGutter: {
+    height: `calc(${theme.typography.body2.lineHeight}em / 2)`,
   },
   timeGrid: {
     position: 'relative',
-    flex: '1 1 0%',
+    flex: '1 1 100%',
     boxSizing: 'border-box',
     borderTop: `1px solid ${theme.palette.divider}`,
   },
@@ -44,9 +47,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     height: `calc(${getCellHeightCalc(theme)})`,
     width: '100%',
-  },
-  topGutter: {
-    height: `calc(${theme.typography.body2.lineHeight}em / 2)`,
   },
 }));
 
