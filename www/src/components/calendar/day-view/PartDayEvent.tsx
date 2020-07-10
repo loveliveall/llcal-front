@@ -65,6 +65,7 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
       width={colCount / fullColCount}
       height={`calc(${getCellHeightCalc(theme)} / 60 * ${duration})`}
       style={{
+        boxSizing: 'border-box',
         border: `${theme.spacing(0.125)}px solid ${event.colorCode}`,
         backgroundColor: `${event.colorCode}c0`,
       }}

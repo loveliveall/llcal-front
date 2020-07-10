@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => {
       position: 'relative',
       overflow: 'hidden',
       flex: '1 1 0%',
+      boxSizing: 'border-box',
       borderBottom: `1px solid ${theme.palette.divider}`,
     },
     cellFrame: {
@@ -41,6 +42,7 @@ const useStyles = makeStyles((theme) => {
     },
     cell: {
       flex: '1 1 0%',
+      boxSizing: 'border-box',
       borderRight: `1px solid ${theme.palette.divider}`,
       textAlign: 'center',
     },

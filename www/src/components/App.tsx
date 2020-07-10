@@ -35,10 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbar: theme.mixins.toolbar,
   calendarWrapper: {
-    // -1px for handling chrome's shitty scrollbar
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px - 1px)`,
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
     [theme.breakpoints.down('xs')]: {
-      height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - 1px)`, // fit to toolbar size changes
+      height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
     },
     [theme.breakpoints.up('md')]: {
       width: `calc(100vw - ${DRAWER_WIDTH}px)`,

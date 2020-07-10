@@ -36,9 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   timeGrid: {
     position: 'relative',
     flex: '1 1 0%',
+    boxSizing: 'border-box',
     borderTop: `1px solid ${theme.palette.divider}`,
   },
   timeCell: {
+    boxSizing: 'border-box',
     borderBottom: `1px solid ${theme.palette.divider}`,
     height: `calc(${getCellHeightCalc(theme)})`,
     width: '100%',
