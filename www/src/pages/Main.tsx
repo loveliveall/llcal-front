@@ -9,8 +9,8 @@ import Calendar, { ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
 
-import { VA_FILTER_DEFAULT } from './defaults';
-import { mockEvents } from './tmp';
+import { VA_FILTER_DEFAULT } from '@/defaults';
+import { mockEvents } from '@/tmp';
 
 const DRAWER_WIDTH = 280;
 
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const App: React.FC = () => {
+const Main: React.FC = () => {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
@@ -131,4 +131,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Main;

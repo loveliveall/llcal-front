@@ -17,7 +17,7 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import VACheckList from '@/components/common/VACheckList';
 import { ViewType } from '@/components/calendar';
 
-import { VACheckState } from '../types';
+import { VACheckState } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

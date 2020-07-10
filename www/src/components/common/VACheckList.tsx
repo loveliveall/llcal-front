@@ -12,13 +12,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { VACheckState } from '@/components/types';
+import { VACheckState } from '@/types';
 import {
   isGroupChecked,
   isGroupIndeterminate,
   isAllChecked,
   isAllIndeterminate,
-} from '@/components/utils';
+} from '@/utils';
 
 import { voiceActorList, groupInfoList } from '@/commonData';
 
