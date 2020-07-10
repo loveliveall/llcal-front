@@ -24,7 +24,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `${theme.spacing(0.75)}px solid`,
   },
   circleWrapper: {
-    paddingTop: theme.spacing(0.375), // TODO: temporary aligning fix. Read about font baseline and fix it
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: theme.typography.body2.fontSize,
+    height: `${theme.typography.body2.lineHeight}em`,
     paddingRight: theme.spacing(3),
   },
   timeText: {
