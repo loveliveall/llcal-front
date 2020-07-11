@@ -40,6 +40,7 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
   };
   const onTextKeyUp = (ev: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (ev.key === 'Enter') {
+      ev.preventDefault();
       onSearchTrigger(text);
     }
   };
@@ -59,6 +60,7 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
       <div className={classes.padded} />
       <Input
         className={classes.maxSm}
+        name="search"
         type="search"
         placeholder="검색어"
         value={text}
