@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "repository": "https://github.com/loveliveall/llcal",
+  "repository": "https://github.com/loveliveall/llcal-front",
   "license": "ISC",
   "devDependencies": {
     "@types/react-router-dom": "^5.1.5",
