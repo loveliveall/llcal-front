@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
@@ -92,10 +93,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             </ListItem>
           );
         })}
-        <ListItem
-          button
-          // TODO: Add onClick handler
-        >
+        <ListItem button component={Link} to="/search">
           <ListItemIcon className={classes.denseIcon}>
             <SearchIcon />
           </ListItemIcon>
