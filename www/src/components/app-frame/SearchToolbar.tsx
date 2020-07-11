@@ -38,8 +38,8 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
   const onSearchClick = () => {
     onSearchTrigger(text);
   };
-  const onTextKeyDown = (ev: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    if (ev.keyCode === 13) { // Enter
+  const onTextKeyUp = (ev: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (ev.key === 'Enter') {
       onSearchTrigger(text);
     }
   };
@@ -63,7 +63,7 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
         placeholder="검색어"
         value={text}
         onChange={onTextChange}
-        onKeyDown={onTextKeyDown}
+        onKeyUp={onTextKeyUp}
         inputProps={{
           'aria-label': 'search text',
         }}

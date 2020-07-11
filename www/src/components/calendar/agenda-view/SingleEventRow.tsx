@@ -51,8 +51,8 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
   const theme = useTheme();
 
   const onClick = () => onEventClick(event);
-  const onKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>) => {
-    if (ev.keyCode === 13) {
+  const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+    if (ev.key === 'Enter') {
       onEventClick(event);
     }
   };
@@ -81,7 +81,7 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
         backgroundColor: event.colorCode,
       } : undefined}
       onClick={onClick}
-      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
     >
       {!isMobile && (
         <>
