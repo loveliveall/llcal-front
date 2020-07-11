@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IOwnProps {
   isMobile: boolean,
+  showFullDate: boolean,
   startOfDay: Date,
   events: ICalendarEvent[],
   onEventClick: (event: ICalendarEvent) => void,
@@ -35,7 +36,7 @@ interface IOwnProps {
 type SingleDateViewProps = IOwnProps;
 
 const SingleDateView: React.FC<SingleDateViewProps> = ({
-  isMobile, startOfDay, events, onEventClick,
+  isMobile, showFullDate, startOfDay, events, onEventClick,
 }) => {
   const classes = useStyles();
 
@@ -61,12 +62,22 @@ const SingleDateView: React.FC<SingleDateViewProps> = ({
     return 0;
   });
   if (visibleEvents.length === 0) return null;
+  const dateText = (() => {
+    const weekday = WEEKDAY_SHORT_NAMES[startOfDay.getDay()];
+    if (!showFullDate) {
+      return `${startOfDay.getDate()}일 (${weekday})`;
+    }
+    const year = `0000${startOfDay.getFullYear()}`.slice(-4);
+    const month = `00${startOfDay.getMonth() + 1}`.slice(-2);
+    const date = `00${startOfDay.getDate()}`.slice(-2);
+    return `${year}.${month}.${date}. (${weekday})`;
+  })();
   return (
     <div className={`${classes.row} ${isSameDay(startOfDay, now) && classes.today}`}>
       <Divider />
       <div className={classes.content}>
         <Typography variant="subtitle1" className={classes.dayTitle}>
-          {`${startOfDay.getDate()}일 (${WEEKDAY_SHORT_NAMES[startOfDay.getDay()]})`}
+          {dateText}
         </Typography>
         {visibleEvents.map((event) => (
           <SingleEventRow

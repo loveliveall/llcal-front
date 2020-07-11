@@ -53,6 +53,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
             <SingleDateView
               key={targetDate.getTime()}
               isMobile={isMobile}
+              showFullDate={false}
               startOfDay={targetDate}
               events={events}
               onEventClick={onEventClick}
