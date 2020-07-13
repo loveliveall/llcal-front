@@ -1,16 +1,25 @@
 import React from 'react';
+import addDays from 'date-fns/addDays';
+import endOfDay from 'date-fns/endOfDay';
+import endOfMonth from 'date-fns/endOfMonth';
+import subDays from 'date-fns/subDays';
+import startOfDay from 'date-fns/startOfDay';
+import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Calendar, { ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
 
+import { filterEvents } from '@/utils';
 import { VA_FILTER_DEFAULT } from '@/defaults';
-import { mockEvents } from '@/tmp';
+import { ClientEvent } from '@/types';
+import { getEvents } from '@/api';
 
 const DRAWER_WIDTH = 280;
 
@@ -46,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
     },
   },
+  progress: {
+    height: 2,
+  },
 }));
 
 const Main: React.FC = () => {
@@ -53,10 +65,31 @@ const Main: React.FC = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
   const [currView, setCurrView] = React.useState<ViewType>('month');
+  const [loading, setLoading] = React.useState(false);
+  const [events, setEvents] = React.useState<ClientEvent[]>([]);
   const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
 
   React.useEffect(() => {
-    window.dispatchEvent(new Event('resize'));
+    const rangeStart = (() => {
+      if (currView === 'month') return subDays(startOfMonth(currDate), 7);
+      if (currView === 'day') return startOfDay(currDate);
+      // Agenda
+      return startOfMonth(currDate);
+    })();
+    const rangeEnd = (() => {
+      if (currView === 'month') return addDays(endOfMonth(currDate), 7);
+      if (currView === 'day') return endOfDay(currDate);
+      // Agenda
+      return endOfMonth(currDate);
+    })();
+    setLoading(true);
+    getEvents(rangeStart, rangeEnd).then((data) => {
+      if (data.status) {
+        setEvents(data.events);
+      }
+    }).finally(() => {
+      setLoading(false);
+    });
   }, [currDate, currView]);
 
   const toggleMobileDrawer = () => {
@@ -86,6 +119,7 @@ const Main: React.FC = () => {
           currView={currView}
           toggleDrawer={toggleMobileDrawer}
         />
+        {loading && <LinearProgress className={classes.progress} />}
       </AppBar>
       <nav className={classes.drawer}>
         <Hidden mdUp>
@@ -120,7 +154,7 @@ const Main: React.FC = () => {
         <div className={classes.toolbar} />
         <div className={classes.calendarWrapper}>
           <Calendar
-            events={mockEvents}
+            events={filterEvents(events, vaFilter)}
             currDate={currDate}
             view={currView}
             onMonthDateClick={onMonthDateClick}

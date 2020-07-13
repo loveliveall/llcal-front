@@ -55,6 +55,10 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
   const ref = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
     let timeoutId: NodeJS.Timeout;
+    setHeightInfo({
+      offset: 0,
+      item: 0,
+    });
     const resizeHandler = () => {
       // Clear previous timeout
       clearTimeout(timeoutId);
@@ -78,11 +82,12 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
       }, 150);
     };
     window.addEventListener('resize', resizeHandler);
+    window.dispatchEvent(new Event('resize'));
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener('resize', resizeHandler);
     };
-  }, []);
+  }, [isMobile, eventRenderGrid.length]);
   const sliceRowAt = (() => {
     const { offset, item } = heightInfo;
     if (item === 0) return -1;

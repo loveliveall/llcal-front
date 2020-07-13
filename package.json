@@ -44,6 +44,8 @@
     "date-fns": "^2.14.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "rrule": "^2.6.4",
+    "typesafe-actions": "^5.1.0"
   }
 }
