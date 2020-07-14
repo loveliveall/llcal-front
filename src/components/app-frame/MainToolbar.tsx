@@ -66,12 +66,12 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
   };
 
   const dateDisplay = (() => {
-    // const year = `0000${currDate.getFullYear()}`.slice(-4);
+    const year = `0${currDate.getFullYear()}`.slice(-2);
     const month = `0${currDate.getMonth() + 1}`.slice(-2);
     const day = `0${currDate.getDate()}`.slice(-2);
     const weekday = ['일', '월', '화', '수', '목', '금', '토'][currDate.getDay()];
-    if (currView === 'month' || currView === 'agenda') return `${currDate.getMonth() + 1}월`;
-    if (currView === 'day') return `${month}.${day}.(${weekday})`;
+    if (currView === 'month' || currView === 'agenda') return `'${year}.${month}.`;
+    if (currView === 'day') return `'${year}.${month}.${day}.(${weekday})`;
     return '';
   })();
   const prevDateTooltip = (() => {
