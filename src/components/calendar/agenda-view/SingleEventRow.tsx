@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(1),
     margin: theme.spacing(0.25),
     borderRadius: theme.spacing(0.5),
+    cursor: 'pointer',
     '&:hover': {
       boxShadow: 'inset 0px 0px 0px 1000px rgba(0, 0, 0, 0.1)',
     },

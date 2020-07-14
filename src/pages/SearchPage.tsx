@@ -1,9 +1,24 @@
 import React from 'react';
+import fuzzysort from 'fuzzysort';
+import addDays from 'date-fns/addDays';
+import addMonths from 'date-fns/addMonths';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
+import endOfMonth from 'date-fns/endOfMonth';
+import startOfMonth from 'date-fns/startOfMonth';
+import subMonths from 'date-fns/subMonths';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 
+import { ClientEvent } from '@/types';
+import { callGetEvents } from '@/api';
+import { getDateString } from '@/utils';
 import SearchToolbar, { SearchToolbarProps } from '@/components/app-frame/SearchToolbar';
+import SingleDateResult from './SingleDateResult';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,23 +36,128 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 'auto',
     maxWidth: theme.breakpoints.values.md,
   },
+  fitParent: {
+    width: '100%',
+    textAlign: 'center',
+    margin: theme.spacing(1),
+  },
+  progress: {
+    height: 2,
+  },
 }));
+
+const EXISTS: {
+  [id: string]: boolean,
+} = {};
+const LOAD_INTERVAL = 6; // Months
 
 const SearchPage: React.FC = () => {
   const classes = useStyles();
+  const now = new Date();
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [searchRange, setSearchRange] = React.useState([
+    startOfMonth(subMonths(now, 3)), endOfMonth(addMonths(now, 9)),
+  ]);
+  const [events, setEvents] = React.useState<ClientEvent[]>([]);
+
+  const loadEvents = (from: Date, to: Date) => {
+    setLoading(true);
+    callGetEvents(from, to).then((data) => {
+      const filtered = data.filter((e) => !EXISTS[e.id]);
+      filtered.forEach((item) => {
+        EXISTS[item.id] = true;
+      });
+      setEvents((prev) => [...prev, ...filtered]);
+    }).catch((e) => {
+      // TODO: Error handling
+      console.error(e);
+    }).finally(() => {
+      setLoading(false);
+    });
+  };
 
   const onSearchTrigger: SearchToolbarProps['onSearchTrigger'] = (text) => {
-    console.log(text);
+    setSearchTerm(text);
+    if (events.length === 0) {
+      loadEvents(searchRange[0], searchRange[1]);
+    }
   };
+  const onLoadPrevClick = () => {
+    const newStart = subMonths(searchRange[0], LOAD_INTERVAL);
+    loadEvents(newStart, searchRange[0]);
+    setSearchRange([newStart, searchRange[1]]);
+  };
+  const onLoadNextClick = () => {
+    const newEnd = addMonths(searchRange[1], LOAD_INTERVAL);
+    loadEvents(searchRange[1], newEnd);
+    setSearchRange([searchRange[0], newEnd]);
+  };
+
+  const searchedEvents = fuzzysort.go<ClientEvent>(
+    searchTerm,
+    events,
+    {
+      keys: ['title', 'place', 'description'],
+    },
+  ).map((e) => e.obj);
+  const diff = differenceInCalendarDays(searchRange[1], searchRange[0]);
 
   return (
     <div className={classes.root}>
       <AppBar color="default" elevation={0} position="fixed" className={classes.appBar}>
         <SearchToolbar onSearchTrigger={onSearchTrigger} />
+        {loading && <LinearProgress className={classes.progress} />}
       </AppBar>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div className={classes.resultWrapper} />
+        <div className={classes.resultWrapper}>
+          {events.length !== 0 && (
+            <>
+              <Button
+                className={classes.fitParent}
+                disabled={loading}
+                onClick={onLoadPrevClick}
+              >
+                더 보기
+              </Button>
+              <Typography
+                className={classes.fitParent}
+                variant="body2"
+              >
+                {`${getDateString(searchRange[0])}부터의 결과입니다.`}
+              </Typography>
+            </>
+          )}
+          {new Array(diff).fill(null).map((_, idx) => {
+            const targetDate = addDays(searchRange[0], idx);
+            return (
+              <SingleDateResult
+                key={targetDate.toISOString()}
+                startOfDay={targetDate}
+                events={searchedEvents}
+              />
+            );
+          })}
+          {events.length !== 0 && (
+            <>
+              <Divider />
+              <Typography
+                className={classes.fitParent}
+                variant="body2"
+              >
+                {`${getDateString(searchRange[1])}까지의 결과입니다.`}
+              </Typography>
+              <Button
+                className={classes.fitParent}
+                disabled={loading}
+                onClick={onLoadNextClick}
+              >
+                더 보기
+              </Button>
+            </>
+          )}
+        </div>
       </main>
     </div>
   );

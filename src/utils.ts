@@ -25,6 +25,13 @@ export function filterEvents(events: ClientEvent[], vaFilter: VACheckState): Cli
   ));
 }
 
+export function getDateString(targetDate: Date): string {
+  const year = `000${targetDate.getFullYear()}`.slice(-4);
+  const month = `0${targetDate.getMonth() + 1}`.slice(-2);
+  const date = `0${targetDate.getDate()}`.slice(-2);
+  return `${year}.${month}.${date}`;
+}
+
 export function getObjWithProp<T, K extends keyof T>(objList: T[], key: K, value: T[K]): T | undefined {
   return objList.find((elem) => elem[key] === value);
 }
