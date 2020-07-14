@@ -1,12 +1,3 @@
-export interface EventCache {
-  serverEvents: {
-    [id: string]: ServerEvent,
-  },
-  monthIDs: {
-    [yearMonth: string]: string[],
-  },
-}
-
 // Refer: ICalendarEvent
 export interface ClientEvent {
   id: string,

@@ -1,6 +1,6 @@
 import { RRule } from 'rrule';
 
-import { EventCache, ClientEvent, ServerEvent } from '@/types';
+import { ClientEvent, ServerEvent } from '@/types';
 import { getTimeForClient, getTimestampForServer, getObjWithProp } from '@/utils';
 
 import { birthdayList, eventCategoryList } from '@/commonData';
@@ -30,21 +30,16 @@ const birthdayEvents: ServerEvent[] = birthdayList.map((birthday, idx) => {
   };
 });
 
-const cache: EventCache = {
-  serverEvents: {},
-  monthIDs: {},
-};
-
-export async function getEvents(from: Date, to: Date): Promise<{ status: boolean, events: ClientEvent[], }> {
-  // TODO: Import event caching
-  console.log(cache);
+export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]> {
   const fromTs = getTimestampForServer(from);
   const toTs = getTimestampForServer(to);
   const res = await fetch(`${API_ENDPOINT}/events?from=${fromTs}&to=${toTs}`);
   const events: ServerEvent[] = await res.json();
 
   // Map server events to client events
-  const eventsInRange = [...events, ...birthdayEvents].reduce((acc, curr) => {
+  const eventsInRange = [...events, ...birthdayEvents].filter((e) => (
+    e.startTime <= toTs && e.endTime >= fromTs
+  )).reduce((acc, curr) => {
     const colorCode = getObjWithProp(eventCategoryList, 'id', curr.categoryId)?.colorHex ?? '#ffa400';
     const eventStart = getTimeForClient(curr.startTime);
     if (curr.rrule) {
@@ -100,8 +95,5 @@ export async function getEvents(from: Date, to: Date): Promise<{ status: boolean
       colorCode,
     }]);
   }, [] as ClientEvent[]);
-  return {
-    status: true,
-    events: eventsInRange,
-  };
+  return eventsInRange;
 }

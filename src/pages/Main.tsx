@@ -1,9 +1,7 @@
 import React from 'react';
 import addDays from 'date-fns/addDays';
-import endOfDay from 'date-fns/endOfDay';
 import endOfMonth from 'date-fns/endOfMonth';
 import subDays from 'date-fns/subDays';
-import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -19,7 +17,7 @@ import DrawerContent from '@/components/app-frame/DrawerContent';
 import { filterEvents } from '@/utils';
 import { VA_FILTER_DEFAULT } from '@/defaults';
 import { ClientEvent } from '@/types';
-import { getEvents } from '@/api';
+import { callGetEvents } from '@/api';
 
 const DRAWER_WIDTH = 280;
 
@@ -60,36 +58,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+function getCacheKey(currDate: Date) {
+  const year = `000${currDate.getFullYear()}`.slice(-4);
+  const month = `0${currDate.getMonth() + 1}`.slice(-2);
+  return `${year}${month}`;
+}
+
 const Main: React.FC = () => {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
   const [currView, setCurrView] = React.useState<ViewType>('month');
-  const [loading, setLoading] = React.useState(false);
-  const [events, setEvents] = React.useState<ClientEvent[]>([]);
+  const [eventCache, setEventCache] = React.useState<{
+    [key: string]: ClientEvent[],
+  }>({});
   const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
 
   React.useEffect(() => {
-    const rangeStart = (() => {
-      if (currView === 'month') return subDays(startOfMonth(currDate), 7);
-      if (currView === 'day') return startOfDay(currDate);
-      // Agenda
-      return startOfMonth(currDate);
-    })();
-    const rangeEnd = (() => {
-      if (currView === 'month') return addDays(endOfMonth(currDate), 7);
-      if (currView === 'day') return endOfDay(currDate);
-      // Agenda
-      return endOfMonth(currDate);
-    })();
-    setLoading(true);
-    getEvents(rangeStart, rangeEnd).then((data) => {
-      if (data.status) {
-        setEvents(data.events);
-      }
-    }).finally(() => {
-      setLoading(false);
-    });
+    const cacheKey = getCacheKey(currDate);
+    const rangeStart = subDays(startOfMonth(currDate), 7);
+    const rangeEnd = addDays(endOfMonth(currDate), 7);
+    if (!(cacheKey in eventCache)) {
+      // Load data into cache
+      callGetEvents(rangeStart, rangeEnd).then((data) => {
+        setEventCache((prev) => ({
+          ...prev,
+          [cacheKey]: data,
+        }));
+      }).catch((e) => {
+        // TODO: Add some error handling (ex. showing snackbar)
+        console.error(e);
+      });
+    }
   }, [currDate, currView]);
 
   const toggleMobileDrawer = () => {
@@ -99,6 +99,9 @@ const Main: React.FC = () => {
     setCurrDate(date);
     setCurrView('day');
   };
+
+  const cacheKey = getCacheKey(currDate);
+  const events = eventCache[cacheKey] ?? [];
 
   const drawer = (
     <DrawerContent
@@ -119,7 +122,7 @@ const Main: React.FC = () => {
           currView={currView}
           toggleDrawer={toggleMobileDrawer}
         />
-        {loading && <LinearProgress className={classes.progress} />}
+        {!(cacheKey in eventCache) && <LinearProgress className={classes.progress} />}
       </AppBar>
       <nav className={classes.drawer}>
         <Hidden mdUp>
