@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     border: `${theme.spacing(0.5)}px solid`,
     marginRight: theme.spacing(0.25),
   },
+  textClip: {
+    textOverflow: 'clip',
+  },
 }));
 
 interface OwnProps {
@@ -47,7 +50,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({
         />
       )}
       <Typography
-        className={classesCommon.eventText}
+        className={`${classesCommon.eventText} ${isMobile && classes.textClip}`}
         variant="body2"
         style={(isBlock || isMobile) ? {
           color: theme.palette.getContrastText(event.colorCode),

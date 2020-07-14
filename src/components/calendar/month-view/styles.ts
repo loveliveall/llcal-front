@@ -21,6 +21,6 @@ export const useCommonStyles = makeStyles((theme) => ({
     fontSize: theme.typography.fontSize,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    textOverflow: 'clip',
+    textOverflow: 'ellipsis',
   },
 }));
