@@ -46,9 +46,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const EXISTS: {
-  [id: string]: boolean,
-} = {};
 const LOAD_INTERVAL = 6; // Months
 
 const SearchPage: React.FC = () => {
@@ -60,14 +57,21 @@ const SearchPage: React.FC = () => {
     startOfMonth(subMonths(now, 3)), endOfMonth(addMonths(now, 9)),
   ]);
   const [events, setEvents] = React.useState<ClientEvent[]>([]);
+  const [exists, setExists] = React.useState<{
+    [id: string]: boolean,
+  }>({});
 
   const loadEvents = (from: Date, to: Date) => {
     setLoading(true);
     callGetEvents(from, to).then((data) => {
-      const filtered = data.filter((e) => !EXISTS[e.id]);
-      filtered.forEach((item) => {
-        EXISTS[item.id] = true;
-      });
+      const filtered = data.filter((e) => !exists[e.id]);
+      setExists((prev) => ({
+        ...prev,
+        ...filtered.reduce((acc, curr) => ({
+          ...acc,
+          [curr.id]: true,
+        }), {}),
+      }));
       setEvents((prev) => [...prev, ...filtered]);
     }).catch((e) => {
       // TODO: Error handling
