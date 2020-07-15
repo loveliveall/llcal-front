@@ -10,9 +10,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
@@ -39,12 +39,6 @@ const Transition = React.forwardRef((
   props: TransitionProps & { children?: React.ReactElement<any, any>, },
   ref: React.Ref<unknown>,
 ) => <Slide direction="up" ref={ref} {...props} />); // eslint-disable-line react/jsx-props-no-spreading
-
-const GridContainer: React.FC = ({ children }) => (
-  <Grid container wrap="nowrap" spacing={2}>
-    {children}
-  </Grid>
-);
 
 const EventDetailDialog: React.FC = () => {
   const theme = useTheme();
@@ -88,52 +82,54 @@ const EventDetailDialog: React.FC = () => {
     >
       <DialogTitle id="event-dialog-title">{event.title}</DialogTitle>
       <DialogContent>
-        {/* Date range */}
-        <GridContainer>
-          <Grid item><DateRangeIcon /></Grid>
-          <Grid item>
-            <Typography variant="body2">{dateRangeStr}</Typography>
-            {event.rrule && (
-              <Typography color="textSecondary" variant="body2">
-                {rruleToText(event.startTime, event.rrule)}
-              </Typography>
-            )}
-          </Grid>
-        </GridContainer>
-        {/* Place */}
-        <GridContainer>
-          <Grid item><PlaceIcon /></Grid>
-          <Grid item>
-            <Linkify componentDecorator={linkifyDecorator}>
-              <Typography variant="body2">{event.place}</Typography>
-            </Linkify>
-          </Grid>
-        </GridContainer>
-        {/* Description */}
-        <GridContainer>
-          <Grid item><NotesIcon /></Grid>
-          <Grid item>
-            <Linkify componentDecorator={linkifyDecorator}>
-              <Typography
-                variant="body2"
-                style={{ whiteSpace: 'pre-line' }}
-              >
-                {event.description}
-              </Typography>
-            </Linkify>
-          </Grid>
-        </GridContainer>
-        {/* Category */}
-        <GridContainer>
-          <Grid item><LabelIcon /></Grid>
-          <Grid item>
-            <Typography variant="body2">{getObjWithProp(eventCategoryList, 'id', event.categoryId)?.name}</Typography>
-          </Grid>
-        </GridContainer>
-        {/* VA List */}
-        <GridContainer>
-          <Grid item><PersonIcon /></Grid>
-          <Grid item style={{ flex: 1 }}>
+        <List dense disablePadding>
+          {/* Date range */}
+          <ListItem disableGutters>
+            <ListItemIcon><DateRangeIcon /></ListItemIcon>
+            <ListItemText
+              primary={dateRangeStr}
+              secondary={rruleToText(event.startTime, event.rrule)}
+            />
+          </ListItem>
+          {/* Place */}
+          <ListItem disableGutters>
+            <ListItemIcon><PlaceIcon /></ListItemIcon>
+            <ListItemText
+              disableTypography
+              primary={(
+                <Linkify componentDecorator={linkifyDecorator}>
+                  <Typography variant="body2">{event.place}</Typography>
+                </Linkify>
+              )}
+            />
+          </ListItem>
+          {/* Description */}
+          <ListItem disableGutters>
+            <ListItemIcon><NotesIcon /></ListItemIcon>
+            <ListItemText
+              disableTypography
+              primary={(
+                <Linkify componentDecorator={linkifyDecorator}>
+                  <Typography
+                    variant="body2"
+                    style={{ whiteSpace: 'pre-line' }}
+                  >
+                    {event.description}
+                  </Typography>
+                </Linkify>
+              )}
+            />
+          </ListItem>
+          {/* Category */}
+          <ListItem disableGutters>
+            <ListItemIcon><LabelIcon /></ListItemIcon>
+            <ListItemText
+              primary={getObjWithProp(eventCategoryList, 'id', event.categoryId)?.name}
+            />
+          </ListItem>
+          {/* VA List */}
+          <ListItem disableGutters>
+            <ListItemIcon><PersonIcon /></ListItemIcon>
             <div style={{ maxHeight: 150, overflowY: 'auto', flex: 1 }}>
               <List dense disablePadding>
                 {event.voiceActorIds.map((vaId) => {
@@ -142,7 +138,7 @@ const EventDetailDialog: React.FC = () => {
                   const group = getObjWithProp(groupInfoList, 'id', va.groupId);
                   if (group === undefined) return null; // We are guaranteed to find group
                   return (
-                    <ListItem key={`detail-${vaId}`} disableGutters style={{ paddingTop: 0 }}>
+                    <ListItem key={`detail-${vaId}`} disableGutters>
                       <ListItemText
                         primary={`${va.name} (${group.name})`}
                         secondary={va.character}
@@ -152,17 +148,15 @@ const EventDetailDialog: React.FC = () => {
                 })}
               </List>
             </div>
-          </Grid>
-        </GridContainer>
-        {/* Is LoveLive */}
-        <GridContainer>
-          <Grid item><FavoriteIcon /></Grid>
-          <Grid item>
-            <Typography variant="body2">
-              {event.isLoveLive ? 'LoveLive! 관련' : 'LoveLive! 비관련'}
-            </Typography>
-          </Grid>
-        </GridContainer>
+          </ListItem>
+          {/* Is LoveLive */}
+          <ListItem disableGutters>
+            <ListItemIcon><FavoriteIcon /></ListItemIcon>
+            <ListItemText
+              primary={event.isLoveLive ? 'LoveLive! 관련' : 'LoveLive! 비관련'}
+            />
+          </ListItem>
+        </List>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCloseDialog} color="primary">닫기</Button>
