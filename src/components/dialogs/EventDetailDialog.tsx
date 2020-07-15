@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Linkify, { Props as LinkifyProps } from 'react-linkify';
 
 import { useTheme } from '@material-ui/core/styles';
+import { TransitionProps } from '@material-ui/core/transitions';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 
 import DateRangeIcon from '@material-ui/icons/DateRange';
@@ -32,6 +34,11 @@ const linkifyDecorator: LinkifyProps['componentDecorator'] = (href, text, key) =
     {text}
   </a>
 );
+
+const Transition = React.forwardRef((
+  props: TransitionProps & { children?: React.ReactElement<any, any>, },
+  ref: React.Ref<unknown>,
+) => <Slide direction="up" ref={ref} {...props} />); // eslint-disable-line react/jsx-props-no-spreading
 
 const GridContainer: React.FC = ({ children }) => (
   <Grid container wrap="nowrap" spacing={2}>
@@ -74,6 +81,8 @@ const EventDetailDialog: React.FC = () => {
       open={open}
       onClose={onCloseDialog}
       scroll="paper"
+      TransitionComponent={Transition}
+      keepMounted
       fullScreen={isMobile}
       fullWidth
     >
@@ -81,7 +90,7 @@ const EventDetailDialog: React.FC = () => {
       <DialogContent>
         {/* Date range */}
         <GridContainer>
-          <Grid item alignItems="center"><DateRangeIcon /></Grid>
+          <Grid item><DateRangeIcon /></Grid>
           <Grid item>
             <Typography variant="body2">{dateRangeStr}</Typography>
             {event.rrule && (
