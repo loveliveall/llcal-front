@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import fuzzysort from 'fuzzysort';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
@@ -13,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
+
+import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 
 import { ClientEvent } from '@/types';
 import { callGetEvents } from '@/api';
@@ -50,6 +53,7 @@ const LOAD_INTERVAL = 6; // Months
 
 const SearchPage: React.FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const now = new Date();
   const [searchTerm, setSearchTerm] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -97,6 +101,9 @@ const SearchPage: React.FC = () => {
     loadEvents(searchRange[1], newEnd);
     setSearchRange([searchRange[0], newEnd]);
   };
+  const onEventClick = (event: ClientEvent) => {
+    dispatch(openEventDetailDialog(event));
+  };
 
   const searchedEvents = fuzzysort.go<ClientEvent>(
     searchTerm,
@@ -140,6 +147,7 @@ const SearchPage: React.FC = () => {
                 key={targetDate.toISOString()}
                 startOfDay={targetDate}
                 events={searchedEvents}
+                onEventClick={onEventClick}
               />
             );
           })}

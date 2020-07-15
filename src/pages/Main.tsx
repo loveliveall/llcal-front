@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import endOfMonth from 'date-fns/endOfMonth';
 import subDays from 'date-fns/subDays';
@@ -13,6 +14,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Calendar, { ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
+
+import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 
 import { filterEvents } from '@/utils';
 import { VA_FILTER_DEFAULT } from '@/defaults';
@@ -66,6 +69,7 @@ function getCacheKey(currDate: Date) {
 
 const Main: React.FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
   const [currView, setCurrView] = React.useState<ViewType>('month');
@@ -98,6 +102,9 @@ const Main: React.FC = () => {
   const onMonthDateClick = (date: Date) => {
     setCurrDate(date);
     setCurrView('day');
+  };
+  const onEventClick = (event: ClientEvent) => {
+    dispatch(openEventDetailDialog(event));
   };
 
   const cacheKey = getCacheKey(currDate);
@@ -161,6 +168,7 @@ const Main: React.FC = () => {
             currDate={currDate}
             view={currView}
             onMonthDateClick={onMonthDateClick}
+            onEventClick={onEventClick}
           />
         </div>
       </main>
