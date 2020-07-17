@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IOwnProps {
   currView: ViewType,
-  setCurrView: React.Dispatch<React.SetStateAction<ViewType>>,
+  setCurrView: (viewType: ViewType) => void,
   vaFilter: VACheckState,
   setVAFilter: (newFilter: VACheckState) => void,
   setMobileDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>,

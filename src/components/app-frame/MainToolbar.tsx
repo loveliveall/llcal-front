@@ -10,12 +10,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 import TodayIcon from '@material-ui/icons/Today';
 
-import { ViewType } from '@/components/calendar';
+import { ViewInfo } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   menuIcon: {
@@ -39,15 +40,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface IOwnProps {
   currDate: Date,
   setCurrDate: React.Dispatch<React.SetStateAction<Date>>,
-  currView: ViewType,
+  view: ViewInfo,
+  onBackClick: () => void,
   toggleDrawer: () => void,
 }
 type MainToolbarProps = IOwnProps;
 
 const MainToolbar: React.FC<MainToolbarProps> = ({
-  currDate, setCurrDate, currView, toggleDrawer,
+  currDate, setCurrDate, view, onBackClick, toggleDrawer,
 }) => {
   const classes = useStyles();
+  const currView = view.currType;
 
   const onTodayClick = () => setCurrDate(new Date());
   const handleNextDate = () => {
@@ -87,15 +90,27 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
 
   return (
     <Toolbar>
-      <IconButton
-        className={classes.menuIcon}
-        color="inherit"
-        aria-label="open drawer"
-        edge="start"
-        onClick={toggleDrawer}
-      >
-        <MenuIcon />
-      </IconButton>
+      {view.showBack ? (
+        <IconButton
+          className={classes.menuIcon}
+          color="inherit"
+          aria-label="go back to prev view"
+          edge="start"
+          onClick={onBackClick}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      ) : (
+        <IconButton
+          className={classes.menuIcon}
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={toggleDrawer}
+        >
+          <MenuIcon />
+        </IconButton>
+      )}
       <Tooltip title="오늘">
         <IconButton
           className={classes.desktopLeftIcon}

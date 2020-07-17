@@ -1,3 +1,5 @@
+import { ViewType } from '@/components/calendar';
+
 // Refer: ICalendarEvent
 export interface ClientEvent {
   id: string,
@@ -36,3 +38,8 @@ export interface ServerEvent {
 export interface VACheckState {
   [id: number]: boolean,
 }
+
+export type ViewInfo = {
+  showBack: boolean,
+  currType: ViewType,
+};

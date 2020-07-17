@@ -19,7 +19,7 @@ import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 
 import { filterEvents } from '@/utils';
 import { VA_FILTER_DEFAULT } from '@/defaults';
-import { ClientEvent } from '@/types';
+import { ClientEvent, ViewInfo } from '@/types';
 import { callGetEvents } from '@/api';
 
 const DRAWER_WIDTH = 280;
@@ -72,7 +72,10 @@ const Main: React.FC = () => {
   const dispatch = useDispatch();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
-  const [currView, setCurrView] = React.useState<ViewType>('month');
+  const [view, setView] = React.useState<ViewInfo>({
+    showBack: false,
+    currType: 'month',
+  });
   const [eventCache, setEventCache] = React.useState<{
     [key: string]: ClientEvent[],
   }>({});
@@ -94,14 +97,29 @@ const Main: React.FC = () => {
         console.error(e);
       });
     }
-  }, [currDate, currView]);
+  }, [currDate, view.currType]);
 
+  const onSelectView = (v: ViewType) => {
+    setView({
+      showBack: false,
+      currType: v,
+    });
+  };
+  const showPrevView = () => {
+    setView({
+      showBack: false,
+      currType: 'month', // TODO: This may be changed in future...? (when app grows...)
+    });
+  };
   const toggleMobileDrawer = () => {
     setMobileOpen(!mobileOpen);
   };
   const onMonthDateClick = (date: Date) => {
     setCurrDate(date);
-    setCurrView('day');
+    setView({
+      showBack: true,
+      currType: 'day',
+    });
   };
   const onEventClick = (event: ClientEvent) => {
     dispatch(openEventDetailDialog(event));
@@ -112,8 +130,8 @@ const Main: React.FC = () => {
 
   const drawer = (
     <DrawerContent
-      currView={currView}
-      setCurrView={setCurrView}
+      currView={view.currType}
+      setCurrView={onSelectView}
       vaFilter={vaFilter}
       setVAFilter={setVAFilter}
       setMobileDrawerOpen={setMobileOpen}
@@ -126,7 +144,8 @@ const Main: React.FC = () => {
         <MainToolbar
           currDate={currDate}
           setCurrDate={setCurrDate}
-          currView={currView}
+          view={view}
+          onBackClick={showPrevView}
           toggleDrawer={toggleMobileDrawer}
         />
         {!(cacheKey in eventCache) && <LinearProgress className={classes.progress} />}
@@ -166,7 +185,7 @@ const Main: React.FC = () => {
           <Calendar
             events={filterEvents(events, vaFilter)}
             currDate={currDate}
-            view={currView}
+            view={view.currType}
             onMonthDateClick={onMonthDateClick}
             onEventClick={onEventClick}
           />
