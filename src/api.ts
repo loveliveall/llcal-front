@@ -97,3 +97,18 @@ export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]
   }, [] as ClientEvent[]);
   return eventsInRange;
 }
+
+export async function tryLogin(id: string, token: string): Promise<boolean> {
+  const ret = await fetch(`${API_ENDPOINT}/login`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id,
+      cred: token,
+    }),
+  });
+  return ret.status === 200;
+}
