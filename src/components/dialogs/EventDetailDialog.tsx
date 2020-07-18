@@ -15,6 +15,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Slide from '@material-ui/core/Slide';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import DateRangeIcon from '@material-ui/icons/DateRange';
@@ -85,7 +86,9 @@ const EventDetailDialog: React.FC = () => {
         <List dense disablePadding>
           {/* Date range */}
           <ListItem disableGutters>
-            <ListItemIcon><DateRangeIcon /></ListItemIcon>
+            <ListItemIcon>
+              <Tooltip title="시간" arrow><DateRangeIcon /></Tooltip>
+            </ListItemIcon>
             <ListItemText
               primary={dateRangeStr}
               secondary={rruleToText(event.startTime, event.rrule)}
@@ -93,7 +96,9 @@ const EventDetailDialog: React.FC = () => {
           </ListItem>
           {/* Place */}
           <ListItem disableGutters>
-            <ListItemIcon><PlaceIcon /></ListItemIcon>
+            <ListItemIcon>
+              <Tooltip title="장소" arrow><PlaceIcon /></Tooltip>
+            </ListItemIcon>
             <ListItemText
               disableTypography
               primary={(
@@ -105,7 +110,9 @@ const EventDetailDialog: React.FC = () => {
           </ListItem>
           {/* Description */}
           <ListItem disableGutters>
-            <ListItemIcon><NotesIcon /></ListItemIcon>
+            <ListItemIcon>
+              <Tooltip title="상세 설명" arrow><NotesIcon /></Tooltip>
+            </ListItemIcon>
             <ListItemText
               disableTypography
               primary={(
@@ -122,14 +129,18 @@ const EventDetailDialog: React.FC = () => {
           </ListItem>
           {/* Category */}
           <ListItem disableGutters>
-            <ListItemIcon><LabelIcon /></ListItemIcon>
+            <ListItemIcon>
+              <Tooltip title="분류" arrow><LabelIcon /></Tooltip>
+            </ListItemIcon>
             <ListItemText
               primary={getObjWithProp(eventCategoryList, 'id', event.categoryId)?.name}
             />
           </ListItem>
           {/* VA List */}
           <ListItem disableGutters>
-            <ListItemIcon><PersonIcon /></ListItemIcon>
+            <ListItemIcon>
+              <Tooltip title="관련 성우" arrow><PersonIcon /></Tooltip>
+            </ListItemIcon>
             <div style={{ maxHeight: 150, overflowY: 'auto', flex: 1 }}>
               <List dense disablePadding>
                 {event.voiceActorIds.map((vaId) => {
@@ -151,7 +162,9 @@ const EventDetailDialog: React.FC = () => {
           </ListItem>
           {/* Is LoveLive */}
           <ListItem disableGutters>
-            <ListItemIcon><FavoriteIcon /></ListItemIcon>
+            <ListItemIcon>
+              <Tooltip title="러브라이브 관련 여부" arrow><FavoriteIcon /></Tooltip>
+            </ListItemIcon>
             <ListItemText
               primary={event.isLoveLive ? 'LoveLive! 관련' : 'LoveLive! 비관련'}
             />
