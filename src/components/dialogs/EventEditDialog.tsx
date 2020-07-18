@@ -10,6 +10,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import Switch from '@material-ui/core/Switch';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
@@ -63,6 +65,7 @@ const EventEditDialog: React.FC = () => {
   const dispatch = useDispatch();
   const open = useSelector((state: AppState) => state.editDialog.open);
   const origEvent = useSelector((state: AppState) => state.editDialog.event);
+  const [editRange, setEditRange] = React.useState<'this' | 'after' | 'all'>('this');
   const [title, setTitle] = React.useState('');
   const [place, setPlace] = React.useState('');
   const [allDay, setAllDay] = React.useState(false);
@@ -79,6 +82,7 @@ const EventEditDialog: React.FC = () => {
   React.useEffect(() => {
     const nowStart = new Date();
     nowStart.setMinutes(Math.floor(nowStart.getMinutes() / 15) * 15);
+    setEditRange('this');
     setTitle(origEvent === null ? '' : origEvent.title);
     setPlace(origEvent === null ? '' : origEvent.place);
     setAllDay(origEvent === null ? false : origEvent.allDay);
@@ -156,6 +160,24 @@ const EventEditDialog: React.FC = () => {
         </Tooltip>
       </div>
       <DialogContent className={classes.dialogContent}>
+        {/* Edit range */}
+        {origEvent !== null && origEvent.rrule !== '' && (
+          <GridContainer>
+            <Grid item xs={2}>
+              <Typography>수정 범위</Typography>
+            </Grid>
+            <Grid item xs>
+              <Select
+                value={editRange}
+                onChange={(e) => setEditRange(e.target.value as 'this' | 'after' | 'all')}
+              >
+                <MenuItem value="this">이 일정만</MenuItem>
+                <MenuItem value="after">이 일정 및 향후 일정</MenuItem>
+                <MenuItem value="all">모든 반복 일정</MenuItem>
+              </Select>
+            </Grid>
+          </GridContainer>
+        )}
         {/* Title */}
         <GridContainer>
           <Grid item xs={2}>
