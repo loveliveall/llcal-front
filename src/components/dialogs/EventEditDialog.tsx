@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Switch from '@material-ui/core/Switch';
@@ -31,7 +32,7 @@ import VACheckList from '@/components/common/VACheckList';
 
 import useMobileCheck from '@/hooks/useMobileCheck';
 
-import { voiceActorList } from '@/commonData';
+import { voiceActorList, categoryGroupList, eventCategoryList } from '@/commonData';
 import { AppState } from '@/store';
 import { closeEventEditDialog } from '@/store/edit-dialog/actions';
 import { rruleToText } from '@/utils';
@@ -305,7 +306,22 @@ const EventEditDialog: React.FC = () => {
             <Typography>분류</Typography>
           </Grid>
           <Grid item xs>
-            {categoryId}
+            <Select
+              value={categoryId}
+              onChange={(e) => setCategroyId(e.target.value as number)}
+            >
+              {eventCategoryList.filter((cat) => cat.groupId === null).map((cat) => (
+                <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
+              ))}
+              {categoryGroupList.map((group) => (
+                <React.Fragment key={`category-group-${group.id}`}>
+                  <ListSubheader>{group.name}</ListSubheader>
+                  {eventCategoryList.filter((cat) => cat.groupId === group.id).map((cat) => (
+                    <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
+                  ))}
+                </React.Fragment>
+              ))}
+            </Select>
           </Grid>
         </GridContainer>
         {/* Is LoveLive */}
