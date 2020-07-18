@@ -20,12 +20,13 @@ import ViewDayIcon from '@material-ui/icons/ViewDay';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
 import VACheckList from '@/components/common/VACheckList';
+import CategoryCheckList from '@/components/common/CategoryCheckList';
 import { ViewType } from '@/components/calendar';
 
 import { AppState } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
-import { VACheckState } from '@/types';
+import { VACheckState, CategoryCheckState } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(1),
     paddingTop: theme.spacing(1),
   },
+  spaced: {
+    paddingLeft: theme.spacing(2),
+  },
 }));
 
 interface IOwnProps {
@@ -45,12 +49,14 @@ interface IOwnProps {
   setCurrView: (viewType: ViewType) => void,
   vaFilter: VACheckState,
   setVAFilter: (newFilter: VACheckState) => void,
+  categoryFilter: CategoryCheckState,
+  setCategoryFilter: (newFilter: CategoryCheckState) => void,
   setMobileDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }
 type DrawerContentProps = IOwnProps;
 
 const DrawerContent: React.FC<DrawerContentProps> = ({
-  currView, setCurrView, vaFilter, setVAFilter, setMobileDrawerOpen,
+  currView, setCurrView, vaFilter, setVAFilter, categoryFilter, setCategoryFilter, setMobileDrawerOpen,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -182,6 +188,18 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
       <VACheckList
         checkState={vaFilter}
         setCheckState={setVAFilter}
+      />
+      <Divider />
+      <Typography
+        className={classes.sectionHeader}
+        color="inherit"
+        variant="h6"
+      >
+        분류 필터
+      </Typography>
+      <CategoryCheckList
+        checkState={categoryFilter}
+        setCheckState={setCategoryFilter}
       />
       <Snackbar
         open={snackbarOpen}

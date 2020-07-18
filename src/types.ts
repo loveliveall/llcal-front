@@ -40,6 +40,10 @@ export interface VACheckState {
   [id: number]: boolean,
 }
 
+export interface CategoryCheckState {
+  [id: number]: boolean,
+}
+
 export type ViewInfo = {
   showBack: boolean,
   currType: ViewType,

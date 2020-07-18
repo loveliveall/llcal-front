@@ -19,7 +19,7 @@ import { AppState } from '@/store';
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 
 import { filterEvents } from '@/utils';
-import { VA_FILTER_DEFAULT } from '@/defaults';
+import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT } from '@/defaults';
 import { ClientEvent, ViewInfo } from '@/types';
 import { callGetEvents } from '@/api';
 
@@ -84,6 +84,7 @@ const Main: React.FC = () => {
     [key: string]: ClientEvent[] | undefined,
   }>({});
   const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
+  const [categoryFilter, setCategoryFilter] = React.useState(CATEGORY_FILTER_DEFAULT);
 
   const onSelectView = (v: ViewType) => {
     setView({
@@ -141,6 +142,8 @@ const Main: React.FC = () => {
       setCurrView={onSelectView}
       vaFilter={vaFilter}
       setVAFilter={setVAFilter}
+      categoryFilter={categoryFilter}
+      setCategoryFilter={setCategoryFilter}
       setMobileDrawerOpen={setMobileOpen}
     />
   );
@@ -190,7 +193,7 @@ const Main: React.FC = () => {
         <div className={classes.toolbar} />
         <div className={classes.calendarWrapper}>
           <Calendar
-            events={filterEvents(events, vaFilter)}
+            events={filterEvents(events, vaFilter, categoryFilter)}
             currDate={currDate}
             view={view.currType}
             onMonthDateClick={onMonthDateClick}

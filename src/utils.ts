@@ -1,7 +1,7 @@
 import { RRule } from 'rrule';
 import { voiceActorList } from '@/commonData';
 
-import { VACheckState, ClientEvent } from './types';
+import { VACheckState, ClientEvent, CategoryCheckState } from './types';
 
 export function isGroupChecked(checkState: VACheckState, groupId: number): boolean {
   return voiceActorList.filter((va) => va.groupId === groupId).some((va) => checkState[va.id]);
@@ -20,9 +20,11 @@ export function isAllIndeterminate(checkState: VACheckState): boolean {
   return !voiceActorList.every((va) => checkState[va.id] === checkState[voiceActorList[0].id]);
 }
 
-export function filterEvents(events: ClientEvent[], vaFilter: VACheckState): ClientEvent[] {
+export function filterEvents(
+  events: ClientEvent[], vaFilter: VACheckState, categoryFilter: CategoryCheckState,
+): ClientEvent[] {
   return events.filter((ev) => (
-    ev.voiceActorIds.some((id) => vaFilter[id])
+    ev.voiceActorIds.some((id) => vaFilter[id]) && categoryFilter[ev.categoryId]
   ));
 }
 

@@ -1,3 +1,5 @@
+import blue from '@material-ui/core/colors/blue';
+
 interface IID<T> {
   id: T,
 }
@@ -6,6 +8,7 @@ interface IEventCategoryRaw {
   name: string,
   description: string,
   colorHex: string,
+  groupId: number | null,
   frozen: boolean,
 }
 
@@ -13,10 +16,22 @@ interface IEventCategory extends IEventCategoryRaw, IID<number> {}
 
 /* eslint-disable object-curly-newline, max-len */
 export const eventCategoryList: IEventCategory[] = [
+  { id: 1, name: 'TV/라디오', description: 'TV 및 라디오 출연 정보', colorHex: '#d81b60', groupId: null, frozen: false },
+  { id: 101, name: '이벤트', description: '캐스트가 참여하는 이벤트', colorHex: '#f4511e', groupId: null, frozen: false },
+  { id: 201, name: '발매 일정', description: '공식 굿즈 관련 발매 정보', colorHex: '#7cb342', groupId: null, frozen: false },
+
+  { id: 301, name: '굿즈 예약', description: '공식 굿즈 예약 기간 정보', colorHex: blue[500], groupId: 1, frozen: false },
+  { id: 302, name: '선행권 정보', description: '선행권 기간과 관련된 정보', colorHex: blue[400], groupId: 1, frozen: false },
+
+  { id: 1001, name: '기타', description: '기타 일정', colorHex: '#a79b8e', groupId: null, frozen: false },
   // Frozen categories
-  { id: 10000, name: '생일', description: '캐스트 및 캐릭터의 생일', colorHex: '#9e69af', frozen: true },
+  { id: 10000, name: '생일', description: '캐스트 및 캐릭터의 생일', colorHex: '#9e69af', groupId: null, frozen: true },
 ];
 /* eslint-enable object-curly-newline */
+
+export const categoryGroupList = [
+  { id: 1, name: '예약/알림' },
+];
 
 interface IBirthdayRaw {
   name: string,
