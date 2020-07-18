@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import fuzzysort from 'fuzzysort';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 
+import { AppState } from '@/store';
 import { ClientEvent } from '@/types';
 import { callGetEvents } from '@/api';
 import { getDateString } from '@/utils';
@@ -54,8 +55,9 @@ const LOAD_INTERVAL = 6; // Months
 const SearchPage: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
   const now = new Date();
-  const [initialLoaded, setInitialLoaded] = React.useState(false);
+  const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [searchTerm, setSearchTerm] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [searchRange, setSearchRange] = React.useState([
@@ -68,11 +70,6 @@ const SearchPage: React.FC = () => {
 
   const loadEvents = (from: Date, to: Date) => {
     setLoading(true);
-    if (!initialLoaded) {
-      setExists({});
-      setEvents([]);
-    }
-    setInitialLoaded(true);
     callGetEvents(from, to).then((data) => {
       const filtered = data.filter((e) => !exists[e.id]);
       setExists((prev) => ({
@@ -107,8 +104,13 @@ const SearchPage: React.FC = () => {
   const onEventClick = (event: ClientEvent) => {
     dispatch(openEventDetailDialog(event));
   };
+  if (currRefreshFlag !== refreshFlag) {
+    setEvents([]);
+    setExists({});
+    setCurrRefreshFlag(refreshFlag);
+  }
 
-  if (searchTerm !== '' && !initialLoaded) {
+  if (searchTerm !== '' && !loading && events.length === 0) {
     // Initial load
     loadEvents(searchRange[0], searchRange[1]);
   }

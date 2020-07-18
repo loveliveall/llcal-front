@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import endOfMonth from 'date-fns/endOfMonth';
 import subDays from 'date-fns/subDays';
@@ -15,6 +15,7 @@ import Calendar, { ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
 
+import { AppState } from '@/store';
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 
 import { filterEvents } from '@/utils';
@@ -70,6 +71,9 @@ function getCacheKey(currDate: Date) {
 const Main: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
+  const [loading, setLoading] = React.useState(false);
+  const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [currDate, setCurrDate] = React.useState(new Date());
   const [view, setView] = React.useState<ViewInfo>({
@@ -106,12 +110,17 @@ const Main: React.FC = () => {
   const onEventClick = (event: ClientEvent) => {
     dispatch(openEventDetailDialog(event));
   };
+  if (refreshFlag !== currRefreshFlag) {
+    setEventCache({});
+    setCurrRefreshFlag(refreshFlag);
+  }
 
   const cacheKey = getCacheKey(currDate);
   const rangeStart = subDays(startOfMonth(currDate), 7);
   const rangeEnd = addDays(endOfMonth(currDate), 7);
-  if (!(cacheKey in eventCache)) {
+  if (!(cacheKey in eventCache) && !loading) {
     // Load data into cache
+    setLoading(true);
     callGetEvents(rangeStart, rangeEnd).then((data) => {
       setEventCache((prev) => ({
         ...prev,
@@ -120,6 +129,8 @@ const Main: React.FC = () => {
     }).catch((e) => {
       // TODO: Add some error handling (ex. showing snackbar)
       console.error(e);
+    }).finally(() => {
+      setLoading(false);
     });
   }
   const events = eventCache[cacheKey] ?? [];
@@ -144,7 +155,7 @@ const Main: React.FC = () => {
           onBackClick={showPrevView}
           toggleDrawer={toggleMobileDrawer}
         />
-        {!(cacheKey in eventCache) && <LinearProgress className={classes.progress} />}
+        {loading && <LinearProgress className={classes.progress} />}
       </AppBar>
       <nav className={classes.drawer}>
         <Hidden mdUp>
