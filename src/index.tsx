@@ -2,11 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import format from 'date-fns/format';
+import koLocale from 'date-fns/locale/ko';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import CssBaseline from '@material-ui/core/CssBaseline';
+
+import DateFnsUtils from '@date-io/date-fns';
 
 import App from '@/App';
 import store from '@/store';
+
+class LocalizedUtils extends DateFnsUtils {
+  getDatePickerHeaderText(date: Date) {
+    return format(date, 'M월 d일', { locale: this.locale });
+  }
+
+  getDateTimePickerHeaderText(date: Date) {
+    return format(date, 'M월 d일', { locale: this.locale });
+  }
+
+  getHourText(date: Date) {
+    return format(date, 'HH', { locale: this.locale });
+  }
+}
 
 const theme = createMuiTheme({
   palette: {
@@ -24,7 +43,9 @@ ReactDOM.render(
     <CssBaseline />
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <App />
+        <MuiPickersUtilsProvider utils={LocalizedUtils} locale={koLocale}>
+          <App />
+        </MuiPickersUtilsProvider>
       </ThemeProvider>
     </BrowserRouter>
   </Provider>,
