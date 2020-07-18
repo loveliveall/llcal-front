@@ -15,11 +15,11 @@ import store from '@/store';
 
 class LocalizedUtils extends DateFnsUtils {
   getDatePickerHeaderText(date: Date) {
-    return format(date, 'M월 d일', { locale: this.locale });
+    return format(date, 'M.dd', { locale: this.locale });
   }
 
   getDateTimePickerHeaderText(date: Date) {
-    return format(date, 'M월 d일', { locale: this.locale });
+    return format(date, 'M.dd', { locale: this.locale });
   }
 
   getHourText(date: Date) {

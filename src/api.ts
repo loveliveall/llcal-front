@@ -1,4 +1,6 @@
 import { RRule } from 'rrule';
+import endOfDay from 'date-fns/endOfDay';
+import startOfDay from 'date-fns/startOfDay';
 
 import { ClientEvent, ServerEvent } from '@/types';
 import { getTimeForClient, getTimestampForServer, getObjWithProp } from '@/utils';
@@ -6,6 +8,8 @@ import { getTimeForClient, getTimestampForServer, getObjWithProp } from '@/utils
 import { birthdayList, eventCategoryList } from '@/commonData';
 
 const API_ENDPOINT = 'https://llcal-back.herokuapp.com/api';
+
+const INFINITE_END_TS = 4102444800; // 2100-01-01 00:00:00
 
 const birthdayEvents: ServerEvent[] = birthdayList.map((birthday, idx) => {
   const dtstart = Date.UTC(2010, birthday.birthMonth - 1, birthday.birthDay);
@@ -16,7 +20,7 @@ const birthdayEvents: ServerEvent[] = birthdayList.map((birthday, idx) => {
     description: `${birthday.name}의 생일입니다`,
     startTime: dtstart / 1000,
     duration: 1,
-    endTime: 4102444800, // 2100-01-01 00:00:00
+    endTime: INFINITE_END_TS,
     isAllDay: true,
     rrule: new RRule({
       freq: RRule.YEARLY,
@@ -110,6 +114,62 @@ export async function tryLogin(id: string, token: string): Promise<boolean> {
     body: JSON.stringify({
       id,
       cred: token,
+    }),
+  });
+  return ret.status === 200;
+}
+
+function convertToServerInfo(start: Date, end: Date, allDay: boolean, rrule: string) {
+  const startTs = getTimestampForServer(allDay ? startOfDay(start) : start);
+  const endTs = getTimestampForServer(allDay ? endOfDay(end) : end);
+  const duration = endTs - startTs;
+  const rangeEndTs = (() => {
+    if (rrule !== '') {
+      const options = RRule.parseString(rrule);
+      if (options.until === undefined && options.count === undefined) return INFINITE_END_TS;
+      const rr = new RRule({
+        ...options,
+        dtstart: new Date(startTs * 1000),
+      });
+      const instances = rr.all();
+      return instances[instances.length - 1].getTime() / 1000 + duration;
+    }
+    return endTs;
+  })();
+  return {
+    startTs,
+    duration,
+    rangeEndTs,
+  };
+}
+
+export async function addNewEvent(
+  token: string,
+  title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
+  rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+): Promise<boolean> {
+  // Convert dates for server
+  const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, rrule);
+  const ret = await fetch(`${API_ENDPOINT}/events/new`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      place,
+      description,
+      startTime: startTs,
+      duration,
+      endTime: rangeEndTs,
+      isAllDay: allDay,
+      rrule,
+      categoryId,
+      voiceActorIds,
+      isLoveLive,
+      isRepeating,
     }),
   });
   return ret.status === 200;

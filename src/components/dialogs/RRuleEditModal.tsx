@@ -113,40 +113,40 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
   }, [open]);
 
   const onChangeInterval = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setLocalRRule((prev) => ({
-      ...prev,
+    setLocalRRule({
+      ...localRRule,
       interval: Number(ev.target.value),
-    }));
+    });
   };
   const onEndTypeChange = (ev: React.ChangeEvent<{ value: unknown, }>) => {
     const selected = ev.target.value as 'none' | 'count' | 'until';
     if (selected === 'none') {
-      setLocalRRule((prev) => ({
-        ...prev,
+      setLocalRRule({
+        ...localRRule,
         count: undefined,
         until: undefined,
-      }));
+      });
     } else if (selected === 'count') {
-      setLocalRRule((prev) => ({
-        ...prev,
+      setLocalRRule({
+        ...localRRule,
         count: 1,
         until: undefined,
-      }));
+      });
     } else {
-      setLocalRRule((prev) => ({
-        ...prev,
+      setLocalRRule({
+        ...localRRule,
         count: undefined,
         until: new Date(start.getFullYear(), start.getMonth(), start.getDate(), 23, 59),
-      }));
+      });
     }
   };
   const onUntilChange = (date: MaterialUiPickersDate) => {
     if (date !== null) {
       const parsed = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59);
-      setLocalRRule((prev) => ({
-        ...prev,
+      setLocalRRule({
+        ...localRRule,
         until: parsed,
-      }));
+      });
     }
   };
   const onSaveClick = () => {
@@ -190,16 +190,16 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
               onChange={(e) => {
                 const selected = e.target.value === 'None' ? undefined : e.target.value as Frequency;
                 if (selected === RRule.WEEKLY) {
-                  setLocalRRule((prev) => ({
-                    ...prev,
+                  setLocalRRule({
+                    ...localRRule,
                     freq: selected,
                     byweekday: [jsDayToWeekday[start.getDay()]],
-                  }));
+                  });
                 } else {
-                  setLocalRRule((prev) => ({
-                    ...prev,
+                  setLocalRRule({
+                    ...localRRule,
                     freq: selected,
-                  }));
+                  });
                 }
               }}
               disabled={isFreqEditDisabled}
@@ -252,10 +252,10 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
                     id="count"
                     type="number"
                     value={localRRule.count}
-                    onChange={(e) => setLocalRRule((prev) => ({
-                      ...prev,
+                    onChange={(e) => setLocalRRule({
+                      ...localRRule,
                       count: Number(e.target.value),
-                    }))}
+                    })}
                   />
                 </Grid>
                 <Grid item>

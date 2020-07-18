@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import addMinutes from 'date-fns/addMinutes';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -32,9 +34,14 @@ import VACheckList from '@/components/common/VACheckList';
 
 import useMobileCheck from '@/hooks/useMobileCheck';
 
+import {
+  addNewEvent,
+} from '@/api';
 import { voiceActorList, categoryGroupList, eventCategoryList } from '@/commonData';
 import { AppState } from '@/store';
+import { clearToken } from '@/store/auth/actions';
 import { closeEventEditDialog } from '@/store/edit-dialog/actions';
+import { refreshHash } from '@/store/flags/actions';
 import { rruleToText } from '@/utils';
 
 import RRuleEditModal from './RRuleEditModal';
@@ -54,6 +61,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   grow: {
     flexGrow: 1,
   },
+  error: {
+    color: 'red',
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 10,
+    color: '#fff',
+  },
 }));
 
 const jsDayToWeekday = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA];
@@ -64,8 +78,11 @@ const EventEditDialog: React.FC = () => {
   const initialStart = new Date();
   initialStart.setMinutes(Math.floor(initialStart.getMinutes() / 15) * 15);
   const dispatch = useDispatch();
+  const token = useSelector((state: AppState) => state.auth.token);
   const open = useSelector((state: AppState) => state.editDialog.open);
   const origEvent = useSelector((state: AppState) => state.editDialog.event);
+  const [loading, setLoading] = React.useState(false);
+  const [errMsg, setErrMsg] = React.useState('');
   const [editRange, setEditRange] = React.useState<'this' | 'after' | 'all'>('this');
   const [title, setTitle] = React.useState('');
   const [place, setPlace] = React.useState('');
@@ -75,7 +92,7 @@ const EventEditDialog: React.FC = () => {
   const [rrule, setRRule] = React.useState('');
   const [rruleModalOpen, setRRuleModalOpen] = React.useState(false);
   const [desc, setDesc] = React.useState('');
-  const [categoryId, setCategroyId] = React.useState<number>(1);
+  const [categoryId, setCategroyId] = React.useState<number | null>(null);
   const [isLoveLive, setIsLoveLive] = React.useState(false);
   const [isRepeating, setIsRepeating] = React.useState(false);
   const [vaIdList, setVAIdList] = React.useState<number[]>([]);
@@ -91,17 +108,52 @@ const EventEditDialog: React.FC = () => {
     setEnd(origEvent === null ? addMinutes(nowStart, 30) : origEvent.endTime);
     setRRule(origEvent === null ? '' : origEvent.rrule);
     setDesc(origEvent === null ? '' : origEvent.description);
-    setCategroyId(origEvent === null ? 1 : origEvent.categoryId);
+    setCategroyId(origEvent === null ? null : origEvent.categoryId);
     setIsLoveLive(origEvent === null ? false : origEvent.isLoveLive);
     setIsRepeating(origEvent === null ? false : origEvent.isRepeating);
     setVAIdList(origEvent === null ? [] : origEvent.voiceActorIds);
   }, [open]);
 
+  if (token === null) return null;
+
   const onCloseDialog = () => {
     dispatch(closeEventEditDialog());
   };
   const onSaveClick = () => {
-    console.log('Save! do here!');
+    if (title === '') {
+      setErrMsg('제목이 반드시 필요합니다');
+    } else if (start > end) {
+      setErrMsg('일정의 끝은 반드시 시작 이후여야 합니다');
+    } else if (categoryId === null) {
+      setErrMsg('반드시 적절한 분류가 선택되어야 합니다');
+    } else if (vaIdList.length === 0) {
+      setErrMsg('최소 한 명의 성우가 필요합니다');
+    } else {
+      setLoading(true);
+      (async () => {
+        if (origEvent === null) {
+          // Add new event
+          return addNewEvent(
+            token, title, place, desc, start, end, allDay, rrule, categoryId, vaIdList, isLoveLive, isRepeating,
+          );
+        }
+        return false;
+      })().then((ok) => {
+        setLoading(false);
+        if (ok) {
+          dispatch(refreshHash());
+        } else {
+          // Token expired
+          // TODO: Show dialog
+          dispatch(clearToken());
+        }
+        dispatch(closeEventEditDialog());
+      }).catch((e) => {
+        setLoading(false);
+        // TODO: Proper error handling here
+        console.error(e);
+      });
+    }
   };
   const handleStartChange = (date: MaterialUiPickersDate) => {
     if (date !== null) {
@@ -150,17 +202,20 @@ const EventEditDialog: React.FC = () => {
         <Typography variant="h6">{origEvent === null ? '새 일정 생성' : '일정 수정'}</Typography>
         <div className={classes.grow} />
         <Tooltip title="저장">
-          <IconButton onClick={onSaveClick}>
+          <IconButton onClick={onSaveClick} disabled={loading}>
             <SaveIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="닫기">
-          <IconButton onClick={onCloseDialog}>
+          <IconButton onClick={onCloseDialog} disabled={loading}>
             <CloseIcon />
           </IconButton>
         </Tooltip>
       </div>
       <DialogContent className={classes.dialogContent}>
+        {errMsg !== '' && (
+          <Typography className={classes.error}>{errMsg}</Typography>
+        )}
         {/* Edit range */}
         {origEvent !== null && origEvent.rrule !== '' && (
           <GridContainer>
@@ -307,19 +362,20 @@ const EventEditDialog: React.FC = () => {
           </Grid>
           <Grid item xs>
             <Select
-              value={categoryId}
+              value={categoryId === null ? 'None' : categoryId}
               onChange={(e) => setCategroyId(e.target.value as number)}
             >
+              <MenuItem value="None">선택 안됨</MenuItem>
               {eventCategoryList.filter((cat) => cat.groupId === null).map((cat) => (
                 <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
               ))}
               {categoryGroupList.map((group) => (
-                <React.Fragment key={`category-group-${group.id}`}>
-                  <ListSubheader>{group.name}</ListSubheader>
-                  {eventCategoryList.filter((cat) => cat.groupId === group.id).map((cat) => (
+                [
+                  <ListSubheader>{group.name}</ListSubheader>,
+                  eventCategoryList.filter((cat) => cat.groupId === group.id).map((cat) => (
                     <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
-                  ))}
-                </React.Fragment>
+                  )),
+                ]
               ))}
             </Select>
           </Grid>
@@ -375,6 +431,9 @@ const EventEditDialog: React.FC = () => {
         }}
         isFreqEditDisabled={origEvent !== null && origEvent.rrule !== ''}
       />
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Dialog>
   );
 };
