@@ -15,8 +15,13 @@ import { tryLogin } from '@/api';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    margin: 'auto',
-    marginTop: theme.spacing(3),
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
+  },
+  paper: {
+    flexGrow: 1,
+    margin: theme.spacing(3),
     padding: theme.spacing(2),
     maxWidth: theme.breakpoints.values.sm,
   },
@@ -67,48 +72,58 @@ const ShipDuck: React.FC = () => {
   };
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.singleRow}>
-        <Typography variant="h6">정보 입력</Typography>
-      </div>
-      {errMsg !== '' && (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
         <div className={classes.singleRow}>
-          <Typography variant="body2" className={classes.error}>{errMsg}</Typography>
+          <Typography variant="h6">정보 입력</Typography>
         </div>
-      )}
-      <div className={classes.singleRow}>
-        <TextField
-          id="id"
-          label="ID"
-          variant="outlined"
-          disabled={loading}
-          value={idText}
-          onChange={onIDChange}
-          fullWidth
-        />
-      </div>
-      <div className={classes.singleRow}>
-        <TextField
-          id="token"
-          label="Token"
-          variant="outlined"
-          disabled={loading}
-          value={tokenText}
-          onChange={onTokenChange}
-          fullWidth
-        />
-      </div>
-      <div className={classes.singleRow}>
-        <Button
-          color="primary"
-          variant="contained"
-          disabled={loading}
-          onClick={onLoginClick}
-        >
-          {loading ? <CircularProgress size="1.75em" /> : 'Login!'}
-        </Button>
-      </div>
-    </Paper>
+        {errMsg !== '' && (
+          <div className={classes.singleRow}>
+            <Typography variant="body2" className={classes.error}>{errMsg}</Typography>
+          </div>
+        )}
+        <div className={classes.singleRow}>
+          <TextField
+            id="id"
+            label="ID"
+            variant="outlined"
+            disabled={loading}
+            value={idText}
+            onChange={onIDChange}
+            fullWidth
+            inputProps={{
+              autoCapitalize: 'none',
+              autoCorrect: 'off',
+            }}
+          />
+        </div>
+        <div className={classes.singleRow}>
+          <TextField
+            id="token"
+            label="Token"
+            variant="outlined"
+            disabled={loading}
+            value={tokenText}
+            onChange={onTokenChange}
+            fullWidth
+            inputProps={{
+              autoCapitalize: 'none',
+              autoCorrect: 'off',
+            }}
+          />
+        </div>
+        <div className={classes.singleRow}>
+          <Button
+            color="primary"
+            variant="contained"
+            disabled={loading}
+            onClick={onLoginClick}
+          >
+            {loading ? <CircularProgress size="1.75em" /> : 'Login!'}
+          </Button>
+        </div>
+      </Paper>
+    </div>
   );
 };
 
