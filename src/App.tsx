@@ -6,6 +6,7 @@ import SearchPage from '@/pages/search';
 import ShipDuck from '@/pages/ship-duck';
 
 import EventDetailDialog from '@/components/dialogs/EventDetailDialog';
+import EventEditDialog from '@/components/dialogs/EventEditDialog';
 
 const App: React.FC = () => (
   <>
@@ -15,6 +16,7 @@ const App: React.FC = () => (
       <Route component={Main} />
     </Switch>
     <EventDetailDialog />
+    <EventEditDialog />
   </>
 );
 

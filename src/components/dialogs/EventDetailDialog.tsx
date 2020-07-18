@@ -2,9 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Linkify, { Props as LinkifyProps } from 'react-linkify';
 
-import { useTheme, makeStyles, Theme } from '@material-ui/core/styles';
-import { TransitionProps } from '@material-ui/core/transitions';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,20 +10,25 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Slide from '@material-ui/core/Slide';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import CloseIcon from '@material-ui/icons/Close';
 import DateRangeIcon from '@material-ui/icons/DateRange';
+import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LabelIcon from '@material-ui/icons/Label';
 import NotesIcon from '@material-ui/icons/Notes';
 import PersonIcon from '@material-ui/icons/Person';
 import PlaceIcon from '@material-ui/icons/Place';
 
+import { SlideUpTransition } from '@/components/common/Transitions';
+
+import useMobileCheck from '@/hooks/useMobileCheck';
+
 import { AppState } from '@/store';
 import { closeEventDetailDialog } from '@/store/detail-dialog/actions';
+import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { getDateString, rruleToText, getObjWithProp } from '@/utils';
 import { eventCategoryList, voiceActorList, groupInfoList } from '@/commonData';
 
@@ -34,11 +37,6 @@ const linkifyDecorator: LinkifyProps['componentDecorator'] = (href, text, key) =
     {text}
   </a>
 );
-
-const Transition = React.forwardRef((
-  props: TransitionProps & { children?: React.ReactElement<any, any>, },
-  ref: React.Ref<unknown>,
-) => <Slide direction="up" ref={ref} {...props} />); // eslint-disable-line react/jsx-props-no-spreading
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogTitle: {
@@ -59,12 +57,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const EventDetailDialog: React.FC = () => {
   const classes = useStyles();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMobileCheck();
   const dispatch = useDispatch();
+  const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const open = useSelector((state: AppState) => state.detailDialog.open);
   const event = useSelector((state: AppState) => state.detailDialog.event);
   if (event === null) return null;
+  const category = getObjWithProp(eventCategoryList, 'id', event.categoryId);
 
   const { startTime, endTime } = event;
   const startDateStr = getDateString(startTime);
@@ -85,6 +84,10 @@ const EventDetailDialog: React.FC = () => {
     return `${startDateStr} ${startTimeStr} - ${endDateStr} ${endTimeStr}`;
   })();
 
+  const onEditClick = () => {
+    dispatch(closeEventDetailDialog());
+    dispatch(openEventEditDialog(event));
+  };
   const onCloseDialog = () => {
     dispatch(closeEventDetailDialog());
   };
@@ -93,7 +96,7 @@ const EventDetailDialog: React.FC = () => {
       open={open}
       onClose={onCloseDialog}
       scroll="paper"
-      TransitionComponent={Transition}
+      TransitionComponent={SlideUpTransition}
       keepMounted
       fullScreen={isMobile}
       fullWidth
@@ -101,9 +104,18 @@ const EventDetailDialog: React.FC = () => {
       <div id="event-dialog-title" className={classes.dialogTitle}>
         <Typography variant="h6">{event.title}</Typography>
         <div className={classes.grow} />
-        <IconButton onClick={onCloseDialog}>
-          <CloseIcon />
-        </IconButton>
+        {authorized && category?.frozen === false && (
+          <Tooltip title="수정">
+            <IconButton onClick={onEditClick}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        <Tooltip title="닫기">
+          <IconButton onClick={onCloseDialog}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </div>
       <DialogContent className={classes.dialogContent}>
         <List dense disablePadding>
@@ -156,7 +168,7 @@ const EventDetailDialog: React.FC = () => {
               <Tooltip title="분류" arrow><LabelIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
-              primary={getObjWithProp(eventCategoryList, 'id', event.categoryId)?.name}
+              primary={category?.name}
             />
           </ListItem>
           {/* VA List */}

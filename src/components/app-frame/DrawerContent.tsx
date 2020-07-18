@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 
+import AddIcon from '@material-ui/icons/Add';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
@@ -23,6 +24,7 @@ import { ViewType } from '@/components/calendar';
 
 import { AppState } from '@/store';
 import { clearToken } from '@/store/auth/actions';
+import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { VACheckState } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -75,6 +77,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     dispatch(clearToken());
     setSnackbarOpen(true);
   };
+  const onNewEventClick = () => {
+    dispatch(openEventEditDialog(null));
+  };
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -83,20 +88,36 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     <div className={classes.root}>
       <List component="nav">
         {authorized && (
-          <ListItem
-            button
-            onClick={onLogoutClick}
-          >
-            <ListItemIcon className={classes.denseIcon}>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="로그아웃"
-              primaryTypographyProps={{
-                variant: 'body2',
-              }}
-            />
-          </ListItem>
+          <>
+            <ListItem
+              button
+              onClick={onLogoutClick}
+            >
+              <ListItemIcon className={classes.denseIcon}>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="로그아웃"
+                primaryTypographyProps={{
+                  variant: 'body2',
+                }}
+              />
+            </ListItem>
+            <ListItem
+              button
+              onClick={onNewEventClick}
+            >
+              <ListItemIcon className={classes.denseIcon}>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="새 일정 추가"
+                primaryTypographyProps={{
+                  variant: 'body2',
+                }}
+              />
+            </ListItem>
+          </>
         )}
         {Object.keys(VIEW_TYPE_MENU).map((v) => {
           const viewType = v as ViewType;

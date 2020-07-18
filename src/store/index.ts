@@ -2,10 +2,12 @@ import { createStore, combineReducers } from 'redux';
 
 import authReducer from './auth/reducer';
 import detailDialogReducer from './detail-dialog/reducer';
+import editDialogReducer from './edit-dialog/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   detailDialog: detailDialogReducer,
+  editDialog: editDialogReducer,
 });
 
 const TOKEN_KEY = 'usertoken';

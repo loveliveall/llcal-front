@@ -55,6 +55,7 @@ const SearchPage: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const now = new Date();
+  const [initialLoaded, setInitialLoaded] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [searchRange, setSearchRange] = React.useState([
@@ -67,6 +68,11 @@ const SearchPage: React.FC = () => {
 
   const loadEvents = (from: Date, to: Date) => {
     setLoading(true);
+    if (!initialLoaded) {
+      setExists({});
+      setEvents([]);
+    }
+    setInitialLoaded(true);
     callGetEvents(from, to).then((data) => {
       const filtered = data.filter((e) => !exists[e.id]);
       setExists((prev) => ({
@@ -87,9 +93,6 @@ const SearchPage: React.FC = () => {
 
   const onSearchTrigger: SearchToolbarProps['onSearchTrigger'] = (text) => {
     setSearchTerm(text);
-    if (events.length === 0) {
-      loadEvents(searchRange[0], searchRange[1]);
-    }
   };
   const onLoadPrevClick = () => {
     const newStart = subMonths(searchRange[0], LOAD_INTERVAL);
@@ -104,6 +107,11 @@ const SearchPage: React.FC = () => {
   const onEventClick = (event: ClientEvent) => {
     dispatch(openEventDetailDialog(event));
   };
+
+  if (searchTerm !== '' && !initialLoaded) {
+    // Initial load
+    loadEvents(searchRange[0], searchRange[1]);
+  }
 
   const searchedEvents = fuzzysort.go<ClientEvent>(
     searchTerm,
