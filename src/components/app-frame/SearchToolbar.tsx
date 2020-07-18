@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
   },
   maxSm: {
+    width: '100%',
     maxWidth: theme.breakpoints.values.sm,
   },
 }));
@@ -44,6 +45,10 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
       onSearchTrigger(text);
     }
   };
+  const onFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    onSearchTrigger(text);
+  };
 
   return (
     <Toolbar>
@@ -58,20 +63,23 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
         </IconButton>
       </Tooltip>
       <div className={classes.padded} />
-      <Input
-        className={classes.maxSm}
-        name="search"
-        type="search"
-        placeholder="검색어"
-        value={text}
-        onChange={onTextChange}
-        onKeyUp={onTextKeyUp}
-        inputProps={{
-          'aria-label': 'search text',
-        }}
-        autoFocus
-        fullWidth
-      />
+      <form className={classes.maxSm} action="." onSubmit={onFormSubmit}>
+        <Input
+          name="search"
+          type="search"
+          placeholder="검색어"
+          value={text}
+          onChange={onTextChange}
+          onKeyUp={onTextKeyUp}
+          inputProps={{
+            'aria-label': 'search text',
+            autoCapitalize: 'none',
+            autoCorrect: 'off',
+          }}
+          autoFocus
+          fullWidth
+        />
+      </form>
       <Tooltip title="검색">
         <IconButton
           color="inherit"
