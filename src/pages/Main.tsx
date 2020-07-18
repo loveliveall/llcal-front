@@ -77,27 +77,9 @@ const Main: React.FC = () => {
     currType: 'month',
   });
   const [eventCache, setEventCache] = React.useState<{
-    [key: string]: ClientEvent[],
+    [key: string]: ClientEvent[] | undefined,
   }>({});
   const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
-
-  React.useEffect(() => {
-    const cacheKey = getCacheKey(currDate);
-    const rangeStart = subDays(startOfMonth(currDate), 7);
-    const rangeEnd = addDays(endOfMonth(currDate), 7);
-    if (!(cacheKey in eventCache)) {
-      // Load data into cache
-      callGetEvents(rangeStart, rangeEnd).then((data) => {
-        setEventCache((prev) => ({
-          ...prev,
-          [cacheKey]: data,
-        }));
-      }).catch((e) => {
-        // TODO: Add some error handling (ex. showing snackbar)
-        console.error(e);
-      });
-    }
-  }, [currDate, view.currType]);
 
   const onSelectView = (v: ViewType) => {
     setView({
@@ -126,6 +108,20 @@ const Main: React.FC = () => {
   };
 
   const cacheKey = getCacheKey(currDate);
+  const rangeStart = subDays(startOfMonth(currDate), 7);
+  const rangeEnd = addDays(endOfMonth(currDate), 7);
+  if (!(cacheKey in eventCache)) {
+    // Load data into cache
+    callGetEvents(rangeStart, rangeEnd).then((data) => {
+      setEventCache((prev) => ({
+        ...prev,
+        [cacheKey]: data,
+      }));
+    }).catch((e) => {
+      // TODO: Add some error handling (ex. showing snackbar)
+      console.error(e);
+    });
+  }
   const events = eventCache[cacheKey] ?? [];
 
   const drawer = (
