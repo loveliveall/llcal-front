@@ -178,13 +178,20 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
         <div className={classes.pad}>
           {morePopup.eventGrid.map((instance) => {
             const { event } = instance;
+            const onInstanceClick = (e: ICalendarEvent) => {
+              setMorePopup((prev) => ({
+                anchorEl: null,
+                eventGrid: prev.eventGrid,
+              }));
+              onEventClick(e);
+            };
             return (
               <SingleEvent
                 key={JSON.stringify(instance)}
                 isMobile={isMobile}
                 event={event}
                 isBlock={instance.isBlock}
-                onEventClick={onEventClick}
+                onEventClick={onInstanceClick}
               />
             );
           })}
