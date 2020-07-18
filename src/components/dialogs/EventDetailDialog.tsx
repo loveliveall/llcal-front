@@ -2,14 +2,12 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Linkify, { Props as LinkifyProps } from 'react-linkify';
 
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -18,6 +16,7 @@ import Slide from '@material-ui/core/Slide';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
+import CloseIcon from '@material-ui/icons/Close';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LabelIcon from '@material-ui/icons/Label';
@@ -41,7 +40,25 @@ const Transition = React.forwardRef((
   ref: React.Ref<unknown>,
 ) => <Slide direction="up" ref={ref} {...props} />); // eslint-disable-line react/jsx-props-no-spreading
 
+const useStyles = makeStyles((theme: Theme) => ({
+  dialogTitle: {
+    display: 'flex',
+    width: '100%',
+    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    alignItems: 'center',
+  },
+  dialogContent: {
+    paddingBottom: theme.spacing(2),
+  },
+  grow: {
+    flexGrow: 1,
+  },
+}));
+
 const EventDetailDialog: React.FC = () => {
+  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useDispatch();
@@ -81,8 +98,14 @@ const EventDetailDialog: React.FC = () => {
       fullScreen={isMobile}
       fullWidth
     >
-      <DialogTitle id="event-dialog-title">{event.title}</DialogTitle>
-      <DialogContent>
+      <div id="event-dialog-title" className={classes.dialogTitle}>
+        <Typography variant="h6">{event.title}</Typography>
+        <div className={classes.grow} />
+        <IconButton onClick={onCloseDialog}>
+          <CloseIcon />
+        </IconButton>
+      </div>
+      <DialogContent className={classes.dialogContent}>
         <List dense disablePadding>
           {/* Date range */}
           <ListItem disableGutters>
@@ -171,9 +194,6 @@ const EventDetailDialog: React.FC = () => {
           </ListItem>
         </List>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onCloseDialog} color="primary">닫기</Button>
-      </DialogActions>
     </Dialog>
   );
 };
