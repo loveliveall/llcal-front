@@ -61,6 +61,7 @@ export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]
         const entityEnd = new Date(entityStart.getTime() + curr.duration * 1000);
         return {
           id: `${curr.id}-${entityStart.getTime() / 1000}`,
+          serverId: curr.id,
           title: curr.title,
           place: curr.place,
           description: curr.description,
@@ -80,6 +81,7 @@ export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]
     const eventEnd = new Date(eventStart.getTime() + curr.duration * 1000);
     return acc.concat([{
       id: curr.id,
+      serverId: curr.id,
       title: curr.title,
       place: curr.place,
       description: curr.description,

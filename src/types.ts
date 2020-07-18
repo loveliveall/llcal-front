@@ -3,6 +3,7 @@ import { ViewType } from '@/components/calendar';
 // Refer: ICalendarEvent
 export interface ClientEvent {
   id: string,
+  serverId: string,
   title: string,
   place: string,
   description: string,
