@@ -1,8 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
+import addMonths from 'date-fns/addMonths';
 import endOfMonth from 'date-fns/endOfMonth';
 import subDays from 'date-fns/subDays';
+import subMonths from 'date-fns/subMonths';
 import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -88,6 +90,22 @@ const Main: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = React.useState(CATEGORY_FILTER_DEFAULT);
   const [etcFilter, setETCFilter] = React.useState(ETC_FILTER_DEFAULT);
 
+  let timeoutId: NodeJS.Timeout;
+  const onCalendarWheel = (ev: React.WheelEvent<HTMLDivElement>) => {
+    const { deltaY } = ev;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      if (view.currType === 'month') {
+        // Support wheel move only on month view
+        if (deltaY < 0) {
+          // Scroll up
+          setCurrDate(subMonths(currDate, 1));
+        } else {
+          setCurrDate(addMonths(currDate, 1));
+        }
+      }
+    }, 200);
+  };
   const onSelectView = (v: ViewType) => {
     setView({
       showBack: false,
@@ -195,7 +213,7 @@ const Main: React.FC = () => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div className={classes.calendarWrapper}>
+        <div className={classes.calendarWrapper} onWheel={onCalendarWheel}>
           <Calendar
             events={filterEvents(events, vaFilter, categoryFilter, etcFilter)}
             currDate={currDate}
