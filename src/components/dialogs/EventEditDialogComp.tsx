@@ -116,9 +116,11 @@ export type DateInfoEditorProps = {
   setRRule: (newValue: string) => void,
   setIsRepeating: (newValue: boolean) => void,
   isFreqEditDisabled: boolean,
+  isEditOnlyThis: boolean,
 };
 const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
   allDay, setAllDay, start, setStart, end, setEnd, rrule, setRRule, setIsRepeating, isFreqEditDisabled,
+  isEditOnlyThis,
 }) => {
   const [rruleModalOpen, setRRuleModalOpen] = React.useState(false);
 
@@ -216,9 +218,15 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
           <Typography>반복</Typography>
         </Grid>
         <Grid item xs>
-          <Button variant="outlined" onClick={openRRuleModal}>
-            {rrule === '' ? '반복 없음' : rruleToText(start, rrule)}
-          </Button>
+          {isEditOnlyThis ? (
+            <Button variant="outlined" disabled>
+              반복 없음
+            </Button>
+          ) : (
+            <Button variant="outlined" onClick={openRRuleModal}>
+              {rrule === '' ? '반복 없음' : rruleToText(start, rrule)}
+            </Button>
+          )}
         </Grid>
       </GridContainer>
       <RRuleEditModal
@@ -242,6 +250,7 @@ export const DateInfoEditor = React.memo(
       && prev.end === next.end
       && prev.rrule === next.rrule
       && prev.isFreqEditDisabled === next.isFreqEditDisabled
+      && prev.isEditOnlyThis === next.isEditOnlyThis
   ),
 );
 

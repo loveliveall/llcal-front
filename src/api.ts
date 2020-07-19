@@ -1,6 +1,7 @@
 import { RRule } from 'rrule';
 import endOfDay from 'date-fns/endOfDay';
 import startOfDay from 'date-fns/startOfDay';
+import subDays from 'date-fns/subDays';
 
 import { ClientEvent, ServerEvent } from '@/types';
 import { getTimeForClient, getTimestampForServer, getObjWithProp } from '@/utils';
@@ -143,6 +144,13 @@ function convertToServerInfo(start: Date, end: Date, allDay: boolean, rrule: str
   };
 }
 
+function getHeader(token: string) {
+  return {
+    Authorization: token,
+    'Content-Type': 'application/json',
+  };
+}
+
 export async function addNewEvent(
   token: string,
   title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
@@ -153,10 +161,7 @@ export async function addNewEvent(
   const ret = await fetch(`${API_ENDPOINT}/events/new`, {
     method: 'POST',
     cache: 'no-cache',
-    headers: {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    },
+    headers: getHeader(token),
     body: JSON.stringify({
       title,
       place,
@@ -170,6 +175,177 @@ export async function addNewEvent(
       voiceActorIds,
       isLoveLive,
       isRepeating,
+    }),
+  });
+  return ret.status === 200;
+}
+
+export async function editNonRepeatEvent(
+  token: string,
+  id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
+  rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+): Promise<boolean> {
+  const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, rrule);
+  const ret = await fetch(`${API_ENDPOINT}/event/edit`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      editRange: 'non-repeat',
+      updateEvent: {
+        id,
+        title,
+        place,
+        description,
+        startTime: startTs,
+        duration,
+        endTime: rangeEndTs,
+        isAllDay: allDay,
+        rrule,
+        categoryId,
+        voiceActorIds,
+        isLoveLive,
+        isRepeating,
+      },
+    }),
+  });
+  return ret.status === 200;
+}
+
+export async function editRepeatEventOnlyThis(
+  token: string, origStart: Date,
+  id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
+  categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+): Promise<boolean> {
+  const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, '');
+  const origStartTs = getTimestampForServer(origStart);
+  const ret = await fetch(`${API_ENDPOINT}/event/edit`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      editRange: 'this',
+      updateEvent: {
+        id,
+        exceptionTime: origStartTs,
+      },
+      newEvent: {
+        title,
+        place,
+        description,
+        startTime: startTs,
+        duration,
+        endTime: rangeEndTs,
+        isAllDay: allDay,
+        categoryId,
+        voiceActorIds,
+        isLoveLive,
+        isRepeating,
+      },
+    }),
+  });
+  return ret.status === 200;
+}
+
+export async function editRepeatEventAfter(
+  token: string, origDtStart: Date, origRRule: string, origDuration: number,
+  id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
+  rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+): Promise<boolean> {
+  // Edit rrule of original event and Add new event
+  // First, calculate new rrule of original event
+  // New end of original event's rrule is one day before current start (since we have at least day frequency)
+  const oneDayBeforeStart = subDays(start, 1);
+  const modifiedRRuleUntil = new Date(
+    Date.UTC(
+      oneDayBeforeStart.getFullYear(), oneDayBeforeStart.getMonth(), oneDayBeforeStart.getDate(), 23, 59, 0,
+    ),
+  );
+  const origRRuleOpts = RRule.parseString(origRRule);
+  origRRuleOpts.count = undefined;
+  origRRuleOpts.until = modifiedRRuleUntil;
+  const origDtStartTs = getTimestampForServer(origDtStart);
+  const rr = new RRule({
+    ...origRRuleOpts,
+    dtstart: new Date(origDtStartTs),
+  });
+  const instances = rr.all();
+  const modifiedRangeEndTs = instances[instances.length - 1].getTime() / 1000 + origDuration;
+  const modifiedRRule = RRule.optionsToString(origRRuleOpts);
+  const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, rrule);
+  const ret = await fetch(`${API_ENDPOINT}/event/edit`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      editRange: 'after',
+      updateEvent: {
+        id,
+        modifiedEndTime: modifiedRangeEndTs,
+        modifiedRRule,
+      },
+      newEvent: {
+        title,
+        place,
+        description,
+        startTime: startTs,
+        duration,
+        endTime: rangeEndTs,
+        isAllDay: allDay,
+        rrule,
+        categoryId,
+        voiceActorIds,
+        isLoveLive,
+        isRepeating,
+      },
+    }),
+  });
+  return ret.status === 200;
+}
+
+export async function editRepeatEventAll(
+  token: string, origStart: Date, origDtStart: Date,
+  id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
+  rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+): Promise<boolean> {
+  const startOffset = start.getTime() - origStart.getTime();
+  const newDtStart = new Date(origDtStart.getTime() + startOffset);
+  const newDtStartTs = getTimestampForServer(newDtStart);
+  const duration = (end.getTime() - start.getTime()) / 1000;
+  const rangeEndTs = (() => {
+    if (rrule !== '') {
+      const options = RRule.parseString(rrule);
+      if (options.until === undefined && options.count === undefined) return INFINITE_END_TS;
+      const rr = new RRule({
+        ...options,
+        dtstart: new Date(newDtStartTs * 1000),
+      });
+      const instances = rr.all();
+      return instances[instances.length - 1].getTime() / 1000 + duration;
+    }
+    return getTimestampForServer(end); // This case will not happen, but for defensive coding & satisfy eslint
+  })();
+  const ret = await fetch(`${API_ENDPOINT}/event/edit`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      editRange: 'all',
+      updateEvent: {
+        id,
+        title,
+        place,
+        description,
+        startTime: newDtStartTs,
+        duration,
+        endTime: rangeEndTs,
+        isAllDay: allDay,
+        rrule,
+        categoryId,
+        voiceActorIds,
+        isLoveLive,
+        isRepeating,
+      },
     }),
   });
   return ret.status === 200;

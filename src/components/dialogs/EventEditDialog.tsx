@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import addMinutes from 'date-fns/addMinutes';
+import isEqual from 'date-fns/isEqual';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -24,6 +25,10 @@ import useMobileCheck from '@/hooks/useMobileCheck';
 
 import {
   addNewEvent,
+  editNonRepeatEvent,
+  editRepeatEventOnlyThis,
+  editRepeatEventAfter,
+  editRepeatEventAll,
 } from '@/api';
 import { voiceActorList } from '@/commonData';
 import { AppState } from '@/store';
@@ -92,6 +97,7 @@ const EventEditDialog: React.FC = () => {
   React.useEffect(() => {
     const nowStart = new Date();
     nowStart.setMinutes(Math.floor(nowStart.getMinutes() / 15) * 15);
+    setErrMsg('');
     setEditRange(null);
     setTitle(origEvent === null ? '' : origEvent.title);
     setPlace(origEvent === null ? '' : origEvent.place);
@@ -128,7 +134,45 @@ const EventEditDialog: React.FC = () => {
         if (origEvent === null) {
           // Add new event
           return addNewEvent(
-            token, title, place, desc, start, end, allDay, rrule, categoryId, vaIdList, isLoveLive, isRepeating,
+            token,
+            title, place, desc, start, end, allDay, rrule,
+            categoryId, vaIdList, isLoveLive, isRepeating,
+          );
+        }
+        const { serverId } = origEvent;
+        // Editing event
+        if (!isEditRepeat) {
+          // Edit non-repeating event
+          return editNonRepeatEvent(
+            token,
+            serverId, title, place, desc, start, end, allDay, rrule,
+            categoryId, vaIdList, isLoveLive, isRepeating,
+          );
+        }
+        if (editRange === 'this') {
+          // Edit only this instance of repeating event
+          return editRepeatEventOnlyThis(
+            token, origEvent.startTime,
+            serverId, title, place, desc, start, end, allDay,
+            categoryId, vaIdList, isLoveLive, isRepeating,
+          );
+        }
+        if (editRange === 'after' && !isEqual(origEvent.dtstart, origEvent.startTime)) {
+          // Edit this instance and after of repeating event
+          // If dtstart === startTime, then it is same as 'all' editRange
+          const origDuration = (origEvent.endTime.getTime() - origEvent.startTime.getTime()) / 1000;
+          return editRepeatEventAfter(
+            token, origEvent.dtstart, origEvent.rrule, origDuration,
+            serverId, title, place, desc, start, end, allDay, rrule,
+            categoryId, vaIdList, isLoveLive, isRepeating,
+          );
+        }
+        if (editRange === 'all' || (editRange === 'after' && isEqual(origEvent.dtstart, origEvent.startTime))) {
+          // Edit every instance of repeating event
+          return editRepeatEventAll(
+            token, origEvent.startTime, origEvent.dtstart,
+            serverId, title, place, desc, start, end, allDay, rrule,
+            categoryId, vaIdList, isLoveLive, isRepeating,
           );
         }
         return false;
@@ -207,6 +251,7 @@ const EventEditDialog: React.FC = () => {
           setRRule={setRRule}
           setIsRepeating={setIsRepeating}
           isFreqEditDisabled={isEditRepeat}
+          isEditOnlyThis={editRange === 'this'}
         />
         {/* Description */}
         <DescriptionEditor
