@@ -350,3 +350,76 @@ export async function editRepeatEventAll(
   });
   return ret.status === 200;
 }
+
+export async function deleteEventAll(
+  token: string, id: string,
+): Promise<boolean> {
+  const ret = await fetch(`${API_ENDPOINT}/event/delete`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      deleteRange: 'all',
+      deleteEvent: {
+        id,
+      },
+    }),
+  });
+  return ret.status === 200;
+}
+
+export async function deleteEventOnlyThis(
+  token: string, id: string, deleteOffset: number,
+): Promise<boolean> {
+  const ret = await fetch(`${API_ENDPOINT}/event/delete`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      deleteRange: 'this',
+      updateEvent: {
+        id,
+        exceptionOffset: deleteOffset,
+      },
+    }),
+  });
+  return ret.status === 200;
+}
+
+export async function deleteEventAfter(
+  token: string, id: string, targetStart: Date, targetRRule: string, targetDtStart: Date, targetDuration: number,
+): Promise<boolean> {
+  // Edit rrule of original event
+  // New end of original event's rrule is one day before current start (since we have at least day frequency)
+  const oneDayBeforeStart = subDays(targetStart, 1);
+  const modifiedRRuleUntil = new Date(
+    Date.UTC(
+      oneDayBeforeStart.getFullYear(), oneDayBeforeStart.getMonth(), oneDayBeforeStart.getDate(), 23, 59, 0,
+    ),
+  );
+  const targetRRuleOpts = RRule.parseString(targetRRule);
+  targetRRuleOpts.count = undefined;
+  targetRRuleOpts.until = modifiedRRuleUntil;
+  const targetDtStartTs = getTimestampForServer(targetDtStart);
+  const rr = new RRule({
+    ...targetRRuleOpts,
+    dtstart: new Date(targetDtStartTs),
+  });
+  const instances = rr.all();
+  const modifiedRangeEndTs = instances[instances.length - 1].getTime() / 1000 + targetDuration;
+  const modifiedRRule = RRule.optionsToString(targetRRuleOpts);
+  const ret = await fetch(`${API_ENDPOINT}/event/delete`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      deleteRange: 'after',
+      updateEvent: {
+        id,
+        endTime: modifiedRangeEndTs,
+        rrule: modifiedRRule,
+      },
+    }),
+  });
+  return ret.status === 200;
+}

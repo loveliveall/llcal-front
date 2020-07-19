@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 import CloseIcon from '@material-ui/icons/Close';
 import DateRangeIcon from '@material-ui/icons/DateRange';
+import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LabelIcon from '@material-ui/icons/Label';
@@ -27,6 +28,7 @@ import { SlideUpTransition } from '@/components/common/Transitions';
 import useMobileCheck from '@/hooks/useMobileCheck';
 
 import { AppState } from '@/store';
+import { openEventDeleteDialog } from '@/store/delete-dialog/actions';
 import { closeEventDetailDialog } from '@/store/detail-dialog/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { getDateString, rruleToText, getObjWithProp } from '@/utils';
@@ -84,6 +86,10 @@ const EventDetailDialog: React.FC = () => {
     return `${startDateStr} ${startTimeStr} - ${endDateStr} ${endTimeStr}`;
   })();
 
+  const onDeleteClick = () => {
+    dispatch(closeEventDetailDialog());
+    dispatch(openEventDeleteDialog(event));
+  };
   const onEditClick = () => {
     dispatch(closeEventDetailDialog());
     dispatch(openEventEditDialog(event));
@@ -105,11 +111,18 @@ const EventDetailDialog: React.FC = () => {
         <Typography variant="h6">{event.title}</Typography>
         <div className={classes.grow} />
         {authorized && category?.frozen === false && (
-          <Tooltip title="수정">
-            <IconButton onClick={onEditClick}>
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
+          <>
+            <Tooltip title="삭제">
+              <IconButton onClick={onDeleteClick}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="수정">
+              <IconButton onClick={onEditClick}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          </>
         )}
         <Tooltip title="닫기">
           <IconButton onClick={onCloseDialog}>

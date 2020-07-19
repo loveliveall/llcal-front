@@ -1,12 +1,14 @@
 import { createStore, combineReducers } from 'redux';
 
 import authReducer from './auth/reducer';
+import deleteDialogReducer from './delete-dialog/reducer';
 import detailDialogReducer from './detail-dialog/reducer';
 import editDialogReducer from './edit-dialog/reducer';
 import flagsReducer from './flags/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  deleteDialog: deleteDialogReducer,
   detailDialog: detailDialogReducer,
   editDialog: editDialogReducer,
   flags: flagsReducer,
