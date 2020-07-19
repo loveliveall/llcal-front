@@ -8,7 +8,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -21,11 +20,13 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
 import VACheckList from '@/components/common/VACheckList';
 import CategoryCheckList from '@/components/common/CategoryCheckList';
+import ReportDialog from '@/components/dialogs/ReportDialog';
 import { ViewType } from '@/components/calendar';
 
 import { AppState } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
+import { openSnackbar } from '@/store/snackbar/actions';
 import { VACheckState, CategoryCheckState } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -61,7 +62,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const VIEW_TYPE_MENU: Record<ViewType, {
     label: string,
     icon: typeof ViewDayIcon,
@@ -81,13 +82,13 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   };
   const onLogoutClick = () => {
     dispatch(clearToken());
-    setSnackbarOpen(true);
+    dispatch(openSnackbar('로그아웃 성공'));
   };
   const onNewEventClick = () => {
     dispatch(openEventEditDialog(null));
   };
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
+  const onReportClick = () => {
+    setReportDialogOpen(true);
   };
 
   return (
@@ -164,7 +165,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         </ListItem>
         <ListItem
           button
-          // TODO: Add onClick handler
+          onClick={onReportClick}
         >
           <ListItemIcon className={classes.denseIcon}>
             <SendIcon />
@@ -201,11 +202,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         checkState={categoryFilter}
         setCheckState={setCategoryFilter}
       />
-      <Snackbar
-        open={snackbarOpen}
-        message="로그아웃 성공"
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
+      <ReportDialog
+        open={reportDialogOpen}
+        setOpen={setReportDialogOpen}
       />
     </div>
   );

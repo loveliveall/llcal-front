@@ -423,3 +423,17 @@ export async function deleteEventAfter(
   });
   return ret.status === 200;
 }
+
+export async function sendReport(report: string): Promise<boolean> {
+  const ret = await fetch(`${API_ENDPOINT}/report`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: report,
+    }),
+  });
+  return ret.status === 200;
+}

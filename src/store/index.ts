@@ -5,6 +5,7 @@ import deleteDialogReducer from './delete-dialog/reducer';
 import detailDialogReducer from './detail-dialog/reducer';
 import editDialogReducer from './edit-dialog/reducer';
 import flagsReducer from './flags/reducer';
+import snackbarReducer from './snackbar/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   detailDialog: detailDialogReducer,
   editDialog: editDialogReducer,
   flags: flagsReducer,
+  snackbar: snackbarReducer,
 });
 
 const TOKEN_KEY = 'usertoken';
