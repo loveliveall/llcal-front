@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
 import subDays from 'date-fns/subDays';
@@ -14,8 +15,10 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import TodayIcon from '@material-ui/icons/Today';
 
+import { refreshHash } from '@/store/flags/actions';
 import { ViewInfo } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,6 +53,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
   currDate, setCurrDate, view, onBackClick, toggleDrawer,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const currView = view.currType;
 
   const onTodayClick = () => setCurrDate(new Date());
@@ -67,14 +71,17 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
       setCurrDate(subDays(currDate, 1));
     }
   };
+  const onRefreshClick = () => {
+    dispatch(refreshHash());
+  };
 
   const dateDisplay = (() => {
     const year = `0${currDate.getFullYear()}`.slice(-2);
     const month = `0${currDate.getMonth() + 1}`.slice(-2);
     const day = `0${currDate.getDate()}`.slice(-2);
-    const weekday = ['일', '월', '화', '수', '목', '금', '토'][currDate.getDay()];
+    // const weekday = ['일', '월', '화', '수', '목', '금', '토'][currDate.getDay()];
     if (currView === 'month' || currView === 'agenda') return `'${year}.${month}.`;
-    if (currView === 'day') return `'${year}.${month}.${day}.(${weekday})`;
+    if (currView === 'day') return `'${year}.${month}.${day}.`;
     return '';
   })();
   const prevDateTooltip = (() => {
@@ -145,6 +152,15 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
         {dateDisplay}
       </Typography>
       <div className={classes.padded} />
+      <Tooltip title="새로고침">
+        <IconButton
+          color="inherit"
+          aria-label="refresh"
+          onClick={onRefreshClick}
+        >
+          <RefreshIcon />
+        </IconButton>
+      </Tooltip>
     </Toolbar>
   );
 };
