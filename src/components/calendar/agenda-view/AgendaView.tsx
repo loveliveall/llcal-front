@@ -6,7 +6,9 @@ import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 import SingleDateView from './SingleDateView';
 import { getEventsInRange } from '../utils/utils';
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface IOwnProps {
+  isLoading: boolean,
   isMobile: boolean,
   events: ICalendarEvent[],
   onEventClick: (event: ICalendarEvent) => void,
@@ -31,7 +34,7 @@ interface IOwnProps {
 type AgendaViewProps = IOwnProps;
 
 const AgendaView: React.FC<AgendaViewProps> = ({
-  isMobile, events, currDate, onEventClick,
+  isLoading, isMobile, events, currDate, onEventClick,
 }) => {
   const classes = useStyles();
 
@@ -39,7 +42,15 @@ const AgendaView: React.FC<AgendaViewProps> = ({
   const eventsInRange = getEventsInRange(events, monthStart, addMonths(monthStart, 1));
   return (
     <div className={classes.root}>
-      {eventsInRange.length === 0 ? (
+      {isLoading && (
+        <div className={classes.innerBox}>
+          <HourglassEmptyIcon fontSize="large" color="inherit" />
+          <Typography variant="h6">
+            일정을 불러오는 중입니다.
+          </Typography>
+        </div>
+      )}
+      {!isLoading && (eventsInRange.length === 0 ? (
         <div className={classes.innerBox}>
           <EventAvailableIcon fontSize="large" color="inherit" />
           <Typography variant="h6">
@@ -60,7 +71,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
             />
           );
         })
-      )}
+      ))}
     </div>
   );
 };

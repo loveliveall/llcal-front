@@ -14,6 +14,7 @@ import { ICalendarEvent } from './utils/types';
 export type ViewType = 'month' | 'day' | 'agenda'; // TODO: Add week view..?
 
 interface IOwnProps<TEvent extends ICalendarEvent> {
+  isLoading?: boolean,
   events: TEvent[],
   onEventClick?: (event: TEvent) => void,
   onMonthDateClick?: (date: Date) => void,
@@ -23,11 +24,12 @@ interface IOwnProps<TEvent extends ICalendarEvent> {
 type CalendarProps<TEvent extends ICalendarEvent> = IOwnProps<TEvent>;
 
 function Calendar<TEvent extends ICalendarEvent>({
-  events, currDate, view, onEventClick, onMonthDateClick,
+  isLoading, events, currDate, view, onEventClick, onMonthDateClick,
 }: CalendarProps<TEvent>): React.ReactElement | null {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const isLoadingInternal = !!isLoading;
   const onEventClickInternal = (event: ICalendarEvent) => onEventClick && onEventClick(event as TEvent);
   const onMonthDateClickInternal = (date: Date) => onMonthDateClick && onMonthDateClick(date);
   const MOBILE_MONTH_SCALING = 0.75;
@@ -73,6 +75,7 @@ function Calendar<TEvent extends ICalendarEvent>({
   if (view === 'agenda') {
     return (
       <AgendaView
+        isLoading={isLoadingInternal}
         isMobile={isMobile}
         currDate={currDate}
         events={normalizedEvents}

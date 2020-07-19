@@ -215,6 +215,7 @@ const Main: React.FC = () => {
         <div className={classes.toolbar} />
         <div className={classes.calendarWrapper} onWheel={onCalendarWheel}>
           <Calendar
+            isLoading={loading}
             events={filterEvents(events, vaFilter, categoryFilter, etcFilter)}
             currDate={currDate}
             view={view.currType}
