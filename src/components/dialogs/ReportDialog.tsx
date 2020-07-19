@@ -42,12 +42,14 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
   }, [open]);
 
   const onSendClick = () => {
-    setLoading(true);
-    sendReport(content).then(() => {
-      setLoading(false);
-      setOpen(false);
-      dispatch(openSnackbar('요청 전송 완료'));
-    });
+    if (content !== '') {
+      setLoading(true);
+      sendReport(content).then(() => {
+        setLoading(false);
+        setOpen(false);
+        dispatch(openSnackbar('요청 전송 완료'));
+      });
+    }
   };
   const onCloseDialog = () => {
     setOpen(false);
@@ -67,6 +69,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
         <Input
           id="report"
           value={content}
+          error={content === ''}
           placeholder="추가하고 싶은 일정에 대한 정보를 적어주세요. 해당 일정에 대한 공지 링크(공식 사이트, 트위터 등) 정보가 있으면 더 정확하게 추가할 수 있습니다"
           onChange={(e) => setContent(e.target.value)}
           fullWidth
