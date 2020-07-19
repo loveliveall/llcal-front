@@ -1,7 +1,12 @@
 import { RRule } from 'rrule';
 import { voiceActorList } from '@/commonData';
 
-import { VACheckState, ClientEvent, CategoryCheckState } from './types';
+import {
+  ClientEvent,
+  VACheckState,
+  CategoryCheckState,
+  ETCCheckState,
+} from './types';
 
 export function isGroupChecked(checkState: VACheckState, groupId: number): boolean {
   return voiceActorList.filter((va) => va.groupId === groupId).some((va) => checkState[va.id]);
@@ -22,9 +27,16 @@ export function isAllIndeterminate(checkState: VACheckState): boolean {
 
 export function filterEvents(
   events: ClientEvent[], vaFilter: VACheckState, categoryFilter: CategoryCheckState,
+  etcFilter: ETCCheckState,
 ): ClientEvent[] {
   return events.filter((ev) => (
-    ev.voiceActorIds.some((id) => vaFilter[id]) && categoryFilter[ev.categoryId]
+    ev.voiceActorIds.some((id) => vaFilter[id]) // VA Filter
+    && categoryFilter[ev.categoryId] // Category Filter
+    && (etcFilter.includeRepeating || !ev.isRepeating) // Repeating filter
+    && ( // isLoveLive filter
+      (ev.isLoveLive && etcFilter.showLoveLive)
+      || (!ev.isLoveLive && etcFilter.showNonLoveLive)
+    )
   ));
 }
 

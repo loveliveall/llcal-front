@@ -18,6 +18,7 @@ import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
 import ViewDayIcon from '@material-ui/icons/ViewDay';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
+import ETCCheckList from '@/components/common/ETCCheckList';
 import VACheckList from '@/components/common/VACheckList';
 import CategoryCheckList from '@/components/common/CategoryCheckList';
 import ReportDialog from '@/components/dialogs/ReportDialog';
@@ -27,7 +28,7 @@ import { AppState } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
-import { VACheckState, CategoryCheckState } from '@/types';
+import { VACheckState, CategoryCheckState, ETCCheckState } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -48,6 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface IOwnProps {
   currView: ViewType,
   setCurrView: (viewType: ViewType) => void,
+  etcFilter: ETCCheckState,
+  setETCFilter: (newFilter: ETCCheckState) => void,
   vaFilter: VACheckState,
   setVAFilter: (newFilter: VACheckState) => void,
   categoryFilter: CategoryCheckState,
@@ -57,7 +60,8 @@ interface IOwnProps {
 type DrawerContentProps = IOwnProps;
 
 const DrawerContent: React.FC<DrawerContentProps> = ({
-  currView, setCurrView, vaFilter, setVAFilter, categoryFilter, setCategoryFilter, setMobileDrawerOpen,
+  currView, setCurrView, etcFilter, setETCFilter,
+  vaFilter, setVAFilter, categoryFilter, setCategoryFilter, setMobileDrawerOpen,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -178,6 +182,18 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           />
         </ListItem>
       </List>
+      <Divider />
+      <Typography
+        className={classes.sectionHeader}
+        color="inherit"
+        variant="h6"
+      >
+        기타 필터
+      </Typography>
+      <ETCCheckList
+        checkState={etcFilter}
+        setCheckState={setETCFilter}
+      />
       <Divider />
       <Typography
         className={classes.sectionHeader}

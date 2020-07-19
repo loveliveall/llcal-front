@@ -36,6 +36,12 @@ export interface ServerEvent {
   isRepeating: boolean,
 }
 
+export interface ETCCheckState {
+  includeRepeating: boolean,
+  showLoveLive: boolean,
+  showNonLoveLive: boolean,
+}
+
 export interface VACheckState {
   [id: number]: boolean,
 }

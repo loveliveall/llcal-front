@@ -20,7 +20,7 @@ import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
 
 import { filterEvents } from '@/utils';
-import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT } from '@/defaults';
+import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT, ETC_FILTER_DEFAULT } from '@/defaults';
 import { ClientEvent, ViewInfo } from '@/types';
 import { callGetEvents } from '@/api';
 
@@ -86,6 +86,7 @@ const Main: React.FC = () => {
   }>({});
   const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
   const [categoryFilter, setCategoryFilter] = React.useState(CATEGORY_FILTER_DEFAULT);
+  const [etcFilter, setETCFilter] = React.useState(ETC_FILTER_DEFAULT);
 
   const onSelectView = (v: ViewType) => {
     setView({
@@ -141,6 +142,8 @@ const Main: React.FC = () => {
     <DrawerContent
       currView={view.currType}
       setCurrView={onSelectView}
+      etcFilter={etcFilter}
+      setETCFilter={setETCFilter}
       vaFilter={vaFilter}
       setVAFilter={setVAFilter}
       categoryFilter={categoryFilter}
@@ -194,7 +197,7 @@ const Main: React.FC = () => {
         <div className={classes.toolbar} />
         <div className={classes.calendarWrapper}>
           <Calendar
-            events={filterEvents(events, vaFilter, categoryFilter)}
+            events={filterEvents(events, vaFilter, categoryFilter, etcFilter)}
             currDate={currDate}
             view={view.currType}
             onMonthDateClick={onMonthDateClick}
