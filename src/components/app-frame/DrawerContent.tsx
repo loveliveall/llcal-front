@@ -4,15 +4,17 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 
 import AddIcon from '@material-ui/icons/Add';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
 import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
@@ -75,6 +77,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
+  const [openVAFilter, setOpenVAFilter] = React.useState(false);
+  const [openCategoryFilter, setOpenCategoryFilter] = React.useState(false);
+  const [openETCFilter, setOpenETCFilter] = React.useState(false);
   const VIEW_TYPE_MENU: Record<ViewType, {
     label: string,
     icon: typeof ViewDayIcon,
@@ -195,48 +200,78 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             }}
           />
         </ListItem>
+        <Divider />
+        <ListItem
+          dense
+          button
+          onClick={() => setOpenVAFilter(!openVAFilter)}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            {openVAFilter ? <ExpandLess /> : <ExpandMore />}
+          </ListItemIcon>
+          <ListItemText
+            primary="성우/캐릭터 필터"
+            primaryTypographyProps={{
+              variant: 'h6',
+            }}
+          />
+        </ListItem>
+        <Collapse in={openVAFilter} timeout="auto" unmountOnExit>
+          <VACheckList
+            checkState={vaFilter}
+            setCheckState={setVAFilter}
+          />
+        </Collapse>
+        <Divider />
+        <ListItem
+          dense
+          button
+          onClick={() => setOpenCategoryFilter(!openCategoryFilter)}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            {openCategoryFilter ? <ExpandLess /> : <ExpandMore />}
+          </ListItemIcon>
+          <ListItemText
+            primary="분류 필터"
+            primaryTypographyProps={{
+              variant: 'h6',
+            }}
+          />
+        </ListItem>
+        <Collapse in={openCategoryFilter} timeout="auto" unmountOnExit>
+          <CategoryCheckList
+            checkState={categoryFilter}
+            setCheckState={setCategoryFilter}
+          />
+        </Collapse>
+        <Divider />
+        <ListItem
+          dense
+          button
+          onClick={() => setOpenETCFilter(!openETCFilter)}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            {openETCFilter ? <ExpandLess /> : <ExpandMore />}
+          </ListItemIcon>
+          <ListItemText
+            primary="기타 필터"
+            primaryTypographyProps={{
+              variant: 'h6',
+            }}
+          />
+        </ListItem>
+        <Collapse in={openETCFilter} timeout="auto" unmountOnExit>
+          <ETCCheckList
+            checkState={etcFilter}
+            setCheckState={setETCFilter}
+          />
+        </Collapse>
+        <div className={classes.center}>
+          <Button onClick={onSaveFilterClick} variant="outlined">
+            필터 설정 저장
+          </Button>
+        </div>
       </List>
-      <Divider />
-      <Typography
-        className={classes.sectionHeader}
-        color="inherit"
-        variant="h6"
-      >
-        기타 필터
-      </Typography>
-      <ETCCheckList
-        checkState={etcFilter}
-        setCheckState={setETCFilter}
-      />
-      <Divider />
-      <Typography
-        className={classes.sectionHeader}
-        color="inherit"
-        variant="h6"
-      >
-        성우/캐릭터 필터
-      </Typography>
-      <VACheckList
-        checkState={vaFilter}
-        setCheckState={setVAFilter}
-      />
-      <Divider />
-      <Typography
-        className={classes.sectionHeader}
-        color="inherit"
-        variant="h6"
-      >
-        분류 필터
-      </Typography>
-      <CategoryCheckList
-        checkState={categoryFilter}
-        setCheckState={setCategoryFilter}
-      />
-      <div className={classes.center}>
-        <Button onClick={onSaveFilterClick} variant="outlined">
-          필터 설정 저장
-        </Button>
-      </div>
       <ReportDialog
         open={reportDialogOpen}
         setOpen={setReportDialogOpen}
