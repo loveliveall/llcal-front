@@ -17,6 +17,7 @@ import DrawerContent from '@/components/app-frame/DrawerContent';
 
 import { AppState } from '@/store';
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
+import { openSnackbar } from '@/store/snackbar/actions';
 
 import { filterEvents } from '@/utils';
 import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT } from '@/defaults';
@@ -128,8 +129,8 @@ const Main: React.FC = () => {
         [cacheKey]: data,
       }));
     }).catch((e) => {
-      // TODO: Add some error handling (ex. showing snackbar)
       console.error(e);
+      dispatch(openSnackbar('일정 불러오기를 실패했습니다.'));
     }).finally(() => {
       setLoading(false);
     });

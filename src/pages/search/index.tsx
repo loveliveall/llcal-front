@@ -16,6 +16,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
+import { openSnackbar } from '@/store/snackbar/actions';
 
 import { AppState } from '@/store';
 import { ClientEvent } from '@/types';
@@ -81,8 +82,8 @@ const SearchPage: React.FC = () => {
       }));
       setEvents((prev) => [...prev, ...filtered]);
     }).catch((e) => {
-      // TODO: Error handling
       console.error(e);
+      dispatch(openSnackbar('일정 불러오기를 실패했습니다.'));
     }).finally(() => {
       setLoading(false);
     });

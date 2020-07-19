@@ -35,6 +35,7 @@ import { AppState } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { closeEventEditDialog } from '@/store/edit-dialog/actions';
 import { refreshHash } from '@/store/flags/actions';
+import { openSnackbar } from '@/store/snackbar/actions';
 
 import {
   EditRangeEditor, EditRangeEditorProps,
@@ -182,14 +183,14 @@ const EventEditDialog: React.FC = () => {
           dispatch(refreshHash());
         } else {
           // Token expired
-          // TODO: Show dialog
           dispatch(clearToken());
+          dispatch(openSnackbar('토큰이 만료되었습니다. 로그아웃합니다.'));
         }
         dispatch(closeEventEditDialog());
       }).catch((e) => {
         setLoading(false);
-        // TODO: Proper error handling here
         console.error(e);
+        dispatch(openSnackbar('API 요청에 문제가 발생했습니다. 관리자에게 문의하세요.'));
       });
     }
   };
