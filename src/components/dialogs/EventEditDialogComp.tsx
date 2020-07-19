@@ -282,6 +282,7 @@ const DescriptionEditorComp: React.FC<DescriptionEditorProps> = ({
 );
 export const DescriptionEditor = DescriptionEditorComp;
 
+const editableCategoryList = eventCategoryList.filter((cat) => !cat.frozen);
 export type CategoryEditorProps = {
   categoryId: number | null,
   setCategoryId: (newValue: number | null) => void,
@@ -300,16 +301,17 @@ const CategoryEditorComp: React.FC<CategoryEditorProps> = ({
         onChange={(e) => setCategoryId(e.target.value as number | null)}
       >
         <MenuItem value="None">선택해주세요</MenuItem>
-        {eventCategoryList.filter((cat) => cat.groupId === null).map((cat) => (
-          <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
-        ))}
         {categoryGroupList.map((group) => (
           [
             <ListSubheader>{group.name}</ListSubheader>,
-            eventCategoryList.filter((cat) => cat.groupId === group.id).map((cat) => (
+            editableCategoryList.filter((cat) => cat.groupId === group.id).map((cat) => (
               <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
             )),
           ]
+        ))}
+        <ListSubheader>그룹 없음</ListSubheader>
+        {editableCategoryList.filter((cat) => cat.groupId === null).map((cat) => (
+          <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
         ))}
       </Select>
     </Grid>
