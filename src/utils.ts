@@ -25,6 +25,27 @@ export function isAllIndeterminate(checkState: VACheckState): boolean {
   return !voiceActorList.every((va) => checkState[va.id] === checkState[voiceActorList[0].id]);
 }
 
+type Obj = { [key in string | number]: any };
+
+export function readLocalStorage(key: string): Obj {
+  try {
+    const val = localStorage.getItem(key);
+    if (val === null) return {};
+    return JSON.parse(val);
+  } catch (e) {
+    return {};
+  }
+}
+
+export function saveLocalStorage(key: string, value: Obj): boolean {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export function filterEvents(
   events: ClientEvent[], vaFilter: VACheckState, categoryFilter: CategoryCheckState,
   etcFilter: ETCCheckState,

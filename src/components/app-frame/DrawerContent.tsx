@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -28,6 +29,8 @@ import { AppState } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
+import { VA_KEY, CATEGORY_KEY, ETC_KEY } from '@/defaults';
+import { saveLocalStorage } from '@/utils';
 import { VACheckState, CategoryCheckState, ETCCheckState } from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,6 +46,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   spaced: {
     paddingLeft: theme.spacing(2),
+  },
+  center: {
+    paddingBottom: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -93,6 +101,12 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   };
   const onReportClick = () => {
     setReportDialogOpen(true);
+  };
+  const onSaveFilterClick = () => {
+    saveLocalStorage(VA_KEY, vaFilter);
+    saveLocalStorage(CATEGORY_KEY, categoryFilter);
+    saveLocalStorage(ETC_KEY, etcFilter);
+    dispatch(openSnackbar('저장 완료'));
   };
 
   return (
@@ -218,6 +232,11 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         checkState={categoryFilter}
         setCheckState={setCategoryFilter}
       />
+      <div className={classes.center}>
+        <Button onClick={onSaveFilterClick} variant="outlined">
+          필터 설정 저장
+        </Button>
+      </div>
       <ReportDialog
         open={reportDialogOpen}
         setOpen={setReportDialogOpen}
