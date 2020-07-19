@@ -126,10 +126,12 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
 
   const handleStartChange = (date: MaterialUiPickersDate) => {
     if (date !== null) {
-      setStart(date);
-      if (end < date) {
-        setEnd(addMinutes(date, 30));
-      }
+      const purifiedDate = new Date(
+        date.getFullYear(), date.getMonth(), date.getDate(),
+        date.getHours(), date.getMinutes(), 0,
+      );
+      setStart(purifiedDate);
+      setEnd(addMinutes(purifiedDate, 30));
       // Update rrule for weekly repeat
       const opt = RRule.parseString(rrule);
       if (opt.freq === RRule.WEEKLY) {
@@ -137,7 +139,7 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
         if (match) {
           const weekdayList = match[1].split(',');
           if (weekdayList.length === 1) {
-            opt.byweekday = [jsDayToWeekday[date.getDay()]];
+            opt.byweekday = [jsDayToWeekday[purifiedDate.getDay()]];
             setRRule(RRule.optionsToString(opt));
           }
         }
@@ -146,10 +148,14 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
   };
   const handleEndChange = (date: MaterialUiPickersDate) => {
     if (date !== null) {
-      if (date < start) {
+      const purifiedDate = new Date(
+        date.getFullYear(), date.getMonth(), date.getDate(),
+        date.getHours(), date.getMinutes(), 0,
+      );
+      if (purifiedDate < start) {
         setEnd(addMinutes(start, 30));
       } else {
-        setEnd(date);
+        setEnd(purifiedDate);
       }
     }
   };
@@ -246,8 +252,8 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
 export const DateInfoEditor = React.memo(
   DateInfoEditorComp,
   (prev, next) => (prev.allDay === next.allDay
-      && prev.start === next.start
-      && prev.end === next.end
+      && prev.start.getTime() === next.start.getTime()
+      && prev.end.getTime() === next.end.getTime()
       && prev.rrule === next.rrule
       && prev.isFreqEditDisabled === next.isFreqEditDisabled
       && prev.isEditOnlyThis === next.isEditOnlyThis

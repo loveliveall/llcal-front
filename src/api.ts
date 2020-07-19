@@ -267,7 +267,7 @@ export async function editRepeatEventAfter(
   const origDtStartTs = getTimestampForServer(origDtStart);
   const rr = new RRule({
     ...origRRuleOpts,
-    dtstart: new Date(origDtStartTs),
+    dtstart: new Date(origDtStartTs * 1000),
   });
   const instances = rr.all();
   const modifiedRangeEndTs = instances[instances.length - 1].getTime() / 1000 + origDuration;
@@ -403,7 +403,7 @@ export async function deleteEventAfter(
   const targetDtStartTs = getTimestampForServer(targetDtStart);
   const rr = new RRule({
     ...targetRRuleOpts,
-    dtstart: new Date(targetDtStartTs),
+    dtstart: new Date(targetDtStartTs * 1000),
   });
   const instances = rr.all();
   const modifiedRangeEndTs = instances[instances.length - 1].getTime() / 1000 + targetDuration;

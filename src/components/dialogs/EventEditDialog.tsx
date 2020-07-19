@@ -73,8 +73,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const EventEditDialog: React.FC = () => {
   const classes = useStyles();
   const isMobile = useMobileCheck();
-  const initialStart = new Date();
-  initialStart.setMinutes(Math.floor(initialStart.getMinutes() / 15) * 15);
+  const now = new Date();
+  const min = now.getMinutes();
+  const initialStart = new Date(
+    now.getFullYear(), now.getMonth(), now.getDate(),
+    now.getHours(), Math.floor(min / 15) * 15, 0,
+  );
   const dispatch = useDispatch();
   const token = useSelector((state: AppState) => state.auth.token);
   const open = useSelector((state: AppState) => state.editDialog.open);
@@ -96,8 +100,12 @@ const EventEditDialog: React.FC = () => {
   const isEditRepeat = origEvent !== null && origEvent.rrule !== '';
 
   React.useEffect(() => {
-    const nowStart = new Date();
-    nowStart.setMinutes(Math.floor(nowStart.getMinutes() / 15) * 15);
+    const now2 = new Date();
+    const min2 = now2.getMinutes();
+    const nowStart = new Date(
+      now2.getFullYear(), now2.getMonth(), now2.getDate(),
+      now2.getHours(), Math.floor(min2 / 15) * 15, 0,
+    );
     setErrMsg('');
     setEditRange(null);
     setTitle(origEvent === null ? '' : origEvent.title);
