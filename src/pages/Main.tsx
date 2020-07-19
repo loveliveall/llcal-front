@@ -90,6 +90,12 @@ const Main: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = React.useState(CATEGORY_FILTER_DEFAULT);
   const [etcFilter, setETCFilter] = React.useState(ETC_FILTER_DEFAULT);
 
+  React.useEffect(() => {
+    if (view.currType === 'day') {
+      window.scrollTo(0, 0);
+    }
+  }, [currDate]);
+
   let timeoutId: NodeJS.Timeout;
   const onCalendarWheel = (ev: React.WheelEvent<HTMLDivElement>) => {
     const { deltaY } = ev;
