@@ -307,6 +307,10 @@ const CategoryEditorComp: React.FC<CategoryEditorProps> = ({
         onChange={(e) => setCategoryId(e.target.value as number | null)}
       >
         <MenuItem value="None">선택해주세요</MenuItem>
+        <ListSubheader>그룹 없음</ListSubheader>
+        {editableCategoryList.filter((cat) => cat.groupId === null).map((cat) => (
+          <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
+        ))}
         {categoryGroupList.map((group) => (
           [
             <ListSubheader>{group.name}</ListSubheader>,
@@ -314,10 +318,6 @@ const CategoryEditorComp: React.FC<CategoryEditorProps> = ({
               <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
             )),
           ]
-        ))}
-        <ListSubheader>그룹 없음</ListSubheader>
-        {editableCategoryList.filter((cat) => cat.groupId === null).map((cat) => (
-          <MenuItem key={`category-${cat.id}`} value={cat.id}>{cat.name}</MenuItem>
         ))}
       </Select>
     </Grid>
