@@ -42,9 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   denseIcon: {
     minWidth: theme.spacing(5),
   },
-  sectionHeader: {
-    paddingLeft: theme.spacing(1),
-    paddingTop: theme.spacing(1),
+  sectionHeaderText: {
+    fontWeight: 'bold',
   },
   spaced: {
     paddingLeft: theme.spacing(2),
@@ -202,7 +201,6 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         </ListItem>
         <Divider />
         <ListItem
-          dense
           button
           onClick={() => setOpenVAFilter(!openVAFilter)}
         >
@@ -212,7 +210,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           <ListItemText
             primary="성우/캐릭터 필터"
             primaryTypographyProps={{
-              variant: 'h6',
+              className: classes.sectionHeaderText,
+              variant: 'body2',
             }}
           />
         </ListItem>
@@ -224,7 +223,6 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         </Collapse>
         <Divider />
         <ListItem
-          dense
           button
           onClick={() => setOpenCategoryFilter(!openCategoryFilter)}
         >
@@ -234,7 +232,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           <ListItemText
             primary="분류 필터"
             primaryTypographyProps={{
-              variant: 'h6',
+              className: classes.sectionHeaderText,
+              variant: 'body2',
             }}
           />
         </ListItem>
@@ -246,7 +245,6 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         </Collapse>
         <Divider />
         <ListItem
-          dense
           button
           onClick={() => setOpenETCFilter(!openETCFilter)}
         >
@@ -256,7 +254,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           <ListItemText
             primary="기타 필터"
             primaryTypographyProps={{
-              variant: 'h6',
+              className: classes.sectionHeaderText,
+              variant: 'body2',
             }}
           />
         </ListItem>
