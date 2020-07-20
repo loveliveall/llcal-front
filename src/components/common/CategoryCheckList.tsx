@@ -113,6 +113,35 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
           }}
         />
       </ListItem>
+      <List component="nav" dense disablePadding>
+        {eventCategoryList.filter((cat) => cat.groupId === null).map((cat) => {
+          const categoryId = cat.id;
+          return (
+            <ListItem
+              key={`category-${categoryId}`}
+              button
+              onClick={() => onCategoryToggle(categoryId)}
+            >
+              <Checkbox
+                onChange={() => onCategoryToggle(categoryId)}
+                checked={checkState[categoryId]}
+                edge="start"
+                disableRipple
+                style={{
+                  color: cat.colorHex,
+                }}
+              />
+              <ListItemText
+                className={classes.spaced}
+                primary={cat.name}
+                primaryTypographyProps={{
+                  variant: 'body2',
+                }}
+              />
+            </ListItem>
+          );
+        })}
+      </List>
       {categoryGroupList.map((groupInfo) => {
         const groupId = groupInfo.id;
         return (
@@ -178,35 +207,6 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
           </React.Fragment>
         );
       })}
-      <List component="nav" dense disablePadding>
-        {eventCategoryList.filter((cat) => cat.groupId === null).map((cat) => {
-          const categoryId = cat.id;
-          return (
-            <ListItem
-              key={`category-${categoryId}`}
-              button
-              onClick={() => onCategoryToggle(categoryId)}
-            >
-              <Checkbox
-                onChange={() => onCategoryToggle(categoryId)}
-                checked={checkState[categoryId]}
-                edge="start"
-                disableRipple
-                style={{
-                  color: cat.colorHex,
-                }}
-              />
-              <ListItemText
-                className={classes.spaced}
-                primary={cat.name}
-                primaryTypographyProps={{
-                  variant: 'body2',
-                }}
-              />
-            </ListItem>
-          );
-        })}
-      </List>
     </List>
   );
 };
