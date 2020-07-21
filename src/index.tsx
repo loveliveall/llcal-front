@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import format from 'date-fns/format';
@@ -12,6 +13,8 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import App from '@/App';
 import store from '@/store';
+
+ReactGA.initialize('UA-142042916-3');
 
 class LocalizedUtils extends DateFnsUtils {
   getDatePickerHeaderText(date: Date) {

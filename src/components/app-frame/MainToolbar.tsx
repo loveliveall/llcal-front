@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import { useDispatch } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
@@ -56,7 +57,13 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
   const dispatch = useDispatch();
   const currView = view.currType;
 
-  const onTodayClick = () => setCurrDate(new Date());
+  const onTodayClick = () => {
+    ReactGA.event({
+      category: 'MainToolbar',
+      action: 'Click today',
+    });
+    setCurrDate(new Date());
+  };
   const handleNextDate = () => {
     if (currView === 'month' || currView === 'agenda') {
       setCurrDate(addMonths(currDate, 1));
@@ -72,6 +79,10 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
     }
   };
   const onRefreshClick = () => {
+    ReactGA.event({
+      category: 'MainToolbar',
+      action: 'Click refresh',
+    });
     dispatch(refreshHash());
   };
 

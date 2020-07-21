@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -103,6 +104,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     },
   };
   const onAboutClick = () => {
+    ReactGA.event({
+      category: 'DrawerContent',
+      action: 'Open about dialog',
+    });
     setAboutDialogOpen(true);
   };
   const onLogoutClick = () => {
@@ -113,15 +118,27 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     dispatch(openEventEditDialog(null));
   };
   const onReportClick = () => {
+    ReactGA.event({
+      category: 'DrawerContent',
+      action: 'Open report dialog',
+    });
     setReportDialogOpen(true);
   };
   const onSaveFilterClick = () => {
+    ReactGA.event({
+      category: 'DrawerContent',
+      action: 'Save filter',
+    });
     saveLocalStorage(VA_KEY, vaFilter);
     saveLocalStorage(CATEGORY_KEY, categoryFilter);
     saveLocalStorage(ETC_KEY, etcFilter);
     dispatch(openSnackbar('저장 완료'));
   };
   const onExportClick = () => {
+    ReactGA.event({
+      category: 'DrawerContent',
+      action: 'Export calendar',
+    });
     setExportDialogOpen(true);
   };
 

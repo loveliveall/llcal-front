@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import fuzzysort from 'fuzzysort';
 import addDays from 'date-fns/addDays';
@@ -90,19 +91,37 @@ const SearchPage: React.FC = () => {
   };
 
   const onSearchTrigger: SearchToolbarProps['onSearchTrigger'] = (text) => {
+    ReactGA.event({
+      category: 'Search',
+      action: 'Perform search',
+      label: text,
+    });
     setSearchTerm(text);
   };
   const onLoadPrevClick = () => {
+    ReactGA.event({
+      category: 'Search',
+      action: 'Load previous',
+    });
     const newStart = subMonths(searchRange[0], LOAD_INTERVAL);
     loadEvents(newStart, searchRange[0]);
     setSearchRange([newStart, searchRange[1]]);
   };
   const onLoadNextClick = () => {
+    ReactGA.event({
+      category: 'Search',
+      action: 'Load next',
+    });
     const newEnd = addMonths(searchRange[1], LOAD_INTERVAL);
     loadEvents(searchRange[1], newEnd);
     setSearchRange([searchRange[0], newEnd]);
   };
   const onEventClick = (event: ClientEvent) => {
+    ReactGA.event({
+      category: 'Search',
+      action: 'See event detail',
+      label: event.title,
+    });
     dispatch(openEventDetailDialog(event));
   };
   if (currRefreshFlag !== refreshFlag) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
@@ -113,12 +114,22 @@ const Main: React.FC = () => {
     }, 200);
   };
   const onSelectView = (v: ViewType) => {
+    ReactGA.event({
+      category: 'Main',
+      action: 'Change view type',
+      label: v,
+    });
     setView({
       showBack: false,
       currType: v,
     });
   };
   const showPrevView = () => {
+    ReactGA.event({
+      category: 'Main',
+      action: 'Change view type',
+      label: 'month-showback',
+    });
     setView({
       showBack: false,
       currType: 'month', // TODO: This may be changed in future...? (when app grows...)
@@ -135,6 +146,11 @@ const Main: React.FC = () => {
     });
   };
   const onEventClick = (event: ClientEvent) => {
+    ReactGA.event({
+      category: 'Main',
+      action: 'See event detail',
+      label: event.title,
+    });
     dispatch(openEventDetailDialog(event));
   };
   if (refreshFlag !== currRefreshFlag) {
