@@ -144,7 +144,7 @@ const Main: React.FC = () => {
 
   const cacheKey = getCacheKey(currDate);
   const rangeStart = subDays(startOfMonth(currDate), 7);
-  const rangeEnd = addDays(endOfMonth(currDate), 7);
+  const rangeEnd = addDays(endOfMonth(currDate), 14);
   if (!(cacheKey in eventCache) && !loading) {
     // Load data into cache
     setLoading(true);
