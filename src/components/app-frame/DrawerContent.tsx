@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import HelpIcon from '@material-ui/icons/HelpOutline';
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
 import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
@@ -24,6 +25,7 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ETCCheckList from '@/components/common/ETCCheckList';
 import VACheckList from '@/components/common/VACheckList';
 import CategoryCheckList from '@/components/common/CategoryCheckList';
+import AboutDialog from '@/components/dialogs/AboutDialog';
 import ReportDialog from '@/components/dialogs/ReportDialog';
 import ExportDialog from '@/components/dialogs/ExportDialog';
 import { ViewType } from '@/components/calendar';
@@ -77,6 +79,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
+  const [aboutDialogOpen, setAboutDialogOpen] = React.useState(false);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [openVAFilter, setOpenVAFilter] = React.useState(false);
@@ -98,6 +101,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
       label: '월간 일정 보기',
       icon: ViewModuleIcon,
     },
+  };
+  const onAboutClick = () => {
+    setAboutDialogOpen(true);
   };
   const onLogoutClick = () => {
     dispatch(clearToken());
@@ -122,6 +128,20 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   return (
     <div className={classes.root}>
       <List component="nav">
+        <ListItem
+          button
+          onClick={onAboutClick}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            <HelpIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="캘린더에 대해"
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItem>
         {authorized && (
           <>
             <ListItem
@@ -282,6 +302,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           </Button>
         </div>
       </List>
+      <AboutDialog
+        open={aboutDialogOpen}
+        setOpen={setAboutDialogOpen}
+      />
       <ReportDialog
         open={reportDialogOpen}
         setOpen={setReportDialogOpen}
