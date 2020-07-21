@@ -22,6 +22,7 @@ import LabelIcon from '@material-ui/icons/Label';
 import NotesIcon from '@material-ui/icons/Notes';
 import PersonIcon from '@material-ui/icons/Person';
 import PlaceIcon from '@material-ui/icons/Place';
+import RepeatIcon from '@material-ui/icons/Repeat';
 
 import { FadeTransition } from '@/components/common/Transitions';
 
@@ -215,6 +216,15 @@ const EventDetailDialog: React.FC = () => {
             </ListItemIcon>
             <ListItemText
               primary={event.isLoveLive ? 'LoveLive! 관련' : 'LoveLive! 비관련'}
+            />
+          </ListItem>
+          {/* Is Repeating */}
+          <ListItem disableGutters>
+            <ListItemIcon>
+              <Tooltip title="정기 일정 여부" arrow><RepeatIcon /></Tooltip>
+            </ListItemIcon>
+            <ListItemText
+              primary={event.isRepeating ? '정기 일정' : '비정기 일정'}
             />
           </ListItem>
         </List>
