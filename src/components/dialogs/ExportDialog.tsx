@@ -4,11 +4,13 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 import { FadeTransition } from '@/components/common/Transitions';
 
@@ -40,6 +42,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
+  },
+  dialogTitle: {
+    display: 'flex',
+    width: '100%',
+    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    alignItems: 'center',
+  },
+  dialogContent: {
+    paddingBottom: theme.spacing(2),
+  },
+  grow: {
+    flexGrow: 1,
   },
 }));
 
@@ -76,8 +92,16 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
       keepMounted
       disableBackdropClick
     >
-      <DialogTitle>일정 내보내기</DialogTitle>
-      <DialogContent>
+      <div id="export-dialog-title" className={classes.dialogTitle}>
+        <Typography variant="h6">일정 내보내기</Typography>
+        <div className={classes.grow} />
+        <Tooltip title="닫기">
+          <IconButton onClick={onCloseDialog}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
+      </div>
+      <DialogContent className={classes.dialogContent}>
         <Typography variant="body2">
           현재 필터 설정으로 캘린더를 내보냅니다. 사용하는 캘린더 앱에서 &#39;URL로 추가&#39;등의 기능에 아래 링크를 붙여 넣으세요.
         </Typography>
@@ -101,9 +125,6 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
           예를 들어, 구글 캘린더의 경우 정보 갱신에 최대 24시간이 소요될 수 있습니다.
         </Typography>
       </DialogContent>
-      <DialogActions>
-        <Button color="primary" onClick={onCloseDialog}>닫기</Button>
-      </DialogActions>
     </Dialog>
   );
 };
