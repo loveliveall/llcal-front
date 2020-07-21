@@ -25,6 +25,7 @@ import ETCCheckList from '@/components/common/ETCCheckList';
 import VACheckList from '@/components/common/VACheckList';
 import CategoryCheckList from '@/components/common/CategoryCheckList';
 import ReportDialog from '@/components/dialogs/ReportDialog';
+import ExportDialog from '@/components/dialogs/ExportDialog';
 import { ViewType } from '@/components/calendar';
 
 import { AppState } from '@/store';
@@ -49,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2),
   },
   center: {
-    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     display: 'flex',
     justifyContent: 'center',
   },
@@ -76,6 +78,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
+  const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [openVAFilter, setOpenVAFilter] = React.useState(false);
   const [openCategoryFilter, setOpenCategoryFilter] = React.useState(false);
   const [openETCFilter, setOpenETCFilter] = React.useState(false);
@@ -111,6 +114,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     saveLocalStorage(CATEGORY_KEY, categoryFilter);
     saveLocalStorage(ETC_KEY, etcFilter);
     dispatch(openSnackbar('저장 완료'));
+  };
+  const onExportClick = () => {
+    setExportDialogOpen(true);
   };
 
   return (
@@ -270,10 +276,22 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             필터 설정 저장
           </Button>
         </div>
+        <div className={classes.center}>
+          <Button onClick={onExportClick} variant="outlined" color="primary">
+            캘린더 내보내기
+          </Button>
+        </div>
       </List>
       <ReportDialog
         open={reportDialogOpen}
         setOpen={setReportDialogOpen}
+      />
+      <ExportDialog
+        open={exportDialogOpen}
+        setOpen={setExportDialogOpen}
+        vaFilter={vaFilter}
+        catFilter={categoryFilter}
+        etcFilter={etcFilter}
       />
     </div>
   );
