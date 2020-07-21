@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { TransitionProps } from '@material-ui/core/transitions';
-import Slide from '@material-ui/core/Slide';
+import Fade from '@material-ui/core/Fade';
 
-export const SlideUpTransition = React.forwardRef((
+export const FadeTransition = React.forwardRef((
   props: TransitionProps & { children?: React.ReactElement<any, any>, },
   ref: React.Ref<unknown>,
-) => <Slide direction="up" ref={ref} {...props} />); // eslint-disable-line react/jsx-props-no-spreading
+) => <Fade ref={ref} {...props} />); // eslint-disable-line react/jsx-props-no-spreading

@@ -17,7 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { SlideUpTransition } from '@/components/common/Transitions';
+import { FadeTransition } from '@/components/common/Transitions';
 import GridContainer from '@/components/common/GridContainer';
 import VACheckList from '@/components/common/VACheckList';
 
@@ -207,7 +207,7 @@ const EventEditDialog: React.FC = () => {
       open={open}
       onClose={onCloseDialog}
       scroll="paper"
-      TransitionComponent={SlideUpTransition}
+      TransitionComponent={FadeTransition}
       keepMounted
       fullScreen={isMobile}
       fullWidth

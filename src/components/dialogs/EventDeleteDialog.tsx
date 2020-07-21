@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 
-import { SlideUpTransition } from '@/components/common/Transitions';
+import { FadeTransition } from '@/components/common/Transitions';
 import GridContainer from '@/components/common/GridContainer';
 
 import {
@@ -109,7 +109,7 @@ const EventDeleteDialog: React.FC = () => {
       open={open}
       onClose={onCloseDialog}
       scroll="paper"
-      TransitionComponent={SlideUpTransition}
+      TransitionComponent={FadeTransition}
       keepMounted
       fullWidth
       disableBackdropClick

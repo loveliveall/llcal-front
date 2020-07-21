@@ -11,7 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Input from '@material-ui/core/Input';
 
-import { SlideUpTransition } from '@/components/common/Transitions';
+import { FadeTransition } from '@/components/common/Transitions';
 import { sendReport } from '@/api';
 
 import { openSnackbar } from '@/store/snackbar/actions';
@@ -59,7 +59,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
       open={open}
       onClose={onCloseDialog}
       scroll="paper"
-      TransitionComponent={SlideUpTransition}
+      TransitionComponent={FadeTransition}
       keepMounted
       fullWidth
       disableBackdropClick

@@ -23,7 +23,7 @@ import NotesIcon from '@material-ui/icons/Notes';
 import PersonIcon from '@material-ui/icons/Person';
 import PlaceIcon from '@material-ui/icons/Place';
 
-import { SlideUpTransition } from '@/components/common/Transitions';
+import { FadeTransition } from '@/components/common/Transitions';
 
 import useMobileCheck from '@/hooks/useMobileCheck';
 
@@ -102,7 +102,7 @@ const EventDetailDialog: React.FC = () => {
       open={open}
       onClose={onCloseDialog}
       scroll="paper"
-      TransitionComponent={SlideUpTransition}
+      TransitionComponent={FadeTransition}
       keepMounted
       fullScreen={isMobile}
       fullWidth
