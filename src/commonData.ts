@@ -22,6 +22,7 @@ export const eventCategoryList: IEventCategory[] = [
 
   { id: 301, name: '굿즈 예약', description: '공식 굿즈 예약 기간 정보', colorHex: blue[500], groupId: 1, frozen: false },
   { id: 302, name: '선행권 정보', description: '선행권 기간과 관련된 정보', colorHex: blue[400], groupId: 1, frozen: false },
+  { id: 399, name: '기타 알림', description: '어느 분류에도 속하지 않는 알림 정보', colorHex: blue[200], groupId: 1, frozen: false },
 
   { id: 1001, name: '기타', description: '기타 일정', colorHex: '#a79b8e', groupId: null, frozen: false },
   // Frozen categories
