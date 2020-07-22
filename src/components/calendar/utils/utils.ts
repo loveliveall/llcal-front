@@ -1,5 +1,7 @@
 import { ICalendarEvent } from './types';
 
+export const DIMMED_FILTER = 'opacity(0.33)';
+
 function padWithZero(n: number, digit: number) {
   const str = n.toString();
   return `${'0'.repeat(Math.max(digit - str.length, 0))}${str}`;

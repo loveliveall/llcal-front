@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { useCommonStyles } from '../month-view/styles';
 import { ICalendarEvent } from '../utils/types';
+import { DIMMED_FILTER } from '../utils/utils';
 
 interface IOwnProps {
   event: ICalendarEvent,
@@ -20,6 +21,7 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
 }) => {
   const commonClasses = useCommonStyles();
   const theme = useTheme();
+  const now = new Date();
 
   const fullLength = differenceInCalendarDays(event.endTime, event.startTime) + 1;
   const currLength = differenceInCalendarDays(currDate, event.startTime) + 1;
@@ -27,7 +29,10 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
   return (
     <Box
       className={commonClasses.eventInstance}
-      style={{ backgroundColor: event.colorCode }}
+      style={{
+        filter: event.endTime <= now ? DIMMED_FILTER : undefined,
+        backgroundColor: event.colorCode,
+      }}
       onClick={() => onEventClick(event)}
     >
       <Typography

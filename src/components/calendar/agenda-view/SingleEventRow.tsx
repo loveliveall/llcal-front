@@ -4,7 +4,7 @@ import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import { getTimeString } from '../utils/utils';
+import { DIMMED_FILTER, getTimeString } from '../utils/utils';
 import { ICalendarEvent } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,6 +50,7 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const now = new Date();
 
   const onClick = () => onEventClick(event);
   const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
@@ -78,9 +79,10 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
       className={classes.eventInstance}
       role="button"
       tabIndex={0}
-      style={isMobile ? {
-        backgroundColor: event.colorCode,
-      } : undefined}
+      style={{
+        filter: event.endTime <= now ? DIMMED_FILTER : undefined,
+        backgroundColor: isMobile ? event.colorCode : undefined,
+      }}
       onClick={onClick}
       onKeyUp={onKeyUp}
     >

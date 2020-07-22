@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
-import { getTimeString } from '../utils/utils';
+import { DIMMED_FILTER, getTimeString } from '../utils/utils';
 import { ICalendarEvent } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,6 +44,7 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const now = new Date();
 
   const dayStart = startOfDay(visibleStart);
   const nextDayStart = addDays(dayStart, 1);
@@ -68,6 +69,7 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
         boxSizing: 'border-box',
         border: `${theme.spacing(0.125)}px solid ${event.colorCode}`,
         backgroundColor: `${event.colorCode}c0`,
+        filter: event.endTime <= now ? DIMMED_FILTER : undefined,
       }}
       onClick={() => onEventClick(event)}
     >

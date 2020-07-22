@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { useCommonStyles } from './styles';
 import { ICalendarEvent } from '../utils/types';
-import { getTimeString } from '../utils/utils';
+import { DIMMED_FILTER, getTimeString } from '../utils/utils';
 
 const useStyles = makeStyles((theme) => ({
   eventCircle: {
@@ -34,13 +34,17 @@ const SingleEvent: React.FC<SingleEventProps> = ({
   const classes = useStyles();
   const classesCommon = useCommonStyles();
   const theme = useTheme();
+  const now = new Date();
 
   const eventPrefix = (!event.allDay && !isMobile) ? `${getTimeString(event.startTime)} ` : '';
   const eventText = `${eventPrefix}${event.title}`;
   return (
     <Box
       className={classesCommon.eventInstance}
-      style={{ backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent' }}
+      style={{
+        filter: event.endTime <= now ? DIMMED_FILTER : undefined,
+        backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent',
+      }}
       onClick={() => onEventClick(event)}
     >
       {(!isBlock && !isMobile) && (
