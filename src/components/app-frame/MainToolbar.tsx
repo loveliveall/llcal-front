@@ -167,6 +167,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
         <IconButton
           color="inherit"
           aria-label="refresh"
+          edge="end"
           onClick={onRefreshClick}
         >
           <RefreshIcon />
