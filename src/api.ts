@@ -151,6 +151,19 @@ function getHeader(token: string) {
   };
 }
 
+export async function duplicateEvent(token: string, id: string, keepExceptions: boolean): Promise<boolean> {
+  const ret = await fetch(`${API_ENDPOINT}/events/duplicate`, {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: getHeader(token),
+    body: JSON.stringify({
+      id,
+      keepExceptions,
+    }),
+  });
+  return ret.status === 200;
+}
+
 export async function addNewEvent(
   token: string,
   title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,

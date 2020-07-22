@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Linkify, { Props as LinkifyProps } from 'react-linkify';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,6 +19,7 @@ import DateRangeIcon from '@material-ui/icons/DateRange';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import LabelIcon from '@material-ui/icons/Label';
 import NotesIcon from '@material-ui/icons/Notes';
 import PersonIcon from '@material-ui/icons/Person';
@@ -31,6 +33,7 @@ import useMobileCheck from '@/hooks/useMobileCheck';
 import { AppState } from '@/store';
 import { openEventDeleteDialog } from '@/store/delete-dialog/actions';
 import { closeEventDetailDialog } from '@/store/detail-dialog/actions';
+import { openEventDuplicateDialog } from '@/store/duplicate-dialog/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { getDateString, rruleToText, getObjWithProp } from '@/utils';
 import { eventCategoryList, voiceActorList, groupInfoList } from '@/commonData';
@@ -49,6 +52,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     alignItems: 'center',
+    wordBreak: 'keep-all',
+  },
+  buttonDiv: {
+    display: 'flex',
+    width: '100%',
+  },
+  button: {
+    flexGrow: 1,
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
   },
   dialogContent: {
     paddingBottom: theme.spacing(2),
@@ -91,6 +104,10 @@ const EventDetailDialog: React.FC = () => {
     dispatch(closeEventDetailDialog());
     dispatch(openEventDeleteDialog(event));
   };
+  const onDuplicateClick = () => {
+    dispatch(closeEventDetailDialog());
+    dispatch(openEventDuplicateDialog(event));
+  };
   const onEditClick = () => {
     dispatch(closeEventDetailDialog());
     dispatch(openEventEditDialog(event));
@@ -111,20 +128,6 @@ const EventDetailDialog: React.FC = () => {
       <div id="event-dialog-title" className={classes.dialogTitle}>
         <Typography variant="h6">{event.title}</Typography>
         <div className={classes.grow} />
-        {authorized && category?.frozen === false && (
-          <>
-            <Tooltip title="삭제">
-              <IconButton onClick={onDeleteClick}>
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="수정">
-              <IconButton onClick={onEditClick}>
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-          </>
-        )}
         <Tooltip title="닫기">
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
@@ -132,6 +135,39 @@ const EventDetailDialog: React.FC = () => {
         </Tooltip>
       </div>
       <DialogContent className={classes.dialogContent}>
+        {authorized && category?.frozen === false && (
+          <div className={classes.buttonDiv}>
+            <Button
+              className={classes.button}
+              variant="outlined"
+              onClick={onDeleteClick}
+              startIcon={<DeleteIcon />}
+              style={{
+                color: 'red',
+                border: '1px solid red',
+              }}
+            >
+              삭제
+            </Button>
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="outlined"
+              onClick={onDuplicateClick}
+              startIcon={<FileCopyIcon />}
+            >
+              복제
+            </Button>
+            <Button
+              className={classes.button}
+              variant="outlined"
+              onClick={onEditClick}
+              startIcon={<EditIcon />}
+            >
+              수정
+            </Button>
+          </div>
+        )}
         <List dense disablePadding>
           {/* Date range */}
           <ListItem disableGutters>

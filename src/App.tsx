@@ -9,6 +9,7 @@ import ShipDuck from '@/pages/ship-duck';
 import GlobalSnackbar from '@/components/GlobalSnackbar';
 import EventDeleteDialog from '@/components/dialogs/EventDeleteDialog';
 import EventDetailDialog from '@/components/dialogs/EventDetailDialog';
+import EventDuplicateDialog from '@/components/dialogs/EventDuplicateDialog';
 import EventEditDialog from '@/components/dialogs/EventEditDialog';
 
 const App: React.FC = () => {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
       </Switch>
       <EventDeleteDialog />
       <EventDetailDialog />
+      <EventDuplicateDialog />
       <EventEditDialog />
       <GlobalSnackbar />
     </>

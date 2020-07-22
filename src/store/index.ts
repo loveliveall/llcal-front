@@ -3,6 +3,7 @@ import { createStore, combineReducers } from 'redux';
 import authReducer from './auth/reducer';
 import deleteDialogReducer from './delete-dialog/reducer';
 import detailDialogReducer from './detail-dialog/reducer';
+import duplicateDialogReducer from './duplicate-dialog/reducer';
 import editDialogReducer from './edit-dialog/reducer';
 import flagsReducer from './flags/reducer';
 import snackbarReducer from './snackbar/reducer';
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   deleteDialog: deleteDialogReducer,
   detailDialog: detailDialogReducer,
+  duplicateDialog: duplicateDialogReducer,
   editDialog: editDialogReducer,
   flags: flagsReducer,
   snackbar: snackbarReducer,
