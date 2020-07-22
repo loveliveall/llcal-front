@@ -57,7 +57,7 @@ const AboutDialog: React.FC<AboutDialogProps> = ({
       <div id="about-dialog-title" className={classes.dialogTitle}>
         <Typography variant="h6">LLCalendar에 관하여</Typography>
         <div className={classes.grow} />
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableFocusListener>
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>

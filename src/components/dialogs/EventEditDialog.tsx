@@ -216,12 +216,12 @@ const EventEditDialog: React.FC = () => {
       <div id="event-dialog-title" className={classes.dialogTitle}>
         <Typography variant="h6">{origEvent === null ? '새 일정 생성' : '일정 수정'}</Typography>
         <div className={classes.grow} />
-        <Tooltip title="저장">
+        <Tooltip title="저장" disableFocusListener>
           <IconButton onClick={onSaveClick} disabled={loading}>
             <SaveIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableFocusListener>
           <IconButton onClick={onCloseDialog} disabled={loading}>
             <CloseIcon />
           </IconButton>
