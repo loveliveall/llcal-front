@@ -202,6 +202,9 @@ const EventDetailDialog: React.FC = () => {
                       <ListItemText
                         primary={`${va.name} (${group.name})`}
                         secondary={va.character}
+                        secondaryTypographyProps={{
+                          variant: 'caption',
+                        }}
                       />
                     </ListItem>
                   );
