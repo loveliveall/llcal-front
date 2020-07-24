@@ -115,6 +115,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     dispatch(openSnackbar('로그아웃 성공'));
   };
   const onNewEventClick = () => {
+    setMobileDrawerOpen(false); // Close mobile drawer on view selection
     dispatch(openEventEditDialog(null));
   };
   const onReportClick = () => {
