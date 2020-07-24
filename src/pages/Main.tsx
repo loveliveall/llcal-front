@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
 import endOfMonth from 'date-fns/endOfMonth';
+import isSameMonth from 'date-fns/isSameMonth';
 import subDays from 'date-fns/subDays';
 import subMonths from 'date-fns/subMonths';
+import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -94,8 +96,20 @@ const Main: React.FC = () => {
   React.useEffect(() => {
     if (view.currType === 'day') {
       window.scrollTo(0, 0);
+    } else if (view.currType === 'agenda') {
+      const now = startOfDay(new Date());
+      if (isSameMonth(currDate, now)) {
+        // Today month. scroll to date
+        const scrollTop = document.getElementById(`date-${now.getTime()}`)?.offsetTop;
+        window.scroll({
+          top: scrollTop === undefined ? undefined : scrollTop - 56, // 56: Toolbar adjustment
+          behavior: 'smooth',
+        });
+      } else {
+        window.scrollTo(0, 0);
+      }
     }
-  }, [currDate]);
+  }, [currDate, view.currType]);
 
   let timeoutId: NodeJS.Timeout;
   const onCalendarWheel = (ev: React.WheelEvent<HTMLDivElement>) => {

@@ -61,7 +61,7 @@ const SingleDateView: React.FC<SingleDateViewProps> = ({
     if (a.endTime > b.endTime) return 1;
     return 0;
   });
-  if (visibleEvents.length === 0) return null;
+  if (visibleEvents.length === 0) return <div id={`date-${startOfDay.getTime()}`} />;
   const dateText = (() => {
     const weekday = WEEKDAY_SHORT_NAMES[startOfDay.getDay()];
     if (!showFullDate) {
@@ -73,7 +73,10 @@ const SingleDateView: React.FC<SingleDateViewProps> = ({
     return `${year}.${month}.${date}. (${weekday})`;
   })();
   return (
-    <div className={`${classes.row} ${isSameDay(startOfDay, now) && classes.today}`}>
+    <div
+      id={`date-${startOfDay.getTime()}`}
+      className={`${classes.row} ${isSameDay(startOfDay, now) && classes.today}`}
+    >
       <Divider />
       <div className={classes.content}>
         <Typography variant="subtitle1" className={classes.dayTitle}>
