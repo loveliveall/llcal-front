@@ -208,7 +208,6 @@ const EventEditDialog: React.FC = () => {
       onClose={onCloseDialog}
       scroll="paper"
       TransitionComponent={FadeTransition}
-      keepMounted
       fullScreen={isMobile}
       fullWidth
       disableBackdropClick
