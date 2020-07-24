@@ -172,7 +172,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Date range */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="시간" arrow disableFocusListener><DateRangeIcon /></Tooltip>
+              <Tooltip title="시간" arrow><DateRangeIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={dateRangeStr}
@@ -182,7 +182,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Place */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="장소" arrow disableFocusListener><PlaceIcon /></Tooltip>
+              <Tooltip title="장소" arrow><PlaceIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               disableTypography
@@ -196,7 +196,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Description */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="상세 설명" arrow disableFocusListener><NotesIcon /></Tooltip>
+              <Tooltip title="상세 설명" arrow><NotesIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               disableTypography
@@ -215,7 +215,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Category */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="분류" arrow disableFocusListener><LabelIcon /></Tooltip>
+              <Tooltip title="분류" arrow><LabelIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={category?.name}
@@ -251,7 +251,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Is LoveLive */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="러브라이브 관련 여부" arrow disableFocusListener><FavoriteIcon /></Tooltip>
+              <Tooltip title="러브라이브 관련 여부" arrow><FavoriteIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={event.isLoveLive ? 'LoveLive! 관련' : 'LoveLive! 비관련'}
@@ -260,7 +260,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Is Repeating */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="정기 일정 여부" arrow disableFocusListener><RepeatIcon /></Tooltip>
+              <Tooltip title="정기 일정 여부" arrow><RepeatIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={event.isRepeating ? '정기 일정' : '비정기 일정'}
