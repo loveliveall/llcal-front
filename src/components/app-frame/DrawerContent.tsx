@@ -13,6 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AddIcon from '@material-ui/icons/Add';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -28,6 +29,7 @@ import ETCCheckList from '@/components/common/ETCCheckList';
 import VACheckList from '@/components/common/VACheckList';
 import CategoryCheckList from '@/components/common/CategoryCheckList';
 import AboutDialog from '@/components/dialogs/AboutDialog';
+import DayStartHourDialog from '@/components/dialogs/DayStartHourDialog';
 import ReportDialog from '@/components/dialogs/ReportDialog';
 import ExportDialog from '@/components/dialogs/ExportDialog';
 import { ViewType } from '@/components/calendar';
@@ -81,9 +83,11 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
+  const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const [aboutDialogOpen, setAboutDialogOpen] = React.useState(false);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
+  const [dayStartDialogOpen, setDayStartDialogOpen] = React.useState(false);
   const [openVAFilter, setOpenVAFilter] = React.useState(false);
   const [openCategoryFilter, setOpenCategoryFilter] = React.useState(false);
   const [openETCFilter, setOpenETCFilter] = React.useState(false);
@@ -247,6 +251,21 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         <Divider />
         <ListItem
           button
+          onClick={() => setDayStartDialogOpen(true)}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            <AccessTimeIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={`하루 범위: ${`0${dayStartHour}`.slice(-2)}:00 - ${dayStartHour + 24}:00`}
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItem>
+        <Divider />
+        <ListItem
+          button
           onClick={() => setOpenVAFilter(!openVAFilter)}
         >
           <ListItemIcon className={classes.denseIcon}>
@@ -335,6 +354,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         vaFilter={vaFilter}
         catFilter={categoryFilter}
         etcFilter={etcFilter}
+      />
+      <DayStartHourDialog
+        open={dayStartDialogOpen}
+        setOpen={setDayStartDialogOpen}
       />
     </div>
   );

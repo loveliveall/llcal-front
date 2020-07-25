@@ -6,6 +6,7 @@ import detailDialogReducer from './detail-dialog/reducer';
 import duplicateDialogReducer from './duplicate-dialog/reducer';
 import editDialogReducer from './edit-dialog/reducer';
 import flagsReducer from './flags/reducer';
+import settingsReducer from './settings/reducer';
 import snackbarReducer from './snackbar/reducer';
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   duplicateDialog: duplicateDialogReducer,
   editDialog: editDialogReducer,
   flags: flagsReducer,
+  settings: settingsReducer,
   snackbar: snackbarReducer,
 });
 
