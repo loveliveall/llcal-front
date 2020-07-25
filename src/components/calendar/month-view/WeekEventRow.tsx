@@ -81,7 +81,6 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
       }, 150);
     };
     window.addEventListener('resize', resizeHandler);
-    window.dispatchEvent(new Event('resize'));
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener('resize', resizeHandler);

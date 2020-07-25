@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 
+export const headerMarginUnit = 0.5;
+
 export const useCommonStyles = makeStyles((theme) => ({
   eventInstance: {
     display: 'flex',

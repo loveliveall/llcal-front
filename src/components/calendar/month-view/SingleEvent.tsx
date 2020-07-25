@@ -1,4 +1,5 @@
 import React from 'react';
+import areEqual from 'fast-deep-equal';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -38,6 +39,9 @@ const SingleEvent: React.FC<SingleEventProps> = ({
   const eventPrefix = (!event.allDay && !isMobile) ? `${getTimeString(event.startTime)} ` : '';
   const eventText = `${eventPrefix}${event.title}`;
 
+  const onClick = () => {
+    onEventClick(event);
+  };
   const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     if (ev.key === 'Enter') {
       onEventClick(event);
@@ -53,7 +57,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({
         filter: event.endTime <= now ? DIMMED_FILTER : undefined,
         backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent',
       }}
-      onClick={() => onEventClick(event)}
+      onClick={onClick}
       onKeyUp={onKeyUp}
     >
       {(!isBlock && !isMobile) && (
@@ -75,4 +79,8 @@ const SingleEvent: React.FC<SingleEventProps> = ({
   );
 };
 
-export default SingleEvent;
+export default React.memo(SingleEvent, (prevProps, nextProps) => (
+  areEqual(prevProps.isMobile, nextProps.isMobile)
+  && areEqual(prevProps.event, nextProps.event)
+  && areEqual(prevProps.isBlock, nextProps.isBlock)
+));

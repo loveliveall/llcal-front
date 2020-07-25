@@ -2,6 +2,7 @@ import React from 'react';
 import ReactGA from 'react-ga';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import areEqual from 'fast-deep-equal';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -339,4 +340,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   );
 };
 
-export default DrawerContent;
+export default React.memo(DrawerContent, (prevProps, nextProps) => (
+  areEqual(prevProps.currView, nextProps.currView)
+  && areEqual(prevProps.vaFilter, nextProps.vaFilter)
+  && areEqual(prevProps.categoryFilter, nextProps.categoryFilter)
+  && areEqual(prevProps.etcFilter, nextProps.etcFilter)
+));

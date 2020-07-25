@@ -1,79 +1,44 @@
 import React from 'react';
+import areEqual from 'fast-deep-equal';
 import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
-import isSameDay from 'date-fns/isSameDay';
-import isSameMonth from 'date-fns/isSameMonth';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import { ICalendarEvent, TMonthEventGrid, ISingleEventRenderInfo } from '../utils/types';
 import { getEventsInRange } from '../utils/utils';
+import { headerMarginUnit } from './styles';
 
+import WeekCellFrame from './WeekCellFrame';
 import WeekEventRow from './WeekEventRow';
 
 const isMidnight = (date: Date) => date.getHours() === 0 && date.getMinutes() === 0;
 
-const useStyles = makeStyles((theme) => {
-  const headerMarginUnit = 0.5;
-  const circleDiameter = `calc(${theme.spacing(headerMarginUnit / 2)}px + ${theme.typography.body2.lineHeight}em)`;
-  return {
-    row: {
-      display: 'flex',
-      position: 'relative',
-      overflow: 'hidden',
-      flex: '1 1 0%',
-      boxSizing: 'border-box',
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-    cellFrame: {
-      display: 'flex',
-      position: 'absolute',
-      width: '100%',
-      top: 0,
-      left: 0,
-      bottom: 0,
-    },
-    cellWrap: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    cell: {
-      flex: '1 1 0%',
-      boxSizing: 'border-box',
-      borderRight: `1px solid ${theme.palette.divider}`,
-      textAlign: 'center',
-    },
-    diffMonthCell: {
-      backgroundColor: theme.palette.grey[300],
-    },
-    todayDate: {
-      borderRadius: '50%',
-      width: circleDiameter,
-      height: circleDiameter,
-      color: theme.palette.getContrastText(theme.palette.primary.main),
-      backgroundColor: theme.palette.primary.main,
-      lineHeight: circleDiameter,
-      margin: `${theme.spacing(headerMarginUnit / 2)}px 0px ${theme.spacing(headerMarginUnit / 2)}px 0px`,
-      fontWeight: 'bold',
-    },
-    otherDate: {
-      margin: `${theme.spacing(headerMarginUnit)}px 0px ${theme.spacing(headerMarginUnit)}px 0px`,
-      fontWeight: 'bold',
-    },
-    diffMonthDate: {
-      color: theme.palette.grey[600],
-      fontWeight: 'inherit',
-    },
-    eventOverlay: {
-      display: 'flex',
-      width: '100%',
-      fontSize: theme.typography.body2.fontSize, // Let line-height em work correctly
-      marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
-    },
-  };
-});
+const useStyles = makeStyles((theme) => ({
+  row: {
+    display: 'flex',
+    position: 'relative',
+    overflow: 'hidden',
+    flex: '1 1 0%',
+    boxSizing: 'border-box',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  cellFrame: {
+    display: 'flex',
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    left: 0,
+    bottom: 0,
+  },
+  eventOverlay: {
+    display: 'flex',
+    width: '100%',
+    fontSize: theme.typography.body2.fontSize, // Let line-height em work correctly
+    marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
+  },
+}));
 
 interface IOwnProps {
   isMobile: boolean,
@@ -90,7 +55,6 @@ const WeekRow: React.FC<WeekRowProps> = ({
 }) => {
   const classes = useStyles();
 
-  const now = new Date();
   const rangeEnd = addDays(rangeStart, 7); // Exlusive
   const eventRenderGrid = getEventsInRange(events, rangeStart, rangeEnd).map((event) => {
     const visibleStart = event.startTime < rangeStart ? rangeStart : event.startTime;
@@ -169,32 +133,11 @@ const WeekRow: React.FC<WeekRowProps> = ({
   return (
     <div className={classes.row}>
       {/* Cell display */}
-      <div className={classes.cellFrame}>
-        {new Array(7).fill(null).map((_, idx) => {
-          const cellDate = addDays(rangeStart, idx);
-          const isToday = isSameDay(cellDate, now);
-          const isTargetMonth = isSameMonth(cellDate, currDate);
-          const onClick = () => onMonthDateClick(cellDate);
-          return (
-            <div key={cellDate.toISOString()} className={`${classes.cell} ${!isTargetMonth && classes.diffMonthCell}`}>
-              <div className={classes.cellWrap}>
-                <Typography
-                  className={`${isToday ? classes.todayDate : classes.otherDate}
-                    ${!isTargetMonth && classes.diffMonthDate}`}
-                  style={{
-                    cursor: 'pointer',
-                  }}
-                  component="span"
-                  variant="body2"
-                  onClick={onClick}
-                >
-                  {cellDate.getDate()}
-                </Typography>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <WeekCellFrame
+        currDate={currDate}
+        rangeStart={rangeStart}
+        onMonthDateClick={onMonthDateClick}
+      />
       {/* Dummy overlay for mobile click */}
       {isMobile && (
         <div className={classes.cellFrame} style={{ zIndex: 1 }}>
@@ -234,4 +177,9 @@ const WeekRow: React.FC<WeekRowProps> = ({
   );
 };
 
-export default WeekRow;
+export default React.memo(WeekRow, (prevProps, nextProps) => (
+  areEqual(prevProps.isMobile, nextProps.isMobile)
+  && areEqual(prevProps.rangeStart, nextProps.rangeStart)
+  && areEqual(prevProps.events, nextProps.events)
+  && areEqual(prevProps.currDate, nextProps.currDate)
+));
