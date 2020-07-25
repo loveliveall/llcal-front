@@ -5,6 +5,7 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 
 import SingleEvent from './SingleEvent';
+import WeekEventSingleRow from './WeekEventSingleRow';
 import { useCommonStyles } from './styles';
 import { TMonthEventGrid, ICalendarEvent, ISingleEventRenderInfo } from '../utils/types';
 
@@ -95,29 +96,13 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
   })();
   return (
     <div ref={ref} className={classes.root}>
-      {(sliceRowAt === -1 ? eventRenderGrid : eventRenderGrid.slice(0, sliceRowAt)).map((row) => (
-        <div key={Math.random()} className={classes.singleRow}>
-          {row.map((instance) => {
-            if (instance === null) return <div key={Math.random()} className={classes.singleSlot} />; // Render empty slot
-            if (instance.startSlotIdx === -1) return null; // Do not render
-            const { event } = instance;
-            return (
-              <div
-                key={instance.event.id}
-                style={{
-                  width: `${(100 * instance.slotCount) / 7}%`,
-                }}
-              >
-                <SingleEvent
-                  isMobile={isMobile}
-                  event={event}
-                  isBlock={instance.isBlock}
-                  onEventClick={onEventClick}
-                />
-              </div>
-            );
-          })}
-        </div>
+      {(sliceRowAt === -1 ? eventRenderGrid : eventRenderGrid.slice(0, sliceRowAt)).map((row, idx) => (
+        <WeekEventSingleRow
+          key={idx} // eslint-disable-line react/no-array-index-key
+          isMobile={isMobile}
+          row={row}
+          onEventClick={onEventClick}
+        />
       ))}
       {/* `more` button */}
       <div className={classes.singleRow}>
