@@ -191,6 +191,7 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
               value={start}
               onChange={handleStartChange}
               format="yyyy/MM/dd HH:mm"
+              ampm={false}
               minutesStep={5}
             />
           )}
@@ -214,6 +215,7 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
               minDate={start}
               onChange={handleEndChange}
               format="yyyy/MM/dd HH:mm"
+              ampm={false}
               minutesStep={5}
             />
           )}
