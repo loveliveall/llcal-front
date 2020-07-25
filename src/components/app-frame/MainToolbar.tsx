@@ -1,10 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
 import { useDispatch } from 'react-redux';
-import addDays from 'date-fns/addDays';
-import addMonths from 'date-fns/addMonths';
-import subDays from 'date-fns/subDays';
-import subMonths from 'date-fns/subMonths';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -47,11 +43,13 @@ interface IOwnProps {
   view: ViewInfo,
   onBackClick: () => void,
   toggleDrawer: () => void,
+  handlePrevDate: () => void,
+  handleNextDate: () => void,
 }
 type MainToolbarProps = IOwnProps;
 
 const MainToolbar: React.FC<MainToolbarProps> = ({
-  currDate, setCurrDate, view, onBackClick, toggleDrawer,
+  currDate, setCurrDate, view, onBackClick, toggleDrawer, handlePrevDate, handleNextDate,
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -63,20 +61,6 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
       action: 'Click today',
     });
     setCurrDate(new Date());
-  };
-  const handleNextDate = () => {
-    if (currView === 'month' || currView === 'agenda') {
-      setCurrDate(addMonths(currDate, 1));
-    } else if (currView === 'day') {
-      setCurrDate(addDays(currDate, 1));
-    }
-  };
-  const handlePrevDate = () => {
-    if (currView === 'month' || currView === 'agenda') {
-      setCurrDate(subMonths(currDate, 1));
-    } else if (currView === 'day') {
-      setCurrDate(subDays(currDate, 1));
-    }
   };
   const onRefreshClick = () => {
     ReactGA.event({

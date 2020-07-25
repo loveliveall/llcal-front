@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactGA from 'react-ga';
+import SwipeableViews from 'react-swipeable-views';
+import { virtualize } from 'react-swipeable-views-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
@@ -29,6 +31,7 @@ import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT, ETC_FILTER_DEFAULT } from '
 import { ClientEvent, ViewInfo } from '@/types';
 import { callGetEvents } from '@/api';
 
+const VirtualizeSwipeableViews = virtualize(SwipeableViews);
 const DRAWER_WIDTH = 280;
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,6 +61,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbar: theme.mixins.toolbar,
   calendarWrapper: {
+    minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
+    [theme.breakpoints.down('xs')]: {
+      minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
+    },
+  },
+  monthViewWrapper: {
     height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
     [theme.breakpoints.down('xs')]: {
       height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
@@ -78,6 +87,7 @@ const Main: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
+  const [viewIndex, setViewIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -93,7 +103,7 @@ const Main: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = React.useState(CATEGORY_FILTER_DEFAULT);
   const [etcFilter, setETCFilter] = React.useState(ETC_FILTER_DEFAULT);
 
-  React.useEffect(() => {
+  const initScroll = () => {
     if (view.currType === 'day') {
       window.scrollTo(0, 0);
     } else if (view.currType === 'agenda') {
@@ -102,15 +112,36 @@ const Main: React.FC = () => {
         // Today month. scroll to date
         const scrollTop = document.getElementById(`date-${now.getTime()}`)?.offsetTop;
         window.scroll({
-          top: scrollTop === undefined ? undefined : scrollTop - 56, // 56: Toolbar adjustment
-          behavior: 'smooth',
+          top: scrollTop === undefined ? undefined : scrollTop,
         });
       } else {
         window.scrollTo(0, 0);
       }
     }
-  }, [currDate, view.currType]);
+  };
 
+  React.useEffect(() => {
+    initScroll();
+  }, [currDate, view.currType, loading]);
+
+  const handleNextDate = () => {
+    const currView = view.currType;
+    setViewIndex(viewIndex + 1);
+    if (currView === 'month' || currView === 'agenda') {
+      setCurrDate(addMonths(currDate, 1));
+    } else if (currView === 'day') {
+      setCurrDate(addDays(currDate, 1));
+    }
+  };
+  const handlePrevDate = () => {
+    const currView = view.currType;
+    setViewIndex(viewIndex - 1);
+    if (currView === 'month' || currView === 'agenda') {
+      setCurrDate(subMonths(currDate, 1));
+    } else if (currView === 'day') {
+      setCurrDate(subDays(currDate, 1));
+    }
+  };
   let timeoutId: NodeJS.Timeout;
   const onCalendarWheel = (ev: React.WheelEvent<HTMLDivElement>) => {
     const { deltaY } = ev;
@@ -120,12 +151,12 @@ const Main: React.FC = () => {
         // Support wheel move only on month view
         if (deltaY < 0) {
           // Scroll up
-          setCurrDate(subMonths(currDate, 1));
+          handlePrevDate();
         } else {
-          setCurrDate(addMonths(currDate, 1));
+          handleNextDate();
         }
       }
-    }, 200);
+    }, 100);
   };
   const onSelectView = (v: ViewType) => {
     ReactGA.event({
@@ -215,6 +246,8 @@ const Main: React.FC = () => {
           view={view}
           onBackClick={showPrevView}
           toggleDrawer={toggleMobileDrawer}
+          handlePrevDate={handlePrevDate}
+          handleNextDate={handleNextDate}
         />
         {loading && <LinearProgress className={classes.progress} />}
       </AppBar>
@@ -249,16 +282,36 @@ const Main: React.FC = () => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div className={classes.calendarWrapper} onWheel={onCalendarWheel}>
-          <Calendar
-            isLoading={loading}
-            events={filterEvents(events, vaFilter, categoryFilter, etcFilter)}
-            currDate={currDate}
-            view={view.currType}
-            onMonthDateClick={onMonthDateClick}
-            onEventClick={onEventClick}
-          />
-        </div>
+        <VirtualizeSwipeableViews
+          overscanSlideAfter={1}
+          overscanSlideBefore={1}
+          enableMouseEvents
+          index={viewIndex}
+          onChangeIndex={(index, indexLatest) => {
+            if (index < indexLatest) handlePrevDate();
+            else handleNextDate();
+          }}
+          slideRenderer={({ index, key }) => {
+            const isCurrIndex = index === viewIndex;
+            const dateFn = view.currType === 'month' ? addMonths : addDays;
+            return (
+              <div
+                key={key}
+                className={`${classes.calendarWrapper} ${view.currType === 'month' && classes.monthViewWrapper}`}
+                onWheel={onCalendarWheel}
+              >
+                <Calendar
+                  isLoading={isCurrIndex ? loading : true}
+                  events={isCurrIndex ? filterEvents(events, vaFilter, categoryFilter, etcFilter) : []}
+                  currDate={dateFn(currDate, index - viewIndex)}
+                  view={view.currType}
+                  onMonthDateClick={onMonthDateClick}
+                  onEventClick={onEventClick}
+                />
+              </div>
+            );
+          }}
+        />
       </main>
     </div>
   );
