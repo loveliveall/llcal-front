@@ -285,7 +285,6 @@ const Main: React.FC = () => {
         <VirtualizeSwipeableViews
           overscanSlideAfter={1}
           overscanSlideBefore={1}
-          enableMouseEvents
           index={viewIndex}
           onChangeIndex={(index, indexLatest) => {
             if (index < indexLatest) handlePrevDate();
