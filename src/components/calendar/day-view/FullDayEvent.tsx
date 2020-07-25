@@ -2,7 +2,6 @@ import React from 'react';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
 import { useTheme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { useCommonStyles } from '../month-view/styles';
@@ -23,17 +22,26 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
   const theme = useTheme();
   const now = new Date();
 
+  const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+    if (ev.key === 'Enter') {
+      onEventClick(event);
+    }
+  };
+
   const fullLength = differenceInCalendarDays(event.endTime, event.startTime) + 1;
   const currLength = differenceInCalendarDays(currDate, event.startTime) + 1;
   const prefix = fullLength === 1 ? '' : `(${currLength}/${fullLength}) `;
   return (
-    <Box
+    <div
       className={commonClasses.eventInstance}
+      role="button"
+      tabIndex={0}
       style={{
         filter: event.endTime <= now ? DIMMED_FILTER : undefined,
         backgroundColor: event.colorCode,
       }}
       onClick={() => onEventClick(event)}
+      onKeyUp={onKeyUp}
     >
       <Typography
         className={commonClasses.eventText}
@@ -44,7 +52,7 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
       >
         {`${prefix}${event.title}`}
       </Typography>
-    </Box>
+    </div>
   );
 };
 

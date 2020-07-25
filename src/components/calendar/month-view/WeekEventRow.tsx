@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 
@@ -128,21 +127,32 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
           const invisibleCount = eventRenderGrid.slice(sliceRowAt).reduce(
             (acc, curr) => acc + (curr[idx] !== null ? 1 : 0), 0,
           );
-          if (invisibleCount === 0) return <Box key={reactKey} width={1 / 7} />;
-          const onMoreClick = (event: React.MouseEvent<HTMLDivElement>) => {
+          if (invisibleCount === 0) return <div key={reactKey} style={{ width: `${100 / 7}%` }} />;
+          const openMorePopup = (anchor: HTMLDivElement) => {
             const thisDayEvents = eventRenderGrid.map((r) => r[idx]).filter(
               (i): i is ISingleEventRenderInfo => i !== null,
             );
             setMorePopup({
-              anchorEl: event.currentTarget,
+              anchorEl: anchor,
               eventGrid: thisDayEvents,
             });
           };
+          const onMoreClick = (event: React.MouseEvent<HTMLDivElement>) => {
+            openMorePopup(event.currentTarget);
+          };
+          const onMoreKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
+            if (event.key === 'Enter') {
+              openMorePopup(event.currentTarget);
+            }
+          };
           return (
             <div key={reactKey} className={classes.singleSlot}>
-              <Box
+              <div
                 className={classesCommon.eventInstance}
+                role="button"
+                tabIndex={0}
                 onClick={onMoreClick}
+                onKeyUp={onMoreKeyUp}
               >
                 <Typography
                   className={classesCommon.eventText}
@@ -150,7 +160,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
                 >
                   {`+${invisibleCount} more`}
                 </Typography>
-              </Box>
+              </div>
             </div>
           );
         })}

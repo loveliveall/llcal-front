@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { useCommonStyles } from './styles';
@@ -38,14 +37,24 @@ const SingleEvent: React.FC<SingleEventProps> = ({
 
   const eventPrefix = (!event.allDay && !isMobile) ? `${getTimeString(event.startTime)} ` : '';
   const eventText = `${eventPrefix}${event.title}`;
+
+  const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+    if (ev.key === 'Enter') {
+      onEventClick(event);
+    }
+  };
+
   return (
-    <Box
+    <div
       className={classesCommon.eventInstance}
+      role="button"
+      tabIndex={0}
       style={{
         filter: event.endTime <= now ? DIMMED_FILTER : undefined,
         backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent',
       }}
       onClick={() => onEventClick(event)}
+      onKeyUp={onKeyUp}
     >
       {(!isBlock && !isMobile) && (
         <div
@@ -62,7 +71,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({
       >
         {eventText}
       </Typography>
-    </Box>
+    </div>
   );
 };
 

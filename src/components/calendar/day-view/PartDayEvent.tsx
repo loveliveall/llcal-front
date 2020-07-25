@@ -4,7 +4,6 @@ import differenceInMinutes from 'date-fns/differenceInMinutes';
 import startOfDay from 'date-fns/startOfDay';
 
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
@@ -57,21 +56,31 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
     return getTimeString(event.endTime);
   })();
   const timeString = startTimeStr === endTimeStr ? startTimeStr : `${startTimeStr} - ${endTimeStr}`;
+
+  const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+    if (ev.key === 'Enter') {
+      onEventClick(event);
+    }
+  };
+
   return (
-    <Box
+    <div
       className={classes.eventInstance}
-      position="absolute"
-      top={`calc(${getCellHeightCalc(theme)} / 60 * ${minFromDayStart})`}
-      left={`${(colIdx * 100) / fullColCount}%`}
-      width={colCount / fullColCount}
-      height={`calc(${getCellHeightCalc(theme)} / 60 * ${duration})`}
+      role="button"
+      tabIndex={0}
       style={{
+        position: 'absolute',
+        top: `calc(${getCellHeightCalc(theme)} / 60 * ${minFromDayStart})`,
+        left: `${(colIdx * 100) / fullColCount}%`,
+        width: `${(100 * colCount) / fullColCount}%`,
+        height: `calc(${getCellHeightCalc(theme)} / 60 * ${duration})`,
         boxSizing: 'border-box',
         border: `${theme.spacing(0.125)}px solid ${event.colorCode}`,
         backgroundColor: `${event.colorCode}c0`,
         filter: event.endTime <= now ? DIMMED_FILTER : undefined,
       }}
       onClick={() => onEventClick(event)}
+      onKeyUp={onKeyUp}
     >
       <Typography
         className={classes.eventText}
@@ -93,7 +102,7 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
           {timeString}
         </Typography>
       )}
-    </Box>
+    </div>
   );
 };
 

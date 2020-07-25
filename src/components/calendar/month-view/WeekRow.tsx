@@ -6,7 +6,6 @@ import isSameDay from 'date-fns/isSameDay';
 import isSameMonth from 'date-fns/isSameMonth';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import { ICalendarEvent, TMonthEventGrid, ISingleEventRenderInfo } from '../utils/types';
@@ -202,12 +201,21 @@ const WeekRow: React.FC<WeekRowProps> = ({
           {new Array(7).fill(null).map((_, idx) => {
             const cellDate = addDays(rangeStart, idx);
             const onClick = () => onMonthDateClick(cellDate);
+            const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+              if (ev.key === 'Enter') {
+                onMonthDateClick(cellDate);
+              }
+            };
             return (
-              <Box
+              // eslint-disable-next-line jsx-a11y/control-has-associated-label
+              <div
                 key={cellDate.toISOString()}
-                width={1 / 7}
+                role="button"
+                tabIndex={0}
                 onClick={onClick}
+                onKeyUp={onKeyUp}
                 style={{
+                  width: `${100 / 7}%`,
                   cursor: 'pointer',
                 }}
               />
