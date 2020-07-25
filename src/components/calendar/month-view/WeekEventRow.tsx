@@ -96,14 +96,14 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
   return (
     <div ref={ref} className={classes.root}>
       {(sliceRowAt === -1 ? eventRenderGrid : eventRenderGrid.slice(0, sliceRowAt)).map((row) => (
-        <div key={JSON.stringify(row)} className={classes.singleRow}>
+        <div key={Math.random()} className={classes.singleRow}>
           {row.map((instance) => {
             if (instance === null) return <div key={Math.random()} className={classes.singleSlot} />; // Render empty slot
             if (instance.startSlotIdx === -1) return null; // Do not render
             const { event } = instance;
             return (
               <div
-                key={JSON.stringify(instance)}
+                key={instance.event.id}
                 style={{
                   width: `${(100 * instance.slotCount) / 7}%`,
                 }}
@@ -196,7 +196,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             };
             return (
               <SingleEvent
-                key={JSON.stringify(instance)}
+                key={instance.event.id}
                 isMobile={isMobile}
                 event={event}
                 isBlock={instance.isBlock}

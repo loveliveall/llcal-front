@@ -112,7 +112,7 @@ const DayView: React.FC<DayViewPorps> = ({
           <div className={classes.fullEvent}>
             {fullDayEventsInfo.map((item) => (
               <FullDayEvent
-                key={JSON.stringify(item)}
+                key={item.event.id}
                 event={item.event}
                 currDate={currDate}
                 onEventClick={onEventClick}
@@ -129,7 +129,7 @@ const DayView: React.FC<DayViewPorps> = ({
         <div className={classes.timeGrid}>
           {partDayRenderInfo.map((info) => (
             <PartDayEvent
-              key={`${info.visibleStart}-${info.colIdx}`}
+              key={info.event.id}
               event={info.event}
               visibleStart={info.visibleStart}
               visibleEnd={info.visibleEnd}

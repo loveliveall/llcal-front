@@ -1,4 +1,5 @@
 export interface ICalendarEvent {
+  id: string,
   title: string,
   allDay: boolean,
   startTime: Date,
