@@ -16,7 +16,7 @@ import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
 import { getRenderInfo } from './algorithm';
 
 import { getEventsInRange } from '../utils/utils';
-import { ICalendarEvent } from '../utils/types';
+import { ICalendarEvent, IEventInfo } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -51,40 +51,41 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface IOwnProps {
-  events: ICalendarEvent[],
+  dayStartHour: number,
+  events: IEventInfo[],
   onEventClick: (event: ICalendarEvent) => void,
   currDate: Date,
 }
 type DayViewPorps = IOwnProps;
 
 const DayView: React.FC<DayViewPorps> = ({
-  events, onEventClick, currDate,
+  dayStartHour, events, onEventClick, currDate,
 }) => {
   const classes = useStyles();
 
   const dayStart = startOfDay(currDate);
   const dayEnd = addDays(dayStart, 1); // Exclusive
   const visibleEventsInfo = getEventsInRange(events, dayStart, dayEnd).sort((a, b) => {
-    if (a.startTime < b.startTime) return -1;
-    if (a.startTime > b.startTime) return 1;
-    if (a.endTime > b.endTime) return -1;
-    if (a.endTime < b.endTime) return 1;
+    if (a.orig.startTime < b.orig.startTime) return -1;
+    if (a.orig.startTime > b.orig.startTime) return 1;
+    if (a.orig.endTime > b.orig.endTime) return -1;
+    if (a.orig.endTime < b.orig.endTime) return 1;
     return 0;
   }).map((event) => {
-    const visibleStart = maxDate([event.startTime, dayStart]);
-    const visibleEnd = minDate([event.endTime, dayEnd]);
+    const visibleStartV = maxDate([event.startTimeV, dayStart]);
+    const visibleEndV = minDate([event.endTimeV, dayEnd]);
     // Ensure that each event has at least SINGLE_LINE_MINUTE duration of visible instance
     const adjusted = (() => {
-      if (differenceInMinutes(visibleEnd, visibleStart) >= SINGLE_LINE_MINUTE) {
+      if (differenceInMinutes(visibleEndV, visibleStartV) >= SINGLE_LINE_MINUTE) {
         // Already has longer visible instance
         return {
-          start: visibleStart,
-          end: visibleEnd,
+          start: visibleStartV,
+          end: visibleEndV,
         };
       }
       // Shorter visible instance
       // Preserve start as far as possible
-      const start = minDate([subMinutes(dayEnd, SINGLE_LINE_MINUTE), visibleStart]);
+      const start = minDate([subMinutes(dayEnd, SINGLE_LINE_MINUTE), visibleStartV]);
       const end = addMinutes(start, SINGLE_LINE_MINUTE);
       return {
         start,
@@ -93,9 +94,9 @@ const DayView: React.FC<DayViewPorps> = ({
     })();
     return {
       event,
-      fullDay: event.allDay || (event.startTime <= dayStart && dayEnd <= event.endTime),
-      visibleStart: adjusted.start,
-      visibleEnd: adjusted.end,
+      fullDay: event.orig.allDay || (event.startTimeV <= dayStart && dayEnd <= event.endTimeV),
+      visibleStartV: adjusted.start,
+      visibleEndV: adjusted.end,
     };
   });
   const fullDayEventsInfo = visibleEventsInfo.filter((item) => item.fullDay);
@@ -112,7 +113,7 @@ const DayView: React.FC<DayViewPorps> = ({
           <div className={classes.fullEvent}>
             {fullDayEventsInfo.map((item) => (
               <FullDayEvent
-                key={item.event.id}
+                key={item.event.orig.id}
                 event={item.event}
                 currDate={currDate}
                 onEventClick={onEventClick}
@@ -124,15 +125,17 @@ const DayView: React.FC<DayViewPorps> = ({
       {/* TimeGrid view */}
       <div className={classes.flex}>
         <div className={classes.timeIndicator}>
-          <TimeIndicator />
+          <TimeIndicator dayStartHour={dayStartHour} />
         </div>
         <div className={classes.timeGrid}>
           {partDayRenderInfo.map((info) => (
             <PartDayEvent
-              key={info.event.id}
+              key={info.event.orig.id}
+              thisDayStart={dayStart}
+              dayStartHour={dayStartHour}
               event={info.event}
-              visibleStart={info.visibleStart}
-              visibleEnd={info.visibleEnd}
+              visibleStartV={info.visibleStartV}
+              visibleEndV={info.visibleEndV}
               colIdx={info.colIdx}
               colCount={info.colCount}
               fullColCount={info.fullColCount}

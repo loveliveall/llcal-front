@@ -5,11 +5,11 @@ import { useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { useCommonStyles } from '../month-view/styles';
-import { ICalendarEvent } from '../utils/types';
+import { ICalendarEvent, IEventInfo } from '../utils/types';
 import { DIMMED_FILTER } from '../utils/utils';
 
 interface IOwnProps {
-  event: ICalendarEvent,
+  event: IEventInfo,
   currDate: Date,
   onEventClick: (event: ICalendarEvent) => void,
 }
@@ -24,12 +24,12 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
 
   const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     if (ev.key === 'Enter') {
-      onEventClick(event);
+      onEventClick(event.orig);
     }
   };
 
-  const fullLength = differenceInCalendarDays(event.endTime, event.startTime) + 1;
-  const currLength = differenceInCalendarDays(currDate, event.startTime) + 1;
+  const fullLength = differenceInCalendarDays(event.endTimeV, event.startTimeV) + 1;
+  const currLength = differenceInCalendarDays(currDate, event.startTimeV) + 1;
   const prefix = fullLength === 1 ? '' : `(${currLength}/${fullLength}) `;
   return (
     <div
@@ -37,20 +37,20 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
       role="button"
       tabIndex={0}
       style={{
-        filter: event.endTime <= now ? DIMMED_FILTER : undefined,
-        backgroundColor: event.colorCode,
+        filter: event.endTimeV <= now ? DIMMED_FILTER : undefined,
+        backgroundColor: event.orig.colorCode,
       }}
-      onClick={() => onEventClick(event)}
+      onClick={() => onEventClick(event.orig)}
       onKeyUp={onKeyUp}
     >
       <Typography
         className={commonClasses.eventText}
         variant="body2"
         style={{
-          color: theme.palette.getContrastText(event.colorCode),
+          color: theme.palette.getContrastText(event.orig.colorCode),
         }}
       >
-        {`${prefix}${event.title}`}
+        {`${prefix}${event.orig.title}`}
       </Typography>
     </div>
   );

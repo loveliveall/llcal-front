@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import subHours from 'date-fns/subHours';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,6 +18,7 @@ import TodayIcon from '@material-ui/icons/Today';
 
 import { refreshHash } from '@/store/flags/actions';
 import { ViewInfo } from '@/types';
+import { AppState } from '@/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   menuIcon: {
@@ -53,6 +55,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const currView = view.currType;
 
   const onTodayClick = () => {
@@ -60,7 +63,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
       category: 'MainToolbar',
       action: 'Click today',
     });
-    setCurrDate(new Date());
+    setCurrDate(subHours(new Date(), dayStartHour));
   };
   const onRefreshClick = () => {
     ReactGA.event({

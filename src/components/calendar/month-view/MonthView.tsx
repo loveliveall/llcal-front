@@ -5,7 +5,7 @@ import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { ICalendarEvent } from '../utils/types';
+import { ICalendarEvent, IEventInfo } from '../utils/types';
 
 import DateHeader from './DateHeader';
 import WeekRow from './WeekRow';
@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 interface IOwnProps {
   isMobile: boolean,
-  events: ICalendarEvent[],
+  dayStartHour: number,
+  events: IEventInfo[],
   onEventClick: (event: ICalendarEvent) => void,
   onMonthDateClick: (date: Date) => void,
   currDate: Date,
@@ -31,7 +32,7 @@ interface IOwnProps {
 type MonthViewProps = IOwnProps;
 
 const MonthView: React.FC<MonthViewProps> = ({
-  isMobile, events, currDate, onEventClick, onMonthDateClick,
+  isMobile, dayStartHour, events, currDate, onEventClick, onMonthDateClick,
 }) => {
   const classes = useStyles();
 
@@ -50,6 +51,7 @@ const MonthView: React.FC<MonthViewProps> = ({
         <WeekRow
           key={`${monthStart}-${idx}`} // eslint-disable-line react/no-array-index-key
           isMobile={isMobile}
+          dayStartHour={dayStartHour}
           events={events}
           onEventClick={onEventClick}
           onMonthDateClick={onMonthDateClick}

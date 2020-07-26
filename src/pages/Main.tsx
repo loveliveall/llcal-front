@@ -8,6 +8,7 @@ import addMonths from 'date-fns/addMonths';
 import endOfMonth from 'date-fns/endOfMonth';
 import isSameMonth from 'date-fns/isSameMonth';
 import subDays from 'date-fns/subDays';
+import subHours from 'date-fns/subHours';
 import subMonths from 'date-fns/subMonths';
 import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
@@ -87,11 +88,12 @@ const Main: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
+  const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const [viewIndex, setViewIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [currDate, setCurrDate] = React.useState(new Date());
+  const [currDate, setCurrDate] = React.useState(subHours(new Date(), dayStartHour));
   const [view, setView] = React.useState<ViewInfo>({
     showBack: false,
     currType: 'month',
@@ -107,7 +109,7 @@ const Main: React.FC = () => {
     if (view.currType === 'day') {
       window.scrollTo(0, 0);
     } else if (view.currType === 'agenda') {
-      const now = startOfDay(new Date());
+      const now = startOfDay(subHours(new Date(), dayStartHour));
       if (isSameMonth(currDate, now)) {
         // Today month. scroll to date
         const scrollTop = document.getElementById(`date-${now.getTime()}`)?.offsetTop;
@@ -204,8 +206,8 @@ const Main: React.FC = () => {
   }
 
   const cacheKey = getCacheKey(currDate);
-  const rangeStart = subDays(startOfMonth(currDate), 7);
-  const rangeEnd = addDays(endOfMonth(currDate), 14);
+  const rangeStart = subDays(startOfMonth(currDate), 8); // one-day margin (daystarthour issue)
+  const rangeEnd = addDays(endOfMonth(currDate), 15); // one-day margin (daystarthour issue)
   if (!(cacheKey in eventCache) && !loading) {
     // Load data into cache
     setLoading(true);
@@ -301,6 +303,7 @@ const Main: React.FC = () => {
               >
                 <Calendar
                   isLoading={isCurrIndex ? loading : true}
+                  dayStartHour={dayStartHour}
                   events={isCurrIndex ? filterEvents(events, vaFilter, categoryFilter, etcFilter) : []}
                   currDate={dateFn(currDate, index - viewIndex)}
                   view={view.currType}

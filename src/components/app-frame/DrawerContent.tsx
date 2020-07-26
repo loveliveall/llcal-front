@@ -34,7 +34,7 @@ import ReportDialog from '@/components/dialogs/ReportDialog';
 import ExportDialog from '@/components/dialogs/ExportDialog';
 import { ViewType } from '@/components/calendar';
 
-import { AppState } from '@/store';
+import { AppState, DAY_START_HOUR_KEY } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
@@ -138,6 +138,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     saveLocalStorage(VA_KEY, vaFilter);
     saveLocalStorage(CATEGORY_KEY, categoryFilter);
     saveLocalStorage(ETC_KEY, etcFilter);
+    localStorage.setItem(DAY_START_HOUR_KEY, `${dayStartHour}`);
     dispatch(openSnackbar('저장 완료'));
   };
   const onExportClick = () => {

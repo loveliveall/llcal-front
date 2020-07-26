@@ -21,10 +21,14 @@ const rootReducer = combineReducers({
 });
 
 const TOKEN_KEY = 'usertoken';
+export const DAY_START_HOUR_KEY = 'dayStartHour';
 
 const store = createStore(rootReducer, {
   auth: {
     token: localStorage.getItem(TOKEN_KEY),
+  },
+  settings: {
+    dayStartHour: Number(localStorage.getItem(DAY_START_HOUR_KEY) ?? 0),
   },
 });
 

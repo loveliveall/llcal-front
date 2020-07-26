@@ -1,5 +1,6 @@
 import React from 'react';
 import startOfDay from 'date-fns/startOfDay';
+import subHours from 'date-fns/subHours';
 import endOfDay from 'date-fns/endOfDay';
 
 import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
@@ -9,7 +10,7 @@ import MonthView from './month-view/MonthView';
 import DayView from './day-view/DayView';
 import AgendaView from './agenda-view/AgendaView';
 
-import { ICalendarEvent } from './utils/types';
+import { ICalendarEvent, IEventInfo } from './utils/types';
 
 export type ViewType = 'month' | 'day' | 'agenda'; // TODO: Add week view..?
 
@@ -43,20 +44,18 @@ function Calendar<TEvent extends ICalendarEvent>({
     },
   });
 
-  const normalizedEvents = events.map((event) => {
-    if (!event.allDay) return event;
-    return {
-      ...event,
-      startTime: startOfDay(event.startTime),
-      endTime: endOfDay(event.endTime),
-    };
-  });
+  const normalizedEvents: IEventInfo[] = events.map((event) => ({
+    orig: event,
+    startTimeV: event.allDay ? startOfDay(event.startTime) : subHours(event.startTime, dayStartHourInternal),
+    endTimeV: event.allDay ? endOfDay(event.endTime) : subHours(event.endTime, dayStartHourInternal),
+  }));
 
   if (view === 'month') {
     return (
       <ThemeProvider theme={isMobile ? mobileMonthViewTheme : theme}>
         <MonthView
           isMobile={isMobile}
+          dayStartHour={dayStartHourInternal}
           events={normalizedEvents}
           currDate={currDate}
           onEventClick={onEventClickInternal}
@@ -69,6 +68,7 @@ function Calendar<TEvent extends ICalendarEvent>({
     return (
       <DayView
         currDate={currDate}
+        dayStartHour={dayStartHourInternal}
         events={normalizedEvents}
         onEventClick={onEventClickInternal}
       />
@@ -79,6 +79,7 @@ function Calendar<TEvent extends ICalendarEvent>({
       <AgendaView
         isLoading={isLoadingInternal}
         isMobile={isMobile}
+        dayStartHour={dayStartHourInternal}
         currDate={currDate}
         events={normalizedEvents}
         onEventClick={onEventClickInternal}

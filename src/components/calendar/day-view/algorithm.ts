@@ -1,15 +1,15 @@
-import { ICalendarEvent } from '../utils/types';
+import { IEventInfo } from '../utils/types';
 
 type EventInfo = {
-  event: ICalendarEvent,
-  visibleStart: Date,
-  visibleEnd: Date,
+  event: IEventInfo,
+  visibleStartV: Date,
+  visibleEndV: Date,
 };
 
 type RenderInfo = {
-  event: ICalendarEvent,
-  visibleStart: Date,
-  visibleEnd: Date,
+  event: IEventInfo,
+  visibleStartV: Date,
+  visibleEndV: Date,
   colIdx: number,
   colCount: number,
   fullColCount: number,
@@ -20,7 +20,7 @@ function getEventWidth(target: EventInfo, nextCol: number, curGrid: EventInfo[][
   for (let colI = nextCol; colI < curGrid.length; colI += 1) {
     for (let rowI = 0; rowI < curGrid[colI].length; rowI += 1) {
       const tester = curGrid[colI][rowI];
-      if (target.visibleStart < tester.visibleEnd && tester.visibleStart < target.visibleEnd) {
+      if (target.visibleStartV < tester.visibleEndV && tester.visibleStartV < target.visibleEndV) {
         // Collision found
         return width;
       }
@@ -40,8 +40,8 @@ export function getRenderInfo(partDayEventsInfo: EventInfo[]): RenderInfo {
         const target = curGrid[colI][rowI];
         renderInfo.push({
           event: target.event,
-          visibleStart: target.visibleStart,
-          visibleEnd: target.visibleEnd,
+          visibleStartV: target.visibleStartV,
+          visibleEndV: target.visibleEndV,
           colIdx: colI,
           colCount: getEventWidth(target, colI + 1, curGrid),
           fullColCount: curGrid.length,
@@ -52,7 +52,7 @@ export function getRenderInfo(partDayEventsInfo: EventInfo[]): RenderInfo {
   // Place events as left as possible
   for (let i = 0; i < partDayEventsInfo.length; i += 1) {
     const cur = partDayEventsInfo[i];
-    if (lastVisibleEndTime !== null && lastVisibleEndTime <= cur.visibleStart) {
+    if (lastVisibleEndTime !== null && lastVisibleEndTime <= cur.visibleStartV) {
       // New colliding group starts. Add render info from previous one
       addRenderInfo(grid);
       grid = [];
@@ -60,7 +60,7 @@ export function getRenderInfo(partDayEventsInfo: EventInfo[]): RenderInfo {
     }
     let found = false;
     for (let col = 0; col < grid.length; col += 1) {
-      if (grid[col][grid[col].length - 1].visibleEnd <= cur.visibleStart) {
+      if (grid[col][grid[col].length - 1].visibleEndV <= cur.visibleStartV) {
         grid[col].push(cur);
         found = true;
         break;
@@ -70,8 +70,8 @@ export function getRenderInfo(partDayEventsInfo: EventInfo[]): RenderInfo {
       // Cannot find non-colliding position
       grid.push([cur]);
     }
-    if (lastVisibleEndTime === null || lastVisibleEndTime < cur.visibleEnd) {
-      lastVisibleEndTime = cur.visibleEnd;
+    if (lastVisibleEndTime === null || lastVisibleEndTime < cur.visibleEndV) {
+      lastVisibleEndTime = cur.visibleEndV;
     }
   }
   if (grid.length > 0) {

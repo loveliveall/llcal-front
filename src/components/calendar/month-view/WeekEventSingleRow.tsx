@@ -18,13 +18,14 @@ const useStyles = makeStyles(() => ({
 
 interface OwnProps {
   isMobile: boolean,
+  dayStartHour: number,
   row: (ISingleEventRenderInfo | null)[],
   onEventClick: (event: ICalendarEvent) => void,
 }
 type WeekEventSingleRowProps = OwnProps;
 
 const WeekEventSingleRow: React.FC<WeekEventSingleRowProps> = ({
-  isMobile, row, onEventClick,
+  isMobile, dayStartHour, row, onEventClick,
 }) => {
   const classes = useStyles();
 
@@ -43,6 +44,7 @@ const WeekEventSingleRow: React.FC<WeekEventSingleRowProps> = ({
           >
             <SingleEvent
               isMobile={isMobile}
+              dayStartHour={dayStartHour}
               event={event}
               isBlock={instance.isBlock}
               onEventClick={onEventClick}
@@ -56,5 +58,6 @@ const WeekEventSingleRow: React.FC<WeekEventSingleRowProps> = ({
 
 export default React.memo(WeekEventSingleRow, (prevProps, nextProps) => (
   areEqual(prevProps.isMobile, nextProps.isMobile)
+  && areEqual(prevProps.dayStartHour, nextProps.dayStartHour)
   && areEqual(prevProps.row, nextProps.row)
 ));

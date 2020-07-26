@@ -29,13 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface IOwnProps {
   isMobile: boolean,
+  dayStartHour: number,
   eventRenderGrid: TMonthEventGrid,
   onEventClick: (event: ICalendarEvent) => void,
 }
 type WeekEventRowProps = IOwnProps;
 
 const WeekEventRow: React.FC<WeekEventRowProps> = ({
-  isMobile, eventRenderGrid, onEventClick,
+  isMobile, dayStartHour, eventRenderGrid, onEventClick,
 }) => {
   const classes = useStyles();
   const classesCommon = useCommonStyles();
@@ -100,6 +101,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
         <WeekEventSingleRow
           key={idx} // eslint-disable-line react/no-array-index-key
           isMobile={isMobile}
+          dayStartHour={dayStartHour}
           row={row}
           onEventClick={onEventClick}
         />
@@ -183,6 +185,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
               <SingleEvent
                 key={instance.event.id}
                 isMobile={isMobile}
+                dayStartHour={dayStartHour}
                 event={event}
                 isBlock={instance.isBlock}
                 onEventClick={onInstanceClick}

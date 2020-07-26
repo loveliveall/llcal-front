@@ -12,7 +12,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 
 import SingleDateView from './SingleDateView';
 import { getEventsInRange } from '../utils/utils';
-import { ICalendarEvent } from '../utils/types';
+import { ICalendarEvent, IEventInfo } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,14 +27,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface IOwnProps {
   isLoading: boolean,
   isMobile: boolean,
-  events: ICalendarEvent[],
+  dayStartHour: number,
+  events: IEventInfo[],
   onEventClick: (event: ICalendarEvent) => void,
   currDate: Date,
 }
 type AgendaViewProps = IOwnProps;
 
 const AgendaView: React.FC<AgendaViewProps> = ({
-  isLoading, isMobile, events, currDate, onEventClick,
+  isLoading, isMobile, dayStartHour, events, currDate, onEventClick,
 }) => {
   const classes = useStyles();
 
@@ -64,6 +65,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
             <SingleDateView
               key={targetDate.getTime()}
               isMobile={isMobile}
+              dayStartHour={dayStartHour}
               showFullDate={false}
               startOfDay={targetDate}
               events={events}

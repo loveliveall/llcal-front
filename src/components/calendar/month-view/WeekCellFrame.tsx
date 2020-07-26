@@ -2,6 +2,7 @@ import React from 'react';
 import addDays from 'date-fns/addDays';
 import isSameDay from 'date-fns/isSameDay';
 import isSameMonth from 'date-fns/isSameMonth';
+import subHours from 'date-fns/subHours';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 interface OwnProps {
+  dayStartHour: number,
   currDate: Date,
   rangeStart: Date,
   onMonthDateClick: (date: Date) => void,
@@ -61,7 +63,7 @@ interface OwnProps {
 type WeekCellFrameProps = OwnProps;
 
 const WeekCellFrame: React.FC<WeekCellFrameProps> = ({
-  currDate, rangeStart, onMonthDateClick,
+  dayStartHour, currDate, rangeStart, onMonthDateClick,
 }) => {
   const classes = useStyles();
   const now = new Date();
@@ -70,7 +72,7 @@ const WeekCellFrame: React.FC<WeekCellFrameProps> = ({
     <div className={classes.cellFrame}>
       {new Array(7).fill(null).map((_, idx) => {
         const cellDate = addDays(rangeStart, idx);
-        const isToday = isSameDay(cellDate, now);
+        const isToday = isSameDay(cellDate, subHours(now, dayStartHour));
         const isTargetMonth = isSameMonth(cellDate, currDate);
         const onClick = () => onMonthDateClick(cellDate);
         return (

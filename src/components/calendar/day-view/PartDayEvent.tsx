@@ -1,14 +1,13 @@
 import React from 'react';
 import addDays from 'date-fns/addDays';
 import differenceInMinutes from 'date-fns/differenceInMinutes';
-import startOfDay from 'date-fns/startOfDay';
 
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { getCellHeightCalc, SINGLE_LINE_MINUTE } from './styles';
 import { DIMMED_FILTER, getTimeString } from '../utils/utils';
-import { ICalendarEvent } from '../utils/types';
+import { ICalendarEvent, IEventInfo } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   eventInstance: {
@@ -28,9 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface IOwnProps {
-  event: ICalendarEvent,
-  visibleStart: Date,
-  visibleEnd: Date,
+  thisDayStart: Date,
+  dayStartHour: number,
+  event: IEventInfo,
+  visibleStartV: Date,
+  visibleEndV: Date,
   colIdx: number,
   colCount: number,
   fullColCount: number,
@@ -39,27 +40,26 @@ interface IOwnProps {
 type PartDayEventProps = IOwnProps;
 
 const PartDayEvent: React.FC<PartDayEventProps> = ({
-  event, visibleStart, visibleEnd, colIdx, colCount, fullColCount, onEventClick,
+  thisDayStart, dayStartHour, event, visibleStartV, visibleEndV, colIdx, colCount, fullColCount, onEventClick,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
   const now = new Date();
 
-  const dayStart = startOfDay(visibleStart);
-  const nextDayStart = addDays(dayStart, 1);
-  const minFromDayStart = differenceInMinutes(visibleStart, dayStart); // in minutes
-  const duration = differenceInMinutes(visibleEnd, visibleStart); // in minutes
-  const startTimeStr = event.startTime < dayStart ? '' : getTimeString(event.startTime);
+  const nextDayStart = addDays(thisDayStart, 1);
+  const minFromDayStart = differenceInMinutes(visibleStartV, thisDayStart); // in minutes
+  const duration = differenceInMinutes(visibleEndV, visibleStartV); // in minutes
+  const startTimeStr = event.startTimeV < thisDayStart ? '' : getTimeString(event.orig.startTime, dayStartHour);
   const endTimeStr = (() => {
-    if (event.endTime > nextDayStart) return ''; // Event continues to next day
-    if (event.endTime.getTime() === nextDayStart.getTime()) return '24:00'; // Exceptional case to display 24:00
-    return getTimeString(event.endTime);
+    if (event.endTimeV > nextDayStart) return ''; // Event continues to next day
+    if (event.endTimeV.getTime() === nextDayStart.getTime()) return `${24 + dayStartHour}:00`; // Exceptional case to display 24:00
+    return getTimeString(event.orig.endTime, dayStartHour);
   })();
   const timeString = startTimeStr === endTimeStr ? startTimeStr : `${startTimeStr} - ${endTimeStr}`;
 
   const onKeyUp = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     if (ev.key === 'Enter') {
-      onEventClick(event);
+      onEventClick(event.orig);
     }
   };
 
@@ -75,28 +75,28 @@ const PartDayEvent: React.FC<PartDayEventProps> = ({
         width: `${(100 * colCount) / fullColCount}%`,
         height: `calc(${getCellHeightCalc(theme)} / 60 * ${duration})`,
         boxSizing: 'border-box',
-        border: `${theme.spacing(0.125)}px solid ${event.colorCode}`,
-        backgroundColor: `${event.colorCode}c0`,
-        filter: event.endTime <= now ? DIMMED_FILTER : undefined,
+        border: `${theme.spacing(0.125)}px solid ${event.orig.colorCode}`,
+        backgroundColor: `${event.orig.colorCode}c0`,
+        filter: event.orig.endTime <= now ? DIMMED_FILTER : undefined,
       }}
-      onClick={() => onEventClick(event)}
+      onClick={() => onEventClick(event.orig)}
       onKeyUp={onKeyUp}
     >
       <Typography
         className={classes.eventText}
         variant="body2"
         style={{
-          color: theme.palette.getContrastText(event.colorCode),
+          color: theme.palette.getContrastText(event.orig.colorCode),
         }}
       >
-        {`${event.title}${duration < SINGLE_LINE_MINUTE * 2 ? `, ${timeString}` : ''}`}
+        {`${event.orig.title}${duration < SINGLE_LINE_MINUTE * 2 ? `, ${timeString}` : ''}`}
       </Typography>
       {duration >= SINGLE_LINE_MINUTE * 2 && (
         <Typography
           className={classes.eventText}
           variant="body2"
           style={{
-            color: theme.palette.getContrastText(event.colorCode),
+            color: theme.palette.getContrastText(event.orig.colorCode),
           }}
         >
           {timeString}

@@ -26,14 +26,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TimeIndicator: React.FC = () => {
+interface OwnProps {
+  dayStartHour: number,
+}
+type TimeIndicatorProps = OwnProps;
+
+const TimeIndicator: React.FC<TimeIndicatorProps> = ({ dayStartHour }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <div className={classes.leftGutter} />
       <div>
         {new Array(24).fill(null).map((_, idx) => {
-          const hour = `0${idx}`.slice(-2);
+          const hour = `0${idx + dayStartHour}`.slice(-2);
           return (
             <div key={hour} className={classes.cellHeight}>
               <Typography
@@ -50,7 +55,7 @@ const TimeIndicator: React.FC = () => {
             className={classes.timeText}
             variant="body2"
           >
-            24:00
+            {`${24 + dayStartHour}:00`}
           </Typography>
         </div>
       </div>

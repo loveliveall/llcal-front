@@ -6,7 +6,12 @@ import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { ICalendarEvent, TMonthEventGrid, ISingleEventRenderInfo } from '../utils/types';
+import {
+  ICalendarEvent,
+  IEventInfo,
+  TMonthEventGrid,
+  ISingleEventRenderInfo,
+} from '../utils/types';
 import { getEventsInRange } from '../utils/utils';
 import { headerMarginUnit } from './styles';
 
@@ -42,8 +47,9 @@ const useStyles = makeStyles((theme) => ({
 
 interface IOwnProps {
   isMobile: boolean,
+  dayStartHour: number,
   rangeStart: Date,
-  events: ICalendarEvent[],
+  events: IEventInfo[],
   onEventClick: (event: ICalendarEvent) => void,
   onMonthDateClick: (date: Date) => void,
   currDate: Date,
@@ -51,23 +57,23 @@ interface IOwnProps {
 type WeekRowProps = IOwnProps;
 
 const WeekRow: React.FC<WeekRowProps> = ({
-  isMobile, rangeStart, events, currDate, onEventClick, onMonthDateClick,
+  isMobile, dayStartHour, rangeStart, events, currDate, onEventClick, onMonthDateClick,
 }) => {
   const classes = useStyles();
 
   const rangeEnd = addDays(rangeStart, 7); // Exlusive
   const eventRenderGrid = getEventsInRange(events, rangeStart, rangeEnd).map((event) => {
-    const visibleStart = event.startTime < rangeStart ? rangeStart : event.startTime;
-    const startSlotIdx = differenceInCalendarDays(visibleStart, rangeStart);
+    const visibleStartV = event.startTimeV < rangeStart ? rangeStart : event.startTimeV;
+    const startSlotIdx = differenceInCalendarDays(visibleStartV, rangeStart);
     const slotCount = (() => {
-      const midnightRevision = isMidnight(event.endTime) ? -1 : 0;
-      const fullCount = differenceInCalendarDays(event.endTime, visibleStart) + 1 + midnightRevision;
-      const maxAvailCount = differenceInCalendarDays(rangeEnd, visibleStart);
+      const midnightRevision = isMidnight(event.endTimeV) ? -1 : 0;
+      const fullCount = differenceInCalendarDays(event.endTimeV, visibleStartV) + 1 + midnightRevision;
+      const maxAvailCount = differenceInCalendarDays(rangeEnd, visibleStartV);
       return Math.max(Math.min(fullCount, maxAvailCount), 1);
     })();
-    const dayDiff = differenceInCalendarDays(event.endTime, event.startTime);
+    const dayDiff = differenceInCalendarDays(event.endTimeV, event.startTimeV);
     // Event is not block if a) it is not allday event and b) it resides in 00:00 - 24:00 in a same day
-    const isNotBlock = !event.allDay && (dayDiff === 0 || (dayDiff === 1 && isMidnight(event.endTime)));
+    const isNotBlock = !event.orig.allDay && (dayDiff === 0 || (dayDiff === 1 && isMidnight(event.endTimeV)));
     return {
       event,
       startSlotIdx,
@@ -86,8 +92,8 @@ const WeekRow: React.FC<WeekRowProps> = ({
     if (a.slotCount > b.slotCount) return -1;
     if (a.slotCount < b.slotCount) return 1;
     // Now from here, two events visually occupies the same dates
-    const aEvent = a.event;
-    const bEvent = b.event;
+    const aEvent = a.event.orig;
+    const bEvent = b.event.orig;
     const aStartTime = aEvent.allDay ? startOfDay(aEvent.startTime) : aEvent.startTime;
     const bStartTime = bEvent.allDay ? startOfDay(bEvent.startTime) : bEvent.startTime;
     // 3. Tie breaker: Earlier starttime comes first
@@ -107,7 +113,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
     const fillRow = (row: (ISingleEventRenderInfo | null)[]) => row.map((value, idx) => {
       if (startSlotIdx === idx) {
         return {
-          event: curr.event,
+          event: curr.event.orig,
           startSlotIdx,
           slotCount,
           isBlock,
@@ -115,7 +121,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
       }
       if (startSlotIdx < idx && idx < startSlotIdx + slotCount) {
         return {
-          event: curr.event,
+          event: curr.event.orig,
           startSlotIdx: -1, // Not render this event. Hold it for context
           slotCount: 0,
           isBlock,
@@ -134,6 +140,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
     <div className={classes.row}>
       {/* Cell display */}
       <WeekCellFrame
+        dayStartHour={dayStartHour}
         currDate={currDate}
         rangeStart={rangeStart}
         onMonthDateClick={onMonthDateClick}
@@ -169,6 +176,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
       <div className={classes.eventOverlay}>
         <WeekEventRow
           isMobile={isMobile}
+          dayStartHour={dayStartHour}
           eventRenderGrid={eventRenderGrid}
           onEventClick={onEventClick}
         />
@@ -179,6 +187,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
 
 export default React.memo(WeekRow, (prevProps, nextProps) => (
   areEqual(prevProps.isMobile, nextProps.isMobile)
+  && areEqual(prevProps.dayStartHour, nextProps.dayStartHour)
   && areEqual(prevProps.rangeStart, nextProps.rangeStart)
   && areEqual(prevProps.events, nextProps.events)
   && areEqual(prevProps.currDate, nextProps.currDate)

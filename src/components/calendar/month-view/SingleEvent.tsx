@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface OwnProps {
   isMobile: boolean,
+  dayStartHour: number,
   event: ICalendarEvent,
   isBlock: boolean,
   onEventClick: (event: ICalendarEvent) => void,
@@ -29,14 +30,14 @@ interface OwnProps {
 type SingleEventProps = OwnProps;
 
 const SingleEvent: React.FC<SingleEventProps> = ({
-  isMobile, event, isBlock, onEventClick,
+  isMobile, dayStartHour, event, isBlock, onEventClick,
 }) => {
   const classes = useStyles();
   const classesCommon = useCommonStyles();
   const theme = useTheme();
   const now = new Date();
 
-  const eventPrefix = (!event.allDay && !isMobile) ? `${getTimeString(event.startTime)} ` : '';
+  const eventPrefix = (!event.allDay && !isMobile) ? `${getTimeString(event.startTime, dayStartHour)} ` : '';
   const eventText = `${eventPrefix}${event.title}`;
 
   const onClick = () => {
@@ -81,6 +82,7 @@ const SingleEvent: React.FC<SingleEventProps> = ({
 
 export default React.memo(SingleEvent, (prevProps, nextProps) => (
   areEqual(prevProps.isMobile, nextProps.isMobile)
+  && areEqual(prevProps.dayStartHour, nextProps.dayStartHour)
   && areEqual(prevProps.event, nextProps.event)
   && areEqual(prevProps.isBlock, nextProps.isBlock)
 ));
