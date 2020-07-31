@@ -2,7 +2,6 @@ import React from 'react';
 import startOfDay from 'date-fns/startOfDay';
 import subHours from 'date-fns/subHours';
 import endOfDay from 'date-fns/endOfDay';
-import isSameMonth from 'date-fns/isSameMonth';
 
 import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -34,7 +33,6 @@ function Calendar<TEvent extends ICalendarEvent>({
 
   const isLoadingInternal = !!isLoading;
   const dayStartHourInternal = dayStartHour ?? 0;
-  const currDateInternal = subHours(currDate, dayStartHourInternal);
   const onEventClickInternal = (event: ICalendarEvent) => onEventClick && onEventClick(event as TEvent);
   const onMonthDateClickInternal = (date: Date) => onMonthDateClick && onMonthDateClick(date);
   const MOBILE_MONTH_SCALING = 0.75;
@@ -45,27 +43,6 @@ function Calendar<TEvent extends ICalendarEvent>({
       fontSize: 14 * MOBILE_MONTH_SCALING, // https://material-ui.com/customization/typography/#font-size
     },
   });
-
-  const initScroll = () => {
-    if (view === 'day') {
-      window.scrollTo(0, 0);
-    } else if (view === 'agenda') {
-      const now = startOfDay(subHours(new Date(), dayStartHourInternal));
-      if (isSameMonth(currDateInternal, now)) {
-        // Today month. scroll to date
-        const scrollTop = document.getElementById(`date-${now.getTime()}`)?.offsetTop;
-        window.scroll({
-          top: scrollTop === undefined ? undefined : scrollTop,
-        });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }
-  };
-
-  React.useEffect(() => {
-    initScroll();
-  }, [currDate, view, isLoadingInternal]);
 
   const normalizedEvents: IEventInfo[] = events.map((event) => ({
     orig: event,
@@ -80,7 +57,7 @@ function Calendar<TEvent extends ICalendarEvent>({
           isMobile={isMobile}
           dayStartHour={dayStartHourInternal}
           events={normalizedEvents}
-          currDate={currDateInternal}
+          currDate={currDate}
           onEventClick={onEventClickInternal}
           onMonthDateClick={onMonthDateClickInternal}
         />
@@ -90,7 +67,7 @@ function Calendar<TEvent extends ICalendarEvent>({
   if (view === 'day') {
     return (
       <DayView
-        currDate={currDateInternal}
+        currDate={currDate}
         dayStartHour={dayStartHourInternal}
         events={normalizedEvents}
         onEventClick={onEventClickInternal}
@@ -103,7 +80,7 @@ function Calendar<TEvent extends ICalendarEvent>({
         isLoading={isLoadingInternal}
         isMobile={isMobile}
         dayStartHour={dayStartHourInternal}
-        currDate={currDateInternal}
+        currDate={currDate}
         events={normalizedEvents}
         onEventClick={onEventClickInternal}
       />

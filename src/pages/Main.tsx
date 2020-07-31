@@ -6,8 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
 import endOfMonth from 'date-fns/endOfMonth';
+import isSameMonth from 'date-fns/isSameMonth';
 import subDays from 'date-fns/subDays';
+import subHours from 'date-fns/subHours';
 import subMonths from 'date-fns/subMonths';
+import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -90,7 +93,7 @@ const Main: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
   const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [currDate, setCurrDate] = React.useState(new Date());
+  const [currDate, setCurrDate] = React.useState(subHours(new Date(), dayStartHour));
   const [view, setView] = React.useState<ViewInfo>({
     showBack: false,
     currType: 'month',
@@ -101,6 +104,27 @@ const Main: React.FC = () => {
   const [vaFilter, setVAFilter] = React.useState(VA_FILTER_DEFAULT);
   const [categoryFilter, setCategoryFilter] = React.useState(CATEGORY_FILTER_DEFAULT);
   const [etcFilter, setETCFilter] = React.useState(ETC_FILTER_DEFAULT);
+
+  const initScroll = () => {
+    if (view.currType === 'day') {
+      window.scrollTo(0, 0);
+    } else if (view.currType === 'agenda') {
+      const now = startOfDay(subHours(new Date(), dayStartHour));
+      if (isSameMonth(currDate, now)) {
+        // Today month. scroll to date
+        const scrollTop = document.getElementById(`date-${now.getTime()}`)?.offsetTop;
+        window.scroll({
+          top: scrollTop === undefined ? undefined : scrollTop,
+        });
+      } else {
+        window.scrollTo(0, 0);
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    initScroll();
+  }, [currDate, view.currType, loading]);
 
   const handleNextDate = () => {
     const currView = view.currType;
