@@ -1,8 +1,6 @@
 import React from 'react';
 import addDays from 'date-fns/addDays';
-import addMonths from 'date-fns/addMonths';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
-import startOfMonth from 'date-fns/startOfMonth';
+import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -28,19 +26,19 @@ interface IOwnProps {
   isLoading: boolean,
   isMobile: boolean,
   dayStartHour: number,
+  rangeStart: Date,
+  rangeEnd: Date,
   events: IEventInfo[],
   onEventClick: (event: ICalendarEvent) => void,
-  currDate: Date,
 }
 type AgendaViewProps = IOwnProps;
 
 const AgendaView: React.FC<AgendaViewProps> = ({
-  isLoading, isMobile, dayStartHour, events, currDate, onEventClick,
+  isLoading, isMobile, dayStartHour, events, rangeStart, rangeEnd, onEventClick,
 }) => {
   const classes = useStyles();
 
-  const monthStart = startOfMonth(currDate);
-  const eventsInRange = getEventsInRange(events, monthStart, addMonths(monthStart, 1));
+  const eventsInRange = getEventsInRange(events, rangeStart, rangeEnd);
   return (
     <div className={classes.root}>
       {isLoading && (
@@ -59,14 +57,14 @@ const AgendaView: React.FC<AgendaViewProps> = ({
           </Typography>
         </div>
       ) : (
-        new Array(getDaysInMonth(monthStart)).fill(null).map((_, idx) => {
-          const targetDate = addDays(monthStart, idx);
+        new Array(differenceInCalendarDays(rangeEnd, rangeStart)).fill(null).map((_, idx) => {
+          const targetDate = addDays(rangeStart, idx);
           return (
             <SingleDateView
               key={targetDate.getTime()}
               isMobile={isMobile}
               dayStartHour={dayStartHour}
-              showFullDate={false}
+              showFullDate
               startOfDay={targetDate}
               events={events}
               onEventClick={onEventClick}

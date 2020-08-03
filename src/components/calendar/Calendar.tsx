@@ -2,6 +2,8 @@ import React from 'react';
 import startOfDay from 'date-fns/startOfDay';
 import subHours from 'date-fns/subHours';
 import endOfDay from 'date-fns/endOfDay';
+import startOfMonth from 'date-fns/startOfMonth';
+import addMonths from 'date-fns/addMonths';
 
 import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -22,17 +24,22 @@ interface IOwnProps<TEvent extends ICalendarEvent> {
   onMonthDateClick?: (date: Date) => void,
   currDate: Date,
   view: ViewType,
+  agendaStart?: Date,
+  agendaEnd?: Date,
 }
 type CalendarProps<TEvent extends ICalendarEvent> = IOwnProps<TEvent>;
 
 function Calendar<TEvent extends ICalendarEvent>({
-  isLoading, dayStartHour, events, currDate, view, onEventClick, onMonthDateClick,
+  isLoading, dayStartHour, events, currDate, view, agendaStart, agendaEnd,
+  onEventClick, onMonthDateClick,
 }: CalendarProps<TEvent>): React.ReactElement | null {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const isLoadingInternal = !!isLoading;
   const dayStartHourInternal = dayStartHour ?? 0;
+  const agendaStartInternal = agendaStart ?? startOfMonth(currDate);
+  const agendaEndInternal = agendaEnd ?? addMonths(agendaStartInternal, 1);
   const onEventClickInternal = (event: ICalendarEvent) => onEventClick && onEventClick(event as TEvent);
   const onMonthDateClickInternal = (date: Date) => onMonthDateClick && onMonthDateClick(date);
   const MOBILE_MONTH_SCALING = 0.75;
@@ -84,7 +91,8 @@ function Calendar<TEvent extends ICalendarEvent>({
         isLoading={isLoadingInternal}
         isMobile={isMobile}
         dayStartHour={dayStartHourInternal}
-        currDate={currDate}
+        rangeStart={agendaStartInternal}
+        rangeEnd={agendaEndInternal}
         events={normalizedEvents}
         onEventClick={onEventClickInternal}
       />
