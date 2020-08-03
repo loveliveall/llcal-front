@@ -20,7 +20,7 @@ const birthdayEvents: ServerEvent[] = birthdayList.map((birthday, idx) => {
     place: '',
     description: `${birthday.name}의 생일입니다`,
     startTime: dtstart / 1000,
-    duration: 1,
+    duration: 86200,
     endTime: INFINITE_END_TS,
     isAllDay: true,
     rrule: new RRule({

@@ -45,7 +45,11 @@ function Calendar<TEvent extends ICalendarEvent>({
   });
 
   const normalizedEvents: IEventInfo[] = events.map((event) => ({
-    orig: event,
+    orig: {
+      ...event,
+      startTime: event.allDay ? startOfDay(event.startTime) : event.startTime,
+      endTime: event.allDay ? endOfDay(event.endTime) : event.endTime,
+    },
     startTimeV: event.allDay ? startOfDay(event.startTime) : subHours(event.startTime, dayStartHourInternal),
     endTimeV: event.allDay ? endOfDay(event.endTime) : subHours(event.endTime, dayStartHourInternal),
   }));

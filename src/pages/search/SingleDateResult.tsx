@@ -24,7 +24,11 @@ function SingleDateResult<TEvent extends ICalendarEvent>({
   const isMobile = useMobileCheck();
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const converted = events.map((e) => ({
-    orig: e,
+    orig: {
+      ...e,
+      startTime: e.allDay ? startOfDay(e.startTime) : e.startTime,
+      endTime: e.allDay ? endOfDay(e.endTime) : e.endTime,
+    },
     startTimeV: e.allDay ? startOfDay(e.startTime) : subHours(e.startTime, dayStartHour),
     endTimeV: e.allDay ? endOfDay(e.endTime) : subHours(e.endTime, dayStartHour),
   }));
