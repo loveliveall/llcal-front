@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 import SingleEventRow from './SingleEventRow';
 
-import { getEventsInRange, WEEKDAY_SHORT_NAMES } from '../utils/utils';
+import { WEEKDAY_SHORT_NAMES } from '../utils/utils';
 import { ICalendarEvent, IEventInfo } from '../utils/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,19 +32,19 @@ interface IOwnProps {
   showFullDate: boolean,
   dayStartHour: number,
   startOfDay: Date,
-  events: IEventInfo[],
+  eventsInRange: IEventInfo[],
   onEventClick: (event: ICalendarEvent) => void,
 }
 type SingleDateViewProps = IOwnProps;
 
 const SingleDateView: React.FC<SingleDateViewProps> = ({
-  isMobile, showFullDate, dayStartHour, startOfDay, events, onEventClick,
+  isMobile, showFullDate, dayStartHour, startOfDay, eventsInRange, onEventClick,
 }) => {
   const classes = useStyles();
 
   const now = new Date();
   const rangeEnd = addDays(startOfDay, 1);
-  const visibleEvents = getEventsInRange(events, startOfDay, rangeEnd).sort((a, b) => {
+  const visibleEvents = eventsInRange.sort((a, b) => {
     const aFullDay = a.orig.allDay || (a.startTimeV <= startOfDay && rangeEnd <= a.endTimeV);
     const bFullDay = b.orig.allDay || (b.startTimeV <= startOfDay && rangeEnd <= b.endTimeV);
     if (aFullDay && !bFullDay) return -1;

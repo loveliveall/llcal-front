@@ -66,7 +66,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
               dayStartHour={dayStartHour}
               showFullDate
               startOfDay={targetDate}
-              events={events}
+              eventsInRange={getEventsInRange(events, targetDate, addDays(targetDate, 1))}
               onEventClick={onEventClick}
             />
           );
