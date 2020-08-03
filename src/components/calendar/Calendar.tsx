@@ -1,7 +1,4 @@
 import React from 'react';
-import startOfDay from 'date-fns/startOfDay';
-import subHours from 'date-fns/subHours';
-import endOfDay from 'date-fns/endOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
 import addMonths from 'date-fns/addMonths';
 
@@ -12,7 +9,8 @@ import MonthView from './month-view/MonthView';
 import DayView from './day-view/DayView';
 import AgendaView from './agenda-view/AgendaView';
 
-import { ICalendarEvent, IEventInfo } from './utils/types';
+import { ICalendarEvent } from './utils/types';
+import { normalizeEvents } from './utils/utils';
 
 export type ViewType = 'month' | 'day' | 'agenda'; // TODO: Add week view..?
 
@@ -51,15 +49,7 @@ function Calendar<TEvent extends ICalendarEvent>({
     },
   });
 
-  const normalizedEvents: IEventInfo[] = events.map((event) => ({
-    orig: {
-      ...event,
-      startTime: event.allDay ? startOfDay(event.startTime) : event.startTime,
-      endTime: event.allDay ? endOfDay(event.endTime) : event.endTime,
-    },
-    startTimeV: event.allDay ? startOfDay(event.startTime) : subHours(event.startTime, dayStartHourInternal),
-    endTimeV: event.allDay ? endOfDay(event.endTime) : subHours(event.endTime, dayStartHourInternal),
-  }));
+  const normalizedEvents = normalizeEvents(events, dayStartHourInternal);
 
   if (view === 'month') {
     return (
