@@ -24,6 +24,7 @@ import { ClientEvent } from '@/types';
 import { callGetEvents } from '@/api';
 import { getDateString } from '@/utils';
 import SearchToolbar, { SearchToolbarProps } from '@/components/app-frame/SearchToolbar';
+import { normalizeEvents } from '@/components/calendar';
 import SingleDateResult from './SingleDateResult';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,6 +59,7 @@ const SearchPage: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
+  const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const now = new Date();
   const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [searchTerm, setSearchTerm] = React.useState('');
@@ -142,6 +144,7 @@ const SearchPage: React.FC = () => {
       keys: ['title', 'place', 'description'],
     },
   ).map((e) => e.obj);
+  const normSearchedEvents = normalizeEvents(searchedEvents, dayStartHour);
   const diff = differenceInCalendarDays(searchRange[1], searchRange[0]);
 
   return (
@@ -176,7 +179,7 @@ const SearchPage: React.FC = () => {
               <SingleDateResult
                 key={targetDate.toISOString()}
                 startOfDay={targetDate}
-                events={searchedEvents}
+                events={normSearchedEvents}
                 onEventClick={onEventClick}
               />
             );
