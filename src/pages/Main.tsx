@@ -29,7 +29,12 @@ import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
 
 import { filterEvents } from '@/utils';
-import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT, ETC_FILTER_DEFAULT } from '@/defaults';
+import {
+  VA_FILTER_DEFAULT,
+  CATEGORY_FILTER_DEFAULT,
+  ETC_FILTER_DEFAULT,
+  VIEW_TYPE_KEY,
+} from '@/defaults';
 import { ClientEvent, ViewInfo, AppViewType } from '@/types';
 import { callGetEvents } from '@/api';
 
@@ -120,7 +125,7 @@ const Main: React.FC = () => {
   const [currDate, setCurrDate] = React.useState(subHours(new Date(), dayStartHour));
   const [view, setView] = React.useState<ViewInfo>({
     showBack: false,
-    currType: 'dashboard',
+    currType: (localStorage.getItem(VIEW_TYPE_KEY) ?? 'dashboard') as AppViewType,
   });
   const [eventCache, setEventCache] = React.useState<{
     [key: string]: ClientEvent[] | undefined,

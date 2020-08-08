@@ -38,7 +38,12 @@ import { AppState, DAY_START_HOUR_KEY } from '@/store';
 import { clearToken } from '@/store/auth/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
-import { VA_KEY, CATEGORY_KEY, ETC_KEY } from '@/defaults';
+import {
+  VA_KEY,
+  CATEGORY_KEY,
+  ETC_KEY,
+  VIEW_TYPE_KEY,
+} from '@/defaults';
 import { saveLocalStorage } from '@/utils';
 import {
   VACheckState,
@@ -139,15 +144,16 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     });
     setReportDialogOpen(true);
   };
-  const onSaveFilterClick = () => {
+  const onSaveSettingsClick = () => {
     ReactGA.event({
       category: 'DrawerContent',
-      action: 'Save filter',
+      action: 'Save settings',
     });
     saveLocalStorage(VA_KEY, vaFilter);
     saveLocalStorage(CATEGORY_KEY, categoryFilter);
     saveLocalStorage(ETC_KEY, etcFilter);
     localStorage.setItem(DAY_START_HOUR_KEY, `${dayStartHour}`);
+    localStorage.setItem(VIEW_TYPE_KEY, currView);
     dispatch(openSnackbar('저장 완료'));
   };
   const onExportClick = () => {
@@ -340,8 +346,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           />
         </Collapse>
         <div className={classes.center}>
-          <Button onClick={onSaveFilterClick} variant="outlined">
-            필터 설정 저장
+          <Button onClick={onSaveSettingsClick} variant="outlined">
+            캘린더 설정 저장
           </Button>
         </div>
         <div className={classes.center}>

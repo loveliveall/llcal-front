@@ -6,6 +6,7 @@ import { VACheckState, CategoryCheckState, ETCCheckState } from './types';
 export const VA_KEY = 'vaFilter';
 export const CATEGORY_KEY = 'catFilter';
 export const ETC_KEY = 'etcFilter';
+export const VIEW_TYPE_KEY = 'viewType';
 
 export const VA_FILTER_DEFAULT: VACheckState = {
   ...voiceActorList.reduce((acc, curr) => ({
