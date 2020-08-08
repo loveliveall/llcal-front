@@ -16,6 +16,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import TodayIcon from '@material-ui/icons/Today';
 
+import { AVAILABLE_VIEWS } from '@/components/calendar';
+
 import { refreshHash } from '@/store/flags/actions';
 import { ViewInfo } from '@/types';
 import { AppState } from '@/store';
@@ -73,14 +75,15 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
     dispatch(refreshHash());
   };
 
-  const dateDisplay = (() => {
+  const titleText = (() => {
     const year = `0${currDate.getFullYear()}`.slice(-2);
     const month = `0${currDate.getMonth() + 1}`.slice(-2);
     const day = `0${currDate.getDate()}`.slice(-2);
     // const weekday = ['일', '월', '화', '수', '목', '금', '토'][currDate.getDay()];
     if (currView === 'month' || currView === 'agenda') return `'${year}.${month}.`;
     if (currView === 'day') return `'${year}.${month}.${day}.`;
-    return '';
+    if (currView === 'dashboard') return '대시보드';
+    throw new Error(`titleText for viewType ${currView} is not defined`);
   })();
   const prevDateTooltip = (() => {
     if (currView === 'month' || currView === 'agenda') return '이전 달';
@@ -116,38 +119,42 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
           <MenuIcon />
         </IconButton>
       )}
-      <Tooltip title="오늘">
-        <IconButton
-          className={classes.desktopLeftIcon}
-          color="inherit"
-          aria-label="show today"
-          onClick={onTodayClick}
-        >
-          <TodayIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title={prevDateTooltip}>
-        <IconButton
-          color="inherit"
-          aria-label="prev day"
-          onClick={handlePrevDate}
-        >
-          <ChevronLeftIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title={nextDateTooltip}>
-        <IconButton
-          color="inherit"
-          aria-label="next day"
-          onClick={handleNextDate}
-        >
-          <ChevronRightIcon />
-        </IconButton>
-      </Tooltip>
+      {AVAILABLE_VIEWS.includes(currView as any) && (
+        <>
+          <Tooltip title="오늘">
+            <IconButton
+              className={classes.desktopLeftIcon}
+              color="inherit"
+              aria-label="show today"
+              onClick={onTodayClick}
+            >
+              <TodayIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={prevDateTooltip}>
+            <IconButton
+              color="inherit"
+              aria-label="prev day"
+              onClick={handlePrevDate}
+            >
+              <ChevronLeftIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={nextDateTooltip}>
+            <IconButton
+              color="inherit"
+              aria-label="next day"
+              onClick={handleNextDate}
+            >
+              <ChevronRightIcon />
+            </IconButton>
+          </Tooltip>
+        </>
+      )}
       <Typography
         variant="h6"
       >
-        {dateDisplay}
+        {titleText}
       </Typography>
       <div className={classes.padded} />
       <Tooltip title="새로고침">

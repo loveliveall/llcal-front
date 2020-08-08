@@ -5,6 +5,7 @@ import { virtualize } from 'react-swipeable-views-utils';
 import { useDispatch, useSelector } from 'react-redux';
 import addDays from 'date-fns/addDays';
 import addMonths from 'date-fns/addMonths';
+import endOfDay from 'date-fns/endOfDay';
 import endOfMonth from 'date-fns/endOfMonth';
 import isSameMonth from 'date-fns/isSameMonth';
 import subDays from 'date-fns/subDays';
@@ -19,7 +20,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import Calendar, { ViewType } from '@/components/calendar';
+import Calendar, { AVAILABLE_VIEWS, ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
 
@@ -29,8 +30,10 @@ import { openSnackbar } from '@/store/snackbar/actions';
 
 import { filterEvents } from '@/utils';
 import { VA_FILTER_DEFAULT, CATEGORY_FILTER_DEFAULT, ETC_FILTER_DEFAULT } from '@/defaults';
-import { ClientEvent, ViewInfo } from '@/types';
+import { ClientEvent, ViewInfo, AppViewType } from '@/types';
 import { callGetEvents } from '@/api';
+
+import Dashboard from './Dashboard';
 
 const VirtualizeSwipeableViews = virtualize(SwipeableViews);
 const DRAWER_WIDTH = 280;
@@ -78,10 +81,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function getCacheKey(currDate: Date) {
-  const year = `000${currDate.getFullYear()}`.slice(-4);
-  const month = `0${currDate.getMonth() + 1}`.slice(-2);
-  return `${year}${month}`;
+function getCacheKey(currDate: Date, viewType: AppViewType) {
+  if (AVAILABLE_VIEWS.includes(viewType as any)) {
+    const year = `000${currDate.getFullYear()}`.slice(-4);
+    const month = `0${currDate.getMonth() + 1}`.slice(-2);
+    return `${year}${month}`;
+  }
+  if (viewType === 'dashboard') {
+    return 'upcoming';
+  }
+  throw new Error(`cacheKey policy for viewType ${viewType} is not defined`);
+}
+
+function getRange(currDate: Date, viewType: AppViewType): [Date, Date] {
+  if (AVAILABLE_VIEWS.includes(viewType as any)) {
+    const rangeStart = subDays(startOfMonth(currDate), 8); // one-day margin (daystarthour issue)
+    const rangeEnd = addDays(endOfMonth(currDate), 15); // one-day margin (daystarthour issue)
+    return [rangeStart, rangeEnd];
+  }
+  if (viewType === 'dashboard') {
+    const now = new Date();
+    const rangeStart = subDays(startOfDay(now), 1);
+    const rangeEnd = addDays(endOfDay(now), 8);
+    return [rangeStart, rangeEnd];
+  }
+  throw new Error(`event retrieving range for viewType ${viewType} is not defined`);
 }
 
 const Main: React.FC = () => {
@@ -96,7 +120,7 @@ const Main: React.FC = () => {
   const [currDate, setCurrDate] = React.useState(subHours(new Date(), dayStartHour));
   const [view, setView] = React.useState<ViewInfo>({
     showBack: false,
-    currType: 'month',
+    currType: 'dashboard',
   });
   const [eventCache, setEventCache] = React.useState<{
     [key: string]: ClientEvent[] | undefined,
@@ -119,6 +143,8 @@ const Main: React.FC = () => {
       } else {
         window.scrollTo(0, 0);
       }
+    } else if (view.currType === 'dashboard') {
+      window.scrollTo(0, 0);
     }
   };
 
@@ -160,7 +186,7 @@ const Main: React.FC = () => {
       }
     }, 100);
   };
-  const onSelectView = (v: ViewType) => {
+  const onSelectView = (v: AppViewType) => {
     ReactGA.event({
       category: 'Main',
       action: 'Change view type',
@@ -205,13 +231,12 @@ const Main: React.FC = () => {
     setCurrRefreshFlag(refreshFlag);
   }
 
-  const cacheKey = getCacheKey(currDate);
-  const rangeStart = subDays(startOfMonth(currDate), 8); // one-day margin (daystarthour issue)
-  const rangeEnd = addDays(endOfMonth(currDate), 15); // one-day margin (daystarthour issue)
+  const cacheKey = getCacheKey(currDate, view.currType);
   if (!(cacheKey in eventCache) && !loading) {
     // Load data into cache
+    const range = getRange(currDate, view.currType);
     setLoading(true);
-    callGetEvents(rangeStart, rangeEnd).then((data) => {
+    callGetEvents(range[0], range[1]).then((data) => {
       setEventCache((prev) => ({
         ...prev,
         [cacheKey]: data,
@@ -284,36 +309,49 @@ const Main: React.FC = () => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <VirtualizeSwipeableViews
-          overscanSlideAfter={1}
-          overscanSlideBefore={1}
-          index={viewIndex}
-          onChangeIndex={(index, indexLatest) => {
-            if (index < indexLatest) handlePrevDate();
-            else handleNextDate();
-          }}
-          slideRenderer={({ index, key }) => {
-            const isCurrIndex = index === viewIndex;
-            const dateFn = view.currType === 'month' ? addMonths : addDays;
-            return (
-              <div
-                key={key}
-                className={`${classes.calendarWrapper} ${view.currType === 'month' && classes.monthViewWrapper}`}
-                onWheel={onCalendarWheel}
-              >
-                <Calendar
-                  isLoading={isCurrIndex ? loading : true}
-                  dayStartHour={dayStartHour}
-                  events={isCurrIndex ? filterEvents(events, vaFilter, categoryFilter, etcFilter) : []}
-                  currDate={dateFn(currDate, index - viewIndex)}
-                  view={view.currType}
-                  onMonthDateClick={onMonthDateClick}
-                  onEventClick={onEventClick}
-                />
-              </div>
-            );
-          }}
-        />
+        {AVAILABLE_VIEWS.includes(view.currType as any) && (
+          <VirtualizeSwipeableViews
+            overscanSlideAfter={1}
+            overscanSlideBefore={1}
+            index={viewIndex}
+            onChangeIndex={(index, indexLatest) => {
+              if (index < indexLatest) handlePrevDate();
+              else handleNextDate();
+            }}
+            slideRenderer={({ index, key }) => {
+              const isCurrIndex = index === viewIndex;
+              const dateFn = view.currType === 'month' ? addMonths : addDays;
+              return (
+                <div
+                  key={key}
+                  className={`${classes.calendarWrapper} ${view.currType === 'month' && classes.monthViewWrapper}`}
+                  onWheel={onCalendarWheel}
+                >
+                  <Calendar
+                    isLoading={isCurrIndex ? loading : true}
+                    dayStartHour={dayStartHour}
+                    events={isCurrIndex ? filterEvents(events, vaFilter, categoryFilter, etcFilter) : []}
+                    currDate={dateFn(currDate, index - viewIndex)}
+                    view={view.currType as ViewType}
+                    onMonthDateClick={onMonthDateClick}
+                    onEventClick={onEventClick}
+                  />
+                </div>
+              );
+            }}
+          />
+        )}
+        {view.currType === 'dashboard' && (
+          <div className={`${classes.calendarWrapper}`}>
+            <Dashboard
+              isLoading={loading}
+              vaFilter={vaFilter}
+              etcFilter={etcFilter}
+              events={events}
+              onEventClick={onEventClick}
+            />
+          </div>
+        )}
       </main>
     </div>
   );

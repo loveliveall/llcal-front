@@ -12,7 +12,8 @@ import AgendaView from './agenda-view/AgendaView';
 import { ICalendarEvent } from './utils/types';
 import { normalizeEvents } from './utils/utils';
 
-export type ViewType = 'month' | 'day' | 'agenda'; // TODO: Add week view..?
+export const AVAILABLE_VIEWS = ['month', 'day', 'agenda'] as const; // TODO: Add week view..?
+export type ViewType = typeof AVAILABLE_VIEWS[number];
 
 interface IOwnProps<TEvent extends ICalendarEvent> {
   isLoading?: boolean,

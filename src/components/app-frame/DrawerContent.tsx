@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AddIcon from '@material-ui/icons/Add';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -32,7 +33,6 @@ import AboutDialog from '@/components/dialogs/AboutDialog';
 import DayStartHourDialog from '@/components/dialogs/DayStartHourDialog';
 import ReportDialog from '@/components/dialogs/ReportDialog';
 import ExportDialog from '@/components/dialogs/ExportDialog';
-import { ViewType } from '@/components/calendar';
 
 import { AppState, DAY_START_HOUR_KEY } from '@/store';
 import { clearToken } from '@/store/auth/actions';
@@ -40,7 +40,12 @@ import { openEventEditDialog } from '@/store/edit-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
 import { VA_KEY, CATEGORY_KEY, ETC_KEY } from '@/defaults';
 import { saveLocalStorage } from '@/utils';
-import { VACheckState, CategoryCheckState, ETCCheckState } from '@/types';
+import {
+  VACheckState,
+  CategoryCheckState,
+  ETCCheckState,
+  AppViewType,
+} from '@/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -64,8 +69,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface IOwnProps {
-  currView: ViewType,
-  setCurrView: (viewType: ViewType) => void,
+  currView: AppViewType,
+  setCurrView: (viewType: AppViewType) => void,
   etcFilter: ETCCheckState,
   setETCFilter: (newFilter: ETCCheckState) => void,
   vaFilter: VACheckState,
@@ -91,10 +96,14 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const [openVAFilter, setOpenVAFilter] = React.useState(false);
   const [openCategoryFilter, setOpenCategoryFilter] = React.useState(false);
   const [openETCFilter, setOpenETCFilter] = React.useState(false);
-  const VIEW_TYPE_MENU: Record<ViewType, {
+  const VIEW_TYPE_MENU: Record<AppViewType, {
     label: string,
     icon: typeof ViewDayIcon,
   }> = {
+    dashboard: {
+      label: '대시보드',
+      icon: DashboardIcon,
+    },
     agenda: {
       label: '일정 목록 보기',
       icon: ViewAgendaIcon,
@@ -199,7 +208,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           </>
         )}
         {Object.keys(VIEW_TYPE_MENU).map((v) => {
-          const viewType = v as ViewType;
+          const viewType = v as AppViewType;
           const { icon: Icon, label } = VIEW_TYPE_MENU[viewType];
           const onClick = () => {
             setCurrView(viewType);
