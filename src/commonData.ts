@@ -24,7 +24,7 @@ export const eventCategoryList: IEventCategory[] = [
   { id: 302, name: '선행권/티켓 정보', description: '선행권 및 티켓 구매와 관련된 정보', colorHex: blue[400], groupId: 1, frozen: false },
   { id: 399, name: '기타 알림', description: '어느 분류에도 속하지 않는 알림 정보', colorHex: blue[200], groupId: 1, frozen: false },
 
-  { id: 1001, name: '기타', description: '기타 일정', colorHex: '#a79b8e', groupId: 2, frozen: false },
+  { id: 1001, name: '기타', description: '기타 일정', colorHex: '#a79b8e', groupId: null, frozen: false },
   { id: 1002, name: '물갤 이벤', description: '러브라이브 선샤인 갤러리 내부 이벤트', colorHex: '#616161', groupId: 2, frozen: false },
   // Frozen categories
   { id: 10000, name: '생일', description: '캐스트 및 캐릭터의 생일', colorHex: '#9e69af', groupId: null, frozen: true },
@@ -33,7 +33,7 @@ export const eventCategoryList: IEventCategory[] = [
 
 export const categoryGroupList = [
   { id: 1, name: '예약/알림' },
-  { id: 2, name: '미분류' },
+  { id: 2, name: '비공식 일정' },
 ];
 
 interface IBirthdayRaw {
