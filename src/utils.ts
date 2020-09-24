@@ -1,4 +1,5 @@
 import { RRule } from 'rrule';
+import getDaysInMonth from 'date-fns/getDaysInMonth';
 import { voiceActorList } from '@/commonData';
 
 import {
@@ -126,7 +127,12 @@ export function rruleToText(start: Date, rrule: string): string {
         const byday = params.BYDAY;
         const weekday = byday.slice(-2) as Weekday;
         const weeknum = Number(byday.slice(0, byday.length - 2));
-        korStr = `${prefix} ${weeknum}번째 ${WEEKDAY_TO_KOR[weekday]}요일`;
+        const ordinality = (() => {
+          if (weeknum > 0) return `${weeknum}번째`;
+          if (weeknum === -1) return '마지막';
+          return `끝에서 ${Math.abs(weeknum)}번째`;
+        })();
+        korStr = `${prefix} ${ordinality} ${WEEKDAY_TO_KOR[weekday]}요일`;
       }
     } else if (params.FREQ === 'WEEKLY') {
       const prefix = isMultiInterval ? `${interval}주마다` : '매주';
@@ -161,4 +167,12 @@ export function rruleToText(start: Date, rrule: string): string {
     }
   }
   return korStr;
+}
+
+export function getNth(date: Date, positive: boolean): number {
+  const daysInMonth = getDaysInMonth(date);
+  const datePart = date.getDate();
+  return positive
+    ? Math.floor((datePart - 1) / 7) + 1 // 1-7: 1st, 8-14: 2nd, ...
+    : -(Math.floor((daysInMonth - datePart) / 7) + 1); // -1 to -7: -1st, -8 to -14: -2nd, ...
 }

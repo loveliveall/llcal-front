@@ -16,6 +16,7 @@ import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 
 import GridContainer from '@/components/common/GridContainer';
+import { getNth } from '@/utils';
 
 interface RRuleOptions {
   freq?: Frequency,
@@ -36,6 +37,7 @@ const strToWeekday = {
 };
 
 const jsDayToWeekday = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA];
+const jsDayToKor = ['일', '월', '화', '수', '목', '금', '토'];
 
 function rruleStrToOpts(rruleStr: string): RRuleOptions {
   const rrOpts: RRuleOptions = {
@@ -47,7 +49,19 @@ function rruleStrToOpts(rruleStr: string): RRuleOptions {
     if (options.interval) rrOpts.interval = options.interval;
     // Weekday
     const match = /BYDAY=(.*?)(;|$)/m.exec(rruleStr);
-    if (match) rrOpts.byweekday = match[1].split(',').map((str) => strToWeekday[str as keyof typeof strToWeekday]);
+    if (match) {
+      rrOpts.byweekday = match[1].split(',').map((str) => {
+        if (str.length === 2) {
+          // No nth prefixing
+          return strToWeekday[str as keyof typeof strToWeekday];
+        }
+        // Get nth
+        const nth = Number(str.slice(0, str.length - 2));
+        const wd = str.slice(-2) as keyof typeof strToWeekday;
+        return strToWeekday[wd].nth(nth);
+      });
+    }
+    // Handle bymonthday?
     if (options.until) {
       const rruleUntil = options.until;
       const localUntil = new Date(
@@ -83,6 +97,8 @@ function optsToRRuleStr(options: RRuleOptions): string {
 
   if (options.freq === RRule.YEARLY) return RRule.optionsToString({ ...commonOptions });
   if (options.freq === RRule.WEEKLY) return RRule.optionsToString({ ...commonOptions, byweekday: options.byweekday });
+  // Handle bymonthday?
+  if (options.freq === RRule.MONTHLY) return RRule.optionsToString({ ...commonOptions, byweekday: options.byweekday });
   if (options.freq === RRule.DAILY) return RRule.optionsToString({ ...commonOptions });
   return '';
 }
@@ -91,6 +107,20 @@ function getEndType(rrOpts: RRuleOptions) {
   if (rrOpts.until === undefined && rrOpts.count === undefined) return 'none';
   if (rrOpts.until === undefined && rrOpts.count !== undefined) return 'count';
   if (rrOpts.until !== undefined && rrOpts.count === undefined) return 'until';
+  return '';
+}
+
+type MonthlyDetail = 'positive' | 'negative';
+function getMonthlyDetail(rrOpts: RRuleOptions): MonthlyDetail | '' {
+  if (rrOpts.freq === RRule.MONTHLY) {
+    const { byweekday } = rrOpts;
+    if (byweekday !== undefined && byweekday.length === 1) {
+      const { n } = byweekday[0];
+      if (n !== undefined && n > 0) return 'positive';
+      if (n !== undefined && n < 0) return 'negative';
+    }
+    // Handle bymonthday?
+  }
   return '';
 }
 
@@ -112,6 +142,8 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
     setLocalRRule(rruleStrToOpts(rrule));
   }, [open]);
 
+  const posNth = getNth(start, true);
+  const negNth = getNth(start, false);
   const onChangeInterval = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setLocalRRule({
       ...localRRule,
@@ -195,6 +227,12 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
                     freq: selected,
                     byweekday: [jsDayToWeekday[start.getDay()]],
                   });
+                } else if (selected === RRule.MONTHLY) {
+                  setLocalRRule({
+                    ...localRRule,
+                    freq: selected,
+                    byweekday: [jsDayToWeekday[start.getDay()].nth(posNth)],
+                  });
                 } else {
                   setLocalRRule({
                     ...localRRule,
@@ -207,10 +245,49 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
               <MenuItem value="None">없음</MenuItem>
               <MenuItem value={RRule.DAILY}>일</MenuItem>
               <MenuItem value={RRule.WEEKLY}>주</MenuItem>
+              <MenuItem value={RRule.MONTHLY}>개월</MenuItem>
               <MenuItem value={RRule.YEARLY}>년</MenuItem>
             </Select>
           </Grid>
         </GridContainer>
+
+        {/* Weekday settings for Monthly freq */}
+        {localRRule.freq === RRule.MONTHLY && (
+          <>
+            <GridContainer>
+              <Grid item xs={2}>
+                <Typography>세부 설정: </Typography>
+              </Grid>
+              <Grid item xs>
+                <Select
+                  value={getMonthlyDetail(localRRule)}
+                  onChange={(e) => {
+                    const selected = e.target.value as MonthlyDetail;
+                    if (selected === 'positive') {
+                      setLocalRRule({
+                        ...localRRule,
+                        byweekday: [jsDayToWeekday[start.getDay()].nth(posNth)],
+                      });
+                    } else if (selected === 'negative') {
+                      setLocalRRule({
+                        ...localRRule,
+                        byweekday: [jsDayToWeekday[start.getDay()].nth(negNth)],
+                      });
+                    }
+                  }}
+                  disabled={isFreqEditDisabled}
+                >
+                  <MenuItem value="positive">
+                    {`${posNth}번째 ${jsDayToKor[start.getDay()]}요일`}
+                  </MenuItem>
+                  <MenuItem value="negative">
+                    {`${negNth === -1 ? '마지막' : `끝에서 ${Math.abs(negNth)}번째`} ${jsDayToKor[start.getDay()]}요일`}
+                  </MenuItem>
+                </Select>
+              </Grid>
+            </GridContainer>
+          </>
+        )}
 
         {/* Repeat end condition */}
         {localRRule.freq !== undefined && (
