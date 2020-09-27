@@ -113,6 +113,12 @@ export const birthdayList: IBirthday[] = [
   { id: 72, name: '사토 히나타', birthMonth: 12, birthDay: 23, voiceActorId: 42, isLoveLive: false },
   { id: 73, name: '카즈노 세이라', birthMonth: 5, birthDay: 4, voiceActorId: 41, isLoveLive: true },
   { id: 74, name: '카즈노 리아', birthMonth: 12, birthDay: 12, voiceActorId: 42, isLoveLive: true },
+  { id: 801, name: '시부야 카논', birthMonth: 5, birthDay: 1, voiceActorId: 501, isLoveLive: true },
+  { id: 802, name: '탕 쿠쿠', birthMonth: 7, birthDay: 7, voiceActorId: 502, isLoveLive: true },
+  { id: 803, name: '아라시 치사토', birthMonth: 2, birthDay: 25, voiceActorId: 503, isLoveLive: true },
+  { id: 804, name: '헤안나 스미레', birthMonth: 9, birthDay: 28, voiceActorId: 504, isLoveLive: true },
+  { id: 805, name: '하즈키 렌', birthMonth: 11, birthDay: 24, voiceActorId: 505, isLoveLive: true },
+  // Add Liella's VA's birthday
 ];
 /* eslint-enable object-curly-newline */
 
@@ -162,6 +168,11 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 33, name: '마츠나가 마호', character: '토도 에레나', groupId: 4, colorHex: '' }, // Colorhex unknown
   { id: 41, name: '타노 아사미', character: '카즈노 세이라', groupId: 5, colorHex: '#87ceeb' },
   { id: 42, name: '사토 히나타', character: '카즈노 리아', groupId: 5, colorHex: '#eeede6' },
+  { id: 501, name: '시부야 카논 성우', character: '시부야 카논', groupId: 6, colorHex: '#fe6d00' },
+  { id: 502, name: '탕 쿠쿠 성우', character: '탕 쿠쿠', groupId: 6, colorHex: '#87ceeb' },
+  { id: 503, name: '아라시 치사토 성우', character: '아라시 치사토', groupId: 6, colorHex: '#ff1493' },
+  { id: 504, name: '헤안나 스미레 성우', character: '헤안나 스미레', groupId: 6, colorHex: '#99dd88' },
+  { id: 505, name: '하즈키 렌 성우', character: '하즈키 렌', groupId: 6, colorHex: '#0000ff' },
 ];
 /* eslint-enable object-curly-newline */
 
@@ -177,6 +188,7 @@ export const groupInfoList: IGroupInfo[] = [
   { id: 1, name: 'µ\'s', colorHex: '#e93398' },
   { id: 2, name: 'Aqours', colorHex: '#019fe8' },
   { id: 3, name: '니지동', colorHex: '#ffc94a' },
+  { id: 6, name: 'Liella!', colorHex: '#0cd20c' }, // Colorhex from http://www.lovelive-anime.jp/yuigaoka/, will may change
   { id: 4, name: 'A-RISE', colorHex: '' }, // Colorhex unknown
   { id: 5, name: 'Saint Snow', colorHex: '' }, // Colorhex unknown
 ];
