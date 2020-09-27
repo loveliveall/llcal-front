@@ -324,7 +324,7 @@ export async function editRepeatEventAll(
   const startOffset = start.getTime() - origStart.getTime();
   const newDtStart = new Date(origDtStart.getTime() + startOffset);
   const newDtStartTs = getTimestampForServer(newDtStart);
-  const duration = (end.getTime() - start.getTime()) / 1000;
+  const duration = Math.floor((end.getTime() - start.getTime()) / 1000);
   const rangeEndTs = (() => {
     if (rrule !== '') {
       const options = RRule.parseString(rrule);
