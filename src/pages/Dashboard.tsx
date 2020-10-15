@@ -76,7 +76,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   const rangeEnd = addDays(rangeStart, 7);
   const alerts = normalizeEvents(filterEvents(events, vaFilter, ONLY_ALERTS, etcFilter), dayStartHour);
   const todayAlerts = getEventsInRange(alerts, rangeStart, nextDay);
-  const urgentBorder = addDays(now, 3);
+  const urgentBorder = addDays(now, 5);
   const urgentAlerts = todayAlerts.filter((e) => e.orig.endTime < urgentBorder);
   const otherAlerts = todayAlerts.filter((e) => e.orig.endTime >= urgentBorder);
 
