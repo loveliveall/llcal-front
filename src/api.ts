@@ -105,6 +105,54 @@ export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]
   return eventsInRange;
 }
 
+type RecentlyResponse = {
+  events: ServerEvent[],
+  meta: {
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+  }[],
+};
+
+export type RecentlyReturn = {
+  id: string,
+  title: string,
+  startTime: Date,
+  description: string,
+  allDay: boolean,
+  categoryId: number,
+  createdAt: string,
+  updatedAt: string,
+}[];
+
+function convertRecentlyResToRet(json: RecentlyResponse): RecentlyReturn {
+  return json.events.map((e) => {
+    const meta = json.meta.find((v) => v.id === e.id);
+    return {
+      id: e.id,
+      title: e.title,
+      startTime: getTimeForClient(e.startTime),
+      description: e.description,
+      allDay: e.isAllDay,
+      categoryId: e.categoryId,
+      createdAt: meta?.createdAt ?? 'N/A',
+      updatedAt: meta?.updatedAt ?? 'N/A',
+    };
+  });
+}
+
+export async function getRecentlyCreatedEvents(): Promise<RecentlyReturn> {
+  const res = await fetch(`${API_ENDPOINT}/events-created-recently`);
+  const json: RecentlyResponse = await res.json();
+  return convertRecentlyResToRet(json);
+}
+
+export async function getRecentlyUpdatedEvents(): Promise<RecentlyReturn> {
+  const res = await fetch(`${API_ENDPOINT}/events-updated-recently`);
+  const json: RecentlyResponse = await res.json();
+  return convertRecentlyResToRet(json);
+}
+
 export async function tryLogin(id: string, token: string): Promise<boolean> {
   const ret = await fetch(`${API_ENDPOINT}/login`, {
     method: 'POST',

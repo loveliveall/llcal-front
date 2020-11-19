@@ -20,6 +20,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/HelpOutline';
+import InfoIcon from '@material-ui/icons/Info';
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
 import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
@@ -33,6 +34,7 @@ import AboutDialog from '@/components/dialogs/AboutDialog';
 import DayStartHourDialog from '@/components/dialogs/DayStartHourDialog';
 import ReportDialog from '@/components/dialogs/ReportDialog';
 import ExportDialog from '@/components/dialogs/ExportDialog';
+import UpdatesAndNotices from '@/components/dialogs/UpdatesAndNotices';
 
 import { AppState, DAY_START_HOUR_KEY } from '@/store';
 import { clearToken } from '@/store/auth/actions';
@@ -94,6 +96,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
+  const [noticesOpen, setNoticesOpen] = React.useState(false);
   const [aboutDialogOpen, setAboutDialogOpen] = React.useState(false);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
@@ -136,6 +139,13 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   const onNewEventClick = () => {
     setMobileDrawerOpen(false); // Close mobile drawer on view selection
     dispatch(openEventEditDialog(null));
+  };
+  const onNoticeClick = () => {
+    ReactGA.event({
+      category: 'DrawerContent',
+      action: 'Open updates & notices',
+    });
+    setNoticesOpen(true);
   };
   const onReportClick = () => {
     ReactGA.event({
@@ -213,6 +223,20 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             </ListItem>
           </>
         )}
+        <ListItem
+          button
+          onClick={onNoticeClick}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            <InfoIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="최근 변경 및 공지"
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItem>
         {Object.keys(VIEW_TYPE_MENU).map((v) => {
           const viewType = v as AppViewType;
           const { icon: Icon, label } = VIEW_TYPE_MENU[viewType];
@@ -374,6 +398,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
       <DayStartHourDialog
         open={dayStartDialogOpen}
         setOpen={setDayStartDialogOpen}
+      />
+      <UpdatesAndNotices
+        open={noticesOpen}
+        setOpen={setNoticesOpen}
       />
     </div>
   );
