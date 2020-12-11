@@ -174,6 +174,16 @@ const EventDetailDialog: React.FC = () => {
           </div>
         )}
         <List dense disablePadding>
+          {authorized && (
+            <ListItem disableGutters>
+              <ListItemIcon>
+                <Tooltip title="ID" arrow><NotesIcon /></Tooltip>
+              </ListItemIcon>
+              <ListItemText
+                primary={event.serverId}
+              />
+            </ListItem>
+          )}
           {/* Date range */}
           <ListItem disableGutters>
             <ListItemIcon>
