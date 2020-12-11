@@ -38,6 +38,7 @@ import {
 import { ClientEvent, ViewInfo, AppViewType } from '@/types';
 import { callGetEvents } from '@/api';
 
+import Concert from './Concert';
 import Dashboard from './Dashboard';
 
 const VirtualizeSwipeableViews = virtualize(SwipeableViews);
@@ -95,6 +96,9 @@ function getCacheKey(currDate: Date, viewType: AppViewType) {
   if (viewType === 'dashboard') {
     return 'upcoming';
   }
+  if (viewType === 'concert') {
+    return 'unused'; // Cache of concert viewtype will be used separately
+  }
   throw new Error(`cacheKey policy for viewType ${viewType} is not defined`);
 }
 
@@ -109,6 +113,9 @@ function getRange(currDate: Date, viewType: AppViewType): [Date, Date] {
     const rangeStart = subDays(startOfDay(now), 1);
     const rangeEnd = addDays(endOfDay(now), 8);
     return [rangeStart, rangeEnd];
+  }
+  if (viewType === 'concert') {
+    return [new Date(), new Date()]; // Cache of concert viewtype will be used separately
   }
   throw new Error(`event retrieving range for viewType ${viewType} is not defined`);
 }
@@ -148,7 +155,7 @@ const Main: React.FC = () => {
       } else {
         window.scrollTo(0, 0);
       }
-    } else if (view.currType === 'dashboard') {
+    } else if (view.currType === 'dashboard' || view.currType === 'concert') {
       window.scrollTo(0, 0);
     }
   };
@@ -355,6 +362,11 @@ const Main: React.FC = () => {
               events={events}
               onEventClick={onEventClick}
             />
+          </div>
+        )}
+        {view.currType === 'concert' && (
+          <div className={`${classes.calendarWrapper}`}>
+            <Concert />
           </div>
         )}
       </main>

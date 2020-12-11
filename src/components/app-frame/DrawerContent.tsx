@@ -21,6 +21,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/HelpOutline';
 import InfoIcon from '@material-ui/icons/Info';
+import LocalATMIcon from '@material-ui/icons/LocalAtm';
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
 import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
@@ -123,6 +124,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
     month: {
       label: '월간 일정 보기',
       icon: ViewModuleIcon,
+    },
+    concert: {
+      label: '공연 정보 묶음',
+      icon: LocalATMIcon,
     },
   };
   const onAboutClick = () => {

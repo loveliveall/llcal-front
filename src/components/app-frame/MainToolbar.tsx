@@ -83,6 +83,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
     if (currView === 'month' || currView === 'agenda') return `'${year}.${month}.`;
     if (currView === 'day') return `'${year}.${month}.${day}.`;
     if (currView === 'dashboard') return '대시보드';
+    if (currView === 'concert') return '공연 목록';
     throw new Error(`titleText for viewType ${currView} is not defined`);
   })();
   const prevDateTooltip = (() => {

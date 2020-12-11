@@ -50,7 +50,7 @@ export interface CategoryCheckState {
   [id: number]: boolean,
 }
 
-export type AppViewType = ViewType | 'dashboard';
+export type AppViewType = ViewType | 'dashboard' | 'concert';
 
 export type ViewInfo = {
   showBack: boolean,
