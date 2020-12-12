@@ -126,7 +126,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
       icon: ViewModuleIcon,
     },
     concert: {
-      label: '공연 정보 묶음',
+      label: '이벤트 정보 모음',
       icon: LocalATMIcon,
     },
   };

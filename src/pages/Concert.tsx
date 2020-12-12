@@ -18,17 +18,19 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EventBusyIcon from '@material-ui/icons/EventBusy';
 
+import { DIMMED_FILTER } from '@/components/calendar/utils/utils';
 import { AppState } from '@/store';
 import { openConcertDeleteDialog } from '@/store/concert-delete-dialog/actions';
 import { openConcertEditDialog } from '@/store/concert-edit-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
-import { getDateRangeStr } from '@/utils';
+import { getDateRangeStr, getObjWithProp } from '@/utils';
 import {
   ClientConcertGroup,
   ClientEvent,
   VACheckState,
   ETCCheckState,
 } from '@/types';
+import { voiceActorList } from '@/commonData';
 import { getConcertGroups, getEventsByIds } from '@/api';
 
 const useStyles = makeStyles((theme) => ({
@@ -68,6 +70,7 @@ const EventList: React.FC<EventListProps> = ({
   isLoading, events, onEventClick,
 }) => {
   const classes = useStyles();
+  const now = new Date();
   if (isLoading) {
     return <CentralCircularProgress />;
   }
@@ -86,6 +89,9 @@ const EventList: React.FC<EventListProps> = ({
       {events.sort((a, b) => a.startTime.getTime() - b.startTime.getTime()).map((ev) => (
         <ListItem key={ev.id} button onClick={() => onEventClick(ev)}>
           <ListItemText
+            style={{
+              filter: ev.endTime <= now ? DIMMED_FILTER : undefined,
+            }}
             primary={ev.title}
             secondary={getDateRangeStr(ev.startTime, ev.endTime, ev.allDay)}
           />
@@ -106,7 +112,7 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
   const classes = useStyles();
   const dispatch = useDispatch();
   const {
-    title, mainEventIds, subEventIds, startTime, endTime,
+    title, mainEventIds, subEventIds, startTime, endTime, isLoveLive, voiceActorIds,
   } = concert;
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const [expanded, setExpanded] = React.useState(false);
@@ -143,20 +149,32 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
   const onPanelChange: ExpansionPanelProps['onChange'] = (_, isExpanded) => {
     setExpanded(isExpanded);
   };
+  const prefix = isLoveLive ? '[LoveLive!] ' : '';
+
   return (
     <ExpansionPanel expanded={expanded} onChange={onPanelChange}>
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
       >
         <div>
-          <Typography>{title}</Typography>
+          <Typography>{`${prefix}${title}`}</Typography>
           <Typography className={classes.textSecondary}>{getDateRangeStr(startTime, endTime, false)}</Typography>
         </div>
       </ExpansionPanelSummary>
       <ExpansionPanelDetail>
         <div className={classes.fullWidth}>
           <div>
-            <Typography variant="h6">공연 일정 목록</Typography>
+            <Typography variant="h6">출연 성우</Typography>
+            <div className={classes.padded}>
+              <Typography>
+                {voiceActorIds.sort((a, b) => a - b).map(
+                  (va) => getObjWithProp(voiceActorList, 'id', va)?.name,
+                ).filter((e) => e !== undefined).join(', ')}
+              </Typography>
+            </div>
+          </div>
+          <div>
+            <Typography variant="h6">이벤트 일정 목록</Typography>
             <EventList
               isLoading={mainEventLoading}
               events={mainEvents}
