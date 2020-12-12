@@ -1,5 +1,6 @@
 import { RRule } from 'rrule';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
+import subDays from 'date-fns/subDays';
 import { voiceActorList } from '@/commonData';
 
 import {
@@ -175,4 +176,26 @@ export function getNth(date: Date, positive: boolean): number {
   return positive
     ? Math.floor((datePart - 1) / 7) + 1 // 1-7: 1st, 8-14: 2nd, ...
     : -(Math.floor((daysInMonth - datePart) / 7) + 1); // -1 to -7: -1st, -8 to -14: -2nd, ...
+}
+
+const isMidnight = (date: Date) => date.getHours() === 0 && date.getMinutes() === 0;
+
+export function getDateRangeStr(startTime: Date, endTime: Date, allDay: boolean): string {
+  const startDateStr = getDateString(startTime);
+  const endDateStr = getDateString(subDays(endTime, isMidnight(endTime) ? 1 : 0)); // End at 00:00 means end at previous date's 24:00
+  if (allDay) {
+    if (startDateStr === endDateStr) return startDateStr;
+    return `${startDateStr} - ${endDateStr}`;
+  }
+  const startTimeStr = `${`0${startTime.getHours()}`.slice(-2)}:${`0${startTime.getMinutes()}`.slice(-2)}`;
+  const endTimeStr = isMidnight(endTime) ? '24:00' : (
+    `${`0${endTime.getHours()}`.slice(-2)}:${`0${endTime.getMinutes()}`.slice(-2)}`
+  );
+  if (startTime.getTime() === endTime.getTime()) {
+    return `${startDateStr} ${startTimeStr}`;
+  }
+  if (startDateStr === endDateStr) {
+    return `${startDateStr} ${startTimeStr} - ${endTimeStr}`;
+  }
+  return `${startDateStr} ${startTimeStr} - ${endDateStr} ${endTimeStr}`;
 }

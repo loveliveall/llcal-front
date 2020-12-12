@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Linkify, { Props as LinkifyProps } from 'react-linkify';
-import subDays from 'date-fns/subDays';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -36,10 +35,12 @@ import { openEventDeleteDialog } from '@/store/delete-dialog/actions';
 import { closeEventDetailDialog } from '@/store/detail-dialog/actions';
 import { openEventDuplicateDialog } from '@/store/duplicate-dialog/actions';
 import { openEventEditDialog } from '@/store/edit-dialog/actions';
-import { getDateString, rruleToText, getObjWithProp } from '@/utils';
+import {
+  rruleToText,
+  getObjWithProp,
+  getDateRangeStr,
+} from '@/utils';
 import { eventCategoryList, voiceActorList, groupInfoList } from '@/commonData';
-
-const isMidnight = (date: Date) => date.getHours() === 0 && date.getMinutes() === 0;
 
 const linkifyDecorator: LinkifyProps['componentDecorator'] = (href, text, key) => (
   <a href={href} key={key} target="_blank" rel="noreferrer">
@@ -85,25 +86,7 @@ const EventDetailDialog: React.FC = () => {
   const category = getObjWithProp(eventCategoryList, 'id', event.categoryId);
 
   const { startTime, endTime } = event;
-  const startDateStr = getDateString(startTime);
-  const endDateStr = getDateString(subDays(endTime, isMidnight(endTime) ? 1 : 0)); // End at 00:00 means end at previous date's 24:00
-  const dateRangeStr = (() => {
-    if (event.allDay) {
-      if (startDateStr === endDateStr) return startDateStr;
-      return `${startDateStr} - ${endDateStr}`;
-    }
-    const startTimeStr = `${`0${startTime.getHours()}`.slice(-2)}:${`0${startTime.getMinutes()}`.slice(-2)}`;
-    const endTimeStr = isMidnight(endTime) ? '24:00' : (
-      `${`0${endTime.getHours()}`.slice(-2)}:${`0${endTime.getMinutes()}`.slice(-2)}`
-    );
-    if (startTime.getTime() === endTime.getTime()) {
-      return `${startDateStr} ${startTimeStr}`;
-    }
-    if (startDateStr === endDateStr) {
-      return `${startDateStr} ${startTimeStr} - ${endTimeStr}`;
-    }
-    return `${startDateStr} ${startTimeStr} - ${endDateStr} ${endTimeStr}`;
-  })();
+  const dateRangeStr = getDateRangeStr(startTime, endTime, event.allDay);
 
   const onDeleteClick = () => {
     dispatch(closeEventDetailDialog());
