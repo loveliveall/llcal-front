@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
@@ -17,7 +16,6 @@ import SaveIcon from '@material-ui/icons/Save';
 
 import useMobileCheck from '@/hooks/useMobileCheck';
 
-import GridContainer from '@/components/common/GridContainer';
 import { FadeTransition } from '@/components/common/Transitions';
 
 import { AppState } from '@/store';
@@ -27,7 +25,8 @@ import { openSnackbar } from '@/store/snackbar/actions';
 import { closeConcertEditDialog } from '@/store/concert-edit-dialog/actions';
 
 import { addConcertGroup, editConcertGroup } from '@/api';
-import { TitleEditor } from './EventEditDialogComp';
+import { TitleEditor, EventIDListEditor } from './ConcertGroupEditDialogComp';
+import { KeyedEventId } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialogTitle: {
@@ -63,14 +62,20 @@ const ConcertGroupEditDialog: React.FC = () => {
   const [errMsg, setErrMsg] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [title, setTitle] = React.useState('');
-  const [mainEventIds, setMainEventIds] = React.useState('');
-  const [subEventIds, setSubEventIds] = React.useState('');
+  const [mainEventIds, setMainEventIds] = React.useState<KeyedEventId[]>([]);
+  const [subEventIds, setSubEventIds] = React.useState<KeyedEventId[]>([]);
 
   React.useEffect(() => {
     setErrMsg('');
     setTitle(origConcert === null ? '' : origConcert.title);
-    setMainEventIds(origConcert === null ? '' : origConcert.mainEventIds.join(','));
-    setSubEventIds(origConcert === null ? '' : origConcert.subEventIds.join(','));
+    setMainEventIds(origConcert === null ? [] : origConcert.mainEventIds.map((e) => ({
+      key: uuid(),
+      eventId: e,
+    })));
+    setSubEventIds(origConcert === null ? [] : origConcert.subEventIds.map((e) => ({
+      key: uuid(),
+      eventId: e,
+    })));
   }, [open]);
 
   if (token === null) return null;
@@ -85,8 +90,10 @@ const ConcertGroupEditDialog: React.FC = () => {
       setErrMsg('공연 일정은 반드시 하나 이상 있어야 합니다');
     } else {
       (async () => {
-        if (origConcert === null) return addConcertGroup(token, title, mainEventIds.split(','), subEventIds.split(','));
-        return editConcertGroup(token, origConcert.id, title, mainEventIds.split(','), subEventIds.split(','));
+        const m = mainEventIds.map((e) => e.eventId);
+        const s = subEventIds.map((e) => e.eventId);
+        if (origConcert === null) return addConcertGroup(token, title, m, s);
+        return editConcertGroup(token, origConcert.id, title, m, s);
       })().then((ok) => {
         setLoading(false);
         if (ok) {
@@ -136,41 +143,16 @@ const ConcertGroupEditDialog: React.FC = () => {
           title={title}
           setTitle={setTitle}
         />
-        <GridContainer>
-          <Grid item xs={2}>
-            <Typography>공연 일정 ID</Typography>
-          </Grid>
-          <Grid item xs>
-            <Input
-              id="mainEventId"
-              value={mainEventIds}
-              error={mainEventIds === ''}
-              onChange={(e) => setMainEventIds(e.target.value)}
-              fullWidth
-              inputProps={{
-                autoCapitalize: 'none',
-                autoCorrect: 'off',
-              }}
-            />
-          </Grid>
-        </GridContainer>
-        <GridContainer>
-          <Grid item xs={2}>
-            <Typography>관련 일정 ID</Typography>
-          </Grid>
-          <Grid item xs>
-            <Input
-              id="subEventId"
-              value={subEventIds}
-              onChange={(e) => setSubEventIds(e.target.value)}
-              fullWidth
-              inputProps={{
-                autoCapitalize: 'none',
-                autoCorrect: 'off',
-              }}
-            />
-          </Grid>
-        </GridContainer>
+        <EventIDListEditor
+          compName="공연 정보"
+          eventIdList={mainEventIds}
+          setEventIdList={setMainEventIds}
+        />
+        <EventIDListEditor
+          compName="관련 정보"
+          eventIdList={subEventIds}
+          setEventIdList={setSubEventIds}
+        />
       </DialogContent>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
