@@ -102,7 +102,7 @@ function getCacheKey(currDate: Date, viewType: AppViewType) {
   throw new Error(`cacheKey policy for viewType ${viewType} is not defined`);
 }
 
-function getRange(currDate: Date, viewType: AppViewType): [Date, Date] {
+function getRange(currDate: Date, viewType: AppViewType): [Date, Date] | null {
   if (AVAILABLE_VIEWS.includes(viewType as any)) {
     const rangeStart = subDays(startOfMonth(currDate), 8); // one-day margin (daystarthour issue)
     const rangeEnd = addDays(endOfMonth(currDate), 15); // one-day margin (daystarthour issue)
@@ -115,7 +115,7 @@ function getRange(currDate: Date, viewType: AppViewType): [Date, Date] {
     return [rangeStart, rangeEnd];
   }
   if (viewType === 'concert') {
-    return [new Date(), new Date()]; // Cache of concert viewtype will be used separately
+    return null; // Cache of concert viewtype will be used separately
   }
   throw new Error(`event retrieving range for viewType ${viewType} is not defined`);
 }
@@ -247,18 +247,25 @@ const Main: React.FC = () => {
   if (!(cacheKey in eventCache) && !loading) {
     // Load data into cache
     const range = getRange(currDate, view.currType);
-    setLoading(true);
-    callGetEvents(range[0], range[1]).then((data) => {
+    if (range === null) {
       setEventCache((prev) => ({
         ...prev,
-        [cacheKey]: data,
+        [cacheKey]: [],
       }));
-    }).catch((e) => {
-      console.error(e);
-      dispatch(openSnackbar('일정 불러오기를 실패했습니다.'));
-    }).finally(() => {
-      setLoading(false);
-    });
+    } else {
+      setLoading(true);
+      callGetEvents(range[0], range[1]).then((data) => {
+        setEventCache((prev) => ({
+          ...prev,
+          [cacheKey]: data,
+        }));
+      }).catch((e) => {
+        console.error(e);
+        dispatch(openSnackbar('일정 불러오기를 실패했습니다.'));
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
   }
   const events = eventCache[cacheKey] ?? [];
 
