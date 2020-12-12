@@ -36,6 +36,28 @@ export interface ServerEvent {
   isRepeating: boolean,
 }
 
+export interface ClientConcertGroup {
+  id: string,
+  title: string,
+  startTime: Date,
+  endTime: Date,
+  mainEventIds: string[],
+  subEventIds: string[],
+  voiceActorIds: number[],
+  isLoveLive: boolean,
+}
+
+export interface ServerConcertGroup {
+  id: string,
+  title: string,
+  startTime: number,
+  endTime: number,
+  mainEventIds: string[],
+  subEventIds: string[],
+  voiceActorIds: number[],
+  isLoveLive: boolean,
+}
+
 export interface ETCCheckState {
   includeRepeating: boolean,
   showLoveLive: boolean,

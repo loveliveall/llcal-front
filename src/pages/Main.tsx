@@ -373,7 +373,11 @@ const Main: React.FC = () => {
         )}
         {view.currType === 'concert' && (
           <div className={`${classes.calendarWrapper}`}>
-            <Concert />
+            <Concert
+              vaFilter={vaFilter}
+              etcFilter={etcFilter}
+              onEventClick={onEventClick}
+            />
           </div>
         )}
       </main>

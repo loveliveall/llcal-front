@@ -11,6 +11,8 @@ import EventDeleteDialog from '@/components/dialogs/EventDeleteDialog';
 import EventDetailDialog from '@/components/dialogs/EventDetailDialog';
 import EventDuplicateDialog from '@/components/dialogs/EventDuplicateDialog';
 import EventEditDialog from '@/components/dialogs/EventEditDialog';
+import ConcertGroupEditDialog from '@/components/dialogs/ConcertGroupEditDialog';
+import ConcertGroupDeleteDialog from '@/components/dialogs/ConcertGroupDeleteDialog';
 
 const App: React.FC = () => {
   const history = useHistory();
@@ -29,6 +31,8 @@ const App: React.FC = () => {
       <EventDetailDialog />
       <EventDuplicateDialog />
       <EventEditDialog />
+      <ConcertGroupEditDialog />
+      <ConcertGroupDeleteDialog />
       <GlobalSnackbar />
     </>
   );

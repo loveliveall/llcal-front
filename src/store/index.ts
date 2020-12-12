@@ -5,6 +5,8 @@ import deleteDialogReducer from './delete-dialog/reducer';
 import detailDialogReducer from './detail-dialog/reducer';
 import duplicateDialogReducer from './duplicate-dialog/reducer';
 import editDialogReducer from './edit-dialog/reducer';
+import concertEditDialogReducer from './concert-edit-dialog/reducer';
+import concertDeleteDialogReducer from './concert-delete-dialog/reducer';
 import flagsReducer from './flags/reducer';
 import settingsReducer from './settings/reducer';
 import snackbarReducer from './snackbar/reducer';
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   detailDialog: detailDialogReducer,
   duplicateDialog: duplicateDialogReducer,
   editDialog: editDialogReducer,
+  concertEditDialog: concertEditDialogReducer,
+  concertDeleteDialog: concertDeleteDialogReducer,
   flags: flagsReducer,
   settings: settingsReducer,
   snackbar: snackbarReducer,
