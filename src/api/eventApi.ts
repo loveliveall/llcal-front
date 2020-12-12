@@ -7,10 +7,7 @@ import { ClientEvent, ServerEvent } from '@/types';
 import { getTimeForClient, getTimestampForServer, getObjWithProp } from '@/utils';
 
 import { birthdayList, eventCategoryList } from '@/commonData';
-
-const API_ENDPOINT = 'https://llcal-back.herokuapp.com/api';
-
-const INFINITE_END_TS = 4102444800; // 2100-01-01 00:00:00
+import { API_ENDPOINT, INFINITE_END_TS } from './const';
 
 const birthdayEvents: ServerEvent[] = birthdayList.map((birthday, idx) => {
   const dtstart = Date.UTC(2010, birthday.birthMonth - 1, birthday.birthDay);
