@@ -124,8 +124,6 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
   React.useEffect(() => {
     if (expanded) {
       setMainEventLoading(true);
-      setSubEventLoading(true);
-
       getEventsByIds(mainEventIds).then(
         (data) => setMainEvents(data),
       ).catch((e) => {
@@ -135,14 +133,17 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
         setMainEventLoading(false);
       });
 
-      getEventsByIds(subEventIds).then(
-        (data) => setSubEvents(data),
-      ).catch((e) => {
-        console.error(e);
-        dispatch(openSnackbar('일정 불러오기를 실패했습니다.'));
-      }).finally(() => {
-        setSubEventLoading(false);
-      });
+      if (subEventIds.length !== 0) {
+        setSubEventLoading(true);
+        getEventsByIds(subEventIds).then(
+          (data) => setSubEvents(data),
+        ).catch((e) => {
+          console.error(e);
+          dispatch(openSnackbar('일정 불러오기를 실패했습니다.'));
+        }).finally(() => {
+          setSubEventLoading(false);
+        });
+      }
     }
   }, [expanded]);
 
