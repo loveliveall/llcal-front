@@ -118,7 +118,11 @@ export const birthdayList: IBirthday[] = [
   { id: 803, name: '아라시 치사토', birthMonth: 2, birthDay: 25, voiceActorId: 503, isLoveLive: true },
   { id: 804, name: '헤안나 스미레', birthMonth: 9, birthDay: 28, voiceActorId: 504, isLoveLive: true },
   { id: 805, name: '하즈키 렌', birthMonth: 11, birthDay: 24, voiceActorId: 505, isLoveLive: true },
-  // Add Liella's VA's birthday
+  { id: 901, name: '다테 사유리', birthMonth: 9, birthDay: 30, voiceActorId: 501, isLoveLive: false },
+  { id: 902, name: 'Liyuu', birthMonth: 1, birthDay: 9, voiceActorId: 502, isLoveLive: false },
+  { id: 903, name: '미사키 나코', birthMonth: 3, birthDay: 8, voiceActorId: 503, isLoveLive: false },
+  { id: 904, name: '페이튼 나오미', birthMonth: 7, birthDay: 1, voiceActorId: 504, isLoveLive: false },
+  { id: 905, name: '아오야마 나기사', birthMonth: 5, birthDay: 16, voiceActorId: 505, isLoveLive: false },
 ];
 /* eslint-enable object-curly-newline */
 
@@ -168,11 +172,11 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 33, name: '마츠나가 마호', character: '토도 에레나', groupId: 4, colorHex: '' }, // Colorhex unknown
   { id: 41, name: '타노 아사미', character: '카즈노 세이라', groupId: 5, colorHex: '#87ceeb' },
   { id: 42, name: '사토 히나타', character: '카즈노 리아', groupId: 5, colorHex: '#eeede6' },
-  { id: 501, name: '시부야 카논 성우', character: '시부야 카논', groupId: 6, colorHex: '#fe6d00' },
-  { id: 502, name: '탕 쿠쿠 성우', character: '탕 쿠쿠', groupId: 6, colorHex: '#87ceeb' },
-  { id: 503, name: '아라시 치사토 성우', character: '아라시 치사토', groupId: 6, colorHex: '#ff1493' },
-  { id: 504, name: '헤안나 스미레 성우', character: '헤안나 스미레', groupId: 6, colorHex: '#99dd88' },
-  { id: 505, name: '하즈키 렌 성우', character: '하즈키 렌', groupId: 6, colorHex: '#0000ff' },
+  { id: 501, name: '다테 사유리', character: '시부야 카논', groupId: 6, colorHex: '#fe6d00' },
+  { id: 502, name: 'Liyuu', character: '탕 쿠쿠', groupId: 6, colorHex: '#87ceeb' },
+  { id: 503, name: '미사키 나코', character: '아라시 치사토', groupId: 6, colorHex: '#ff1493' },
+  { id: 504, name: '페이튼 나오미', character: '헤안나 스미레', groupId: 6, colorHex: '#99dd88' },
+  { id: 505, name: '아오야마 나기사', character: '하즈키 렌', groupId: 6, colorHex: '#0000ff' },
 ];
 /* eslint-enable object-curly-newline */
 
