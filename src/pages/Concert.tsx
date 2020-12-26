@@ -86,17 +86,28 @@ const EventList: React.FC<EventListProps> = ({
   }
   return (
     <List dense>
-      {events.sort((a, b) => a.startTime.getTime() - b.startTime.getTime()).map((ev) => (
-        <ListItem key={ev.id} button onClick={() => onEventClick(ev)}>
-          <ListItemText
+      {events.sort((a, b) => a.startTime.getTime() - b.startTime.getTime()).map((ev) => {
+        const isActive = ev.startTime <= now && now <= ev.endTime;
+        return (
+          // Additional div for overriding background color with hover feature enabled
+          <div
+            key={ev.id}
             style={{
-              filter: ev.endTime <= now ? DIMMED_FILTER : undefined,
+              backgroundColor: isActive ? 'lightblue' : undefined,
             }}
-            primary={ev.title}
-            secondary={getDateRangeStr(ev.startTime, ev.endTime, ev.allDay)}
-          />
-        </ListItem>
-      ))}
+          >
+            <ListItem button onClick={() => onEventClick(ev)}>
+              <ListItemText
+                style={{
+                  filter: ev.endTime <= now ? DIMMED_FILTER : undefined,
+                }}
+                primary={ev.title}
+                secondary={getDateRangeStr(ev.startTime, ev.endTime, ev.allDay)}
+              />
+            </ListItem>
+          </div>
+        );
+      })}
     </List>
   );
 };
