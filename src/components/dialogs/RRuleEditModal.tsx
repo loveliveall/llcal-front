@@ -2,10 +2,12 @@ import React from 'react';
 import RRule, { Frequency, Weekday } from 'rrule';
 
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -22,6 +24,7 @@ interface RRuleOptions {
   freq?: Frequency,
   interval?: number,
   byweekday?: Weekday[],
+  bymonthday?: number[],
   until?: Date,
   count?: number,
 }
@@ -61,7 +64,11 @@ function rruleStrToOpts(rruleStr: string): RRuleOptions {
         return strToWeekday[wd].nth(nth);
       });
     }
-    // Handle bymonthday?
+    // Monthday
+    const match2 = /BYMONTHDAY=(.*?)(;|$)/m.exec(rruleStr);
+    if (match2) {
+      rrOpts.bymonthday = match2[1].split(',').map(Number);
+    }
     if (options.until) {
       const rruleUntil = options.until;
       const localUntil = new Date(
@@ -97,8 +104,13 @@ function optsToRRuleStr(options: RRuleOptions): string {
 
   if (options.freq === RRule.YEARLY) return RRule.optionsToString({ ...commonOptions });
   if (options.freq === RRule.WEEKLY) return RRule.optionsToString({ ...commonOptions, byweekday: options.byweekday });
-  // Handle bymonthday?
-  if (options.freq === RRule.MONTHLY) return RRule.optionsToString({ ...commonOptions, byweekday: options.byweekday });
+  if (options.freq === RRule.MONTHLY) {
+    return RRule.optionsToString({
+      ...commonOptions,
+      byweekday: options.byweekday,
+      bymonthday: (options.bymonthday ?? []).sort((a, b) => a - b),
+    });
+  }
   if (options.freq === RRule.DAILY) return RRule.optionsToString({ ...commonOptions });
   return '';
 }
@@ -110,14 +122,15 @@ function getEndType(rrOpts: RRuleOptions) {
   return '';
 }
 
-type MonthlyDetail = 'positive' | 'negative';
+type MonthlyDetail = 'weekday_positive' | 'weekday_negative' | 'weekday_monthday';
 function getMonthlyDetail(rrOpts: RRuleOptions): MonthlyDetail | '' {
   if (rrOpts.freq === RRule.MONTHLY) {
-    const { byweekday } = rrOpts;
+    const { byweekday, bymonthday } = rrOpts;
     if (byweekday !== undefined && byweekday.length === 1) {
+      if (bymonthday !== undefined) return 'weekday_monthday';
       const { n } = byweekday[0];
-      if (n !== undefined && n > 0) return 'positive';
-      if (n !== undefined && n < 0) return 'negative';
+      if (n !== undefined && n > 0) return 'weekday_positive';
+      if (n !== undefined && n < 0) return 'weekday_negative';
     }
     // Handle bymonthday?
   }
@@ -232,6 +245,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
                     ...localRRule,
                     freq: selected,
                     byweekday: [jsDayToWeekday[start.getDay()].nth(posNth)],
+                    bymonthday: undefined,
                   });
                 } else {
                   setLocalRRule({
@@ -263,29 +277,79 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
                   value={getMonthlyDetail(localRRule)}
                   onChange={(e) => {
                     const selected = e.target.value as MonthlyDetail;
-                    if (selected === 'positive') {
+                    if (selected === 'weekday_positive') {
                       setLocalRRule({
                         ...localRRule,
                         byweekday: [jsDayToWeekday[start.getDay()].nth(posNth)],
+                        bymonthday: undefined,
                       });
-                    } else if (selected === 'negative') {
+                    } else if (selected === 'weekday_negative') {
                       setLocalRRule({
                         ...localRRule,
                         byweekday: [jsDayToWeekday[start.getDay()].nth(negNth)],
+                        bymonthday: undefined,
+                      });
+                    } else if (selected === 'weekday_monthday') {
+                      setLocalRRule({
+                        ...localRRule,
+                        byweekday: [jsDayToWeekday[start.getDay()]],
+                        bymonthday: [start.getDate()],
                       });
                     }
                   }}
                   disabled={isFreqEditDisabled}
                 >
-                  <MenuItem value="positive">
+                  <MenuItem value="weekday_positive">
                     {`${posNth}번째 ${jsDayToKor[start.getDay()]}요일`}
                   </MenuItem>
-                  <MenuItem value="negative">
+                  <MenuItem value="weekday_negative">
                     {`${negNth === -1 ? '마지막' : `끝에서 ${Math.abs(negNth)}번째`} ${jsDayToKor[start.getDay()]}요일`}
+                  </MenuItem>
+                  <MenuItem value="weekday_monthday">
+                    {`조건을 만족하는 ${jsDayToKor[start.getDay()]}요일`}
                   </MenuItem>
                 </Select>
               </Grid>
             </GridContainer>
+            {getMonthlyDetail(localRRule) === 'weekday_monthday' && (
+              new Array(2).fill(null).map((_, typeIdx) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <GridContainer key={typeIdx}>
+                  {new Array(31).fill(null).map((__, dayIdx) => {
+                    const day = (typeIdx === 0 ? 1 : -1) * (dayIdx + 1);
+                    const { bymonthday } = localRRule;
+                    const target = bymonthday ?? [];
+                    const isChecked = target.includes(day);
+                    return (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <Grid key={dayIdx} item xs>
+                        <FormControlLabel
+                          control={(
+                            <Checkbox
+                              checked={isChecked}
+                              onChange={() => {
+                                if (isChecked) {
+                                  setLocalRRule({
+                                    ...localRRule,
+                                    bymonthday: target.filter((e) => e !== day),
+                                  });
+                                } else {
+                                  setLocalRRule({
+                                    ...localRRule,
+                                    bymonthday: [...target, day],
+                                  });
+                                }
+                              }}
+                            />
+                          )}
+                          label={day}
+                        />
+                      </Grid>
+                    );
+                  })}
+                </GridContainer>
+              ))
+            )}
           </>
         )}
 

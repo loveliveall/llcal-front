@@ -102,6 +102,7 @@ export function rruleToText(start: Date, rrule: string): string {
   // i.e., (FREQ=YEARLY;INTERVAL=n / FREQ=MONTHLY;INTERVAL=n;BYMONTHDAY=22
   // FREQ=MONTHLY;INTERVAL=n;BYDAY=4MO / FREQ=WEEKLY;INTERVAL=n;BYDAY=MO,WE
   // FREQ=DAILY;INTERVAL=n) with UNTIL=DATE or COUNT=n
+  // * RRULE with format FREQ=MONTHLY;INTERVAL=n;BYDAY=SU;BYMONTHDAY=2,3,4,5,6,7,8 will also be supported (2021.01.02.)
   // `start` from local, `rrule` from server, which means,
   // `start` value could be used as-is, and UTC value of `rrule` should be used.
   const match = /^RRULE:(.*)$/m.exec(rrule);
@@ -122,18 +123,57 @@ export function rruleToText(start: Date, rrule: string): string {
       korStr = `${prefix} ${dateStr}`;
     } else if (params.FREQ === 'MONTHLY') {
       const prefix = isMultiInterval ? `${interval}월마다` : '매월';
-      if (params.BYMONTHDAY) {
-        korStr = `${prefix} ${params.BYMONTHDAY}일`;
-      } else if (params.BYDAY) {
+      if (params.BYDAY) {
         const byday = params.BYDAY;
-        const weekday = byday.slice(-2) as Weekday;
-        const weeknum = Number(byday.slice(0, byday.length - 2));
-        const ordinality = (() => {
-          if (weeknum > 0) return `${weeknum}번째`;
-          if (weeknum === -1) return '마지막';
-          return `끝에서 ${Math.abs(weeknum)}번째`;
-        })();
-        korStr = `${prefix} ${ordinality} ${WEEKDAY_TO_KOR[weekday]}요일`;
+        if (params.BYMONTHDAY) {
+          // Case of FREQ=MONTHLY;INTERVAL=n;BYDAY=SU;BYMONTHDAY=2,3,4,5,6,7,8
+          const weekday = byday as Weekday;
+          const monthdays = params.BYMONTHDAY.split(',').map(Number).sort((a, b) => a - b);
+          const monthdayStr = (() => {
+            // Compressing consecutive numbers to shorter string
+            const negative = [];
+            const positive = [];
+            let str = '';
+            let from = monthdays[0];
+            let to = from;
+            for (let i = 1; i < monthdays.length; i += 1) {
+              if (monthdays[i] === to + 1) {
+                to = monthdays[i];
+              } else {
+                if (from < 0) str += '뒤에서 ';
+                if (from === to) str += `${Math.abs(from)}일`;
+                else str += `${Math.abs(from)}-${Math.abs(to)}일`;
+
+                if (from < 0) negative.push(str);
+                else positive.push(str);
+
+                str = '';
+                from = monthdays[i];
+                to = from;
+              }
+            }
+            if (from < 0) str += '뒤에서 ';
+            if (from === to) str += `${Math.abs(from)}일`;
+            else str += `${Math.abs(from)}-${Math.abs(to)}일`;
+
+            if (from < 0) negative.push(str);
+            else positive.push(str);
+            return [...positive, ...negative].join(', ');
+          })();
+          korStr = `${prefix} ${monthdayStr} 중 ${WEEKDAY_TO_KOR[weekday]}요일`;
+        } else {
+          // Case of FREQ=MONTHLY;INTERVAL=n;BYDAY=4MO
+          const weekday = byday.slice(-2) as Weekday;
+          const weeknum = Number(byday.slice(0, byday.length - 2));
+          const ordinality = (() => {
+            if (weeknum > 0) return `${weeknum}번째`;
+            if (weeknum === -1) return '마지막';
+            return `끝에서 ${Math.abs(weeknum)}번째`;
+          })();
+          korStr = `${prefix} ${ordinality} ${WEEKDAY_TO_KOR[weekday]}요일`;
+        }
+      } else if (params.BYMONTHDAY) {
+        korStr = `${prefix} ${params.BYMONTHDAY}일`;
       }
     } else if (params.FREQ === 'WEEKLY') {
       const prefix = isMultiInterval ? `${interval}주마다` : '매주';

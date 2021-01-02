@@ -149,13 +149,20 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
         // Case 1. BYDAY specified
         const match1 = /BYDAY=(.*?)(;|$)/m.exec(rrule);
         if (match1) {
-          const weekdayList = match1[1].split(','); // Format ex. 4MO
-          if (weekdayList.length === 1) {
-            // Get nth from existing rrule
-            const prevWeekday = weekdayList[0];
-            const prevWeekdayNth = Number(prevWeekday.slice(0, prevWeekday.length - 2));
-            opt.byweekday = [jsDayToWeekday[purifiedDate.getDay()].nth(getNth(purifiedDate, prevWeekdayNth >= 0))];
+          const match2 = /BYMONTHDAY=(.*?)(;|$)/m.exec(rrule);
+          if (match2) {
+            // BYDAY with BYMONTHDAY. Update only weekday info
+            opt.byweekday = [jsDayToWeekday[purifiedDate.getDay()]];
             setRRule(RRule.optionsToString(opt));
+          } else {
+            const weekdayList = match1[1].split(','); // Format ex. 4MO
+            if (weekdayList.length === 1) {
+              // Get nth from existing rrule
+              const prevWeekday = weekdayList[0];
+              const prevWeekdayNth = Number(prevWeekday.slice(0, prevWeekday.length - 2));
+              opt.byweekday = [jsDayToWeekday[purifiedDate.getDay()].nth(getNth(purifiedDate, prevWeekdayNth >= 0))];
+              setRRule(RRule.optionsToString(opt));
+            }
           }
         }
         /* Case 2. BYMONTHDAY specified
