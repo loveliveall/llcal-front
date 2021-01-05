@@ -114,7 +114,7 @@ export const birthdayList: IBirthday[] = [
   { id: 73, name: '카즈노 세이라', birthMonth: 5, birthDay: 4, voiceActorId: 41, isLoveLive: true },
   { id: 74, name: '카즈노 리아', birthMonth: 12, birthDay: 12, voiceActorId: 42, isLoveLive: true },
   { id: 801, name: '시부야 카논', birthMonth: 5, birthDay: 1, voiceActorId: 501, isLoveLive: true },
-  { id: 802, name: '탕 쿠쿠', birthMonth: 7, birthDay: 7, voiceActorId: 502, isLoveLive: true },
+  { id: 802, name: '탕 쿠쿠', birthMonth: 7, birthDay: 17, voiceActorId: 502, isLoveLive: true },
   { id: 803, name: '아라시 치사토', birthMonth: 2, birthDay: 25, voiceActorId: 503, isLoveLive: true },
   { id: 804, name: '헤안나 스미레', birthMonth: 9, birthDay: 28, voiceActorId: 504, isLoveLive: true },
   { id: 805, name: '하즈키 렌', birthMonth: 11, birthDay: 24, voiceActorId: 505, isLoveLive: true },
