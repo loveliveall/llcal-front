@@ -219,6 +219,8 @@ interface ConcertProps {
   onEventClick: (event: ClientEvent) => void,
 }
 
+type PageType = 'new' | 'old';
+
 const Concert: React.FC<ConcertProps> = ({
   vaFilter, etcFilter, onEventClick,
 }) => {
@@ -226,6 +228,7 @@ const Concert: React.FC<ConcertProps> = ({
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
+  const [page, setPage] = React.useState<PageType>('new');
   const [currRefreshFlag, setCurrRefreshFlag] = React.useState('');
   const [concertGroups, setConcertGroups] = React.useState<ClientConcertGroup[] | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -238,7 +241,9 @@ const Concert: React.FC<ConcertProps> = ({
   if (concertGroups === null && !loading) {
     setLoading(true);
     const now = startOfDay(new Date());
-    getConcertGroups(now, addYears(now, 1)).then(
+    const from = page === 'new' ? now : addYears(now, -1);
+    const to = page === 'new' ? addYears(now, 1) : now;
+    getConcertGroups(from, to).then(
       (data) => setConcertGroups(data),
     ).catch((e) => {
       console.error(e);
@@ -251,6 +256,15 @@ const Concert: React.FC<ConcertProps> = ({
   if (loading) {
     return <CentralCircularProgress />;
   }
+
+  const togglePage = () => {
+    if (page === 'new') {
+      setPage('old');
+    } else {
+      setPage('new');
+    }
+    setConcertGroups(null);
+  };
 
   const groups = (concertGroups ?? []).filter((g) => (
     g.voiceActorIds.some((id) => vaFilter[id]) // VA Filter
@@ -281,6 +295,13 @@ const Concert: React.FC<ConcertProps> = ({
           onEventClick={onEventClick}
         />
       ))}
+      {authorized && (
+        <div className={classes.paddedCenter}>
+          <Button variant="outlined" onClick={() => togglePage()}>
+            {page === 'new' ? '과거 공연 보기' : '현재 공연 보기'}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
