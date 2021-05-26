@@ -174,18 +174,20 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
         <Divider /> */}
         <div className={classes.row}>
           <Typography variant="h6">
-            확인 중인 개인 비정기 방송
+            확인 중인 개인 비정기 방송 (별도 언급 없을시 니코동 방송)
           </Typography>
           {/* eslint-disable react/jsx-one-expression-per-line, max-len */}
           <ul>
+            <li>우치다 아야: <a href="https://www.onsen.ag/program/aya-uchida/" target="_blank" rel="noreferrer">内田彩の今夜一献傾けて (온센)</a></li>
+            <li>우치다 아야: <a href="https://ch.nicovideo.jp/phonon" target="_blank" rel="noreferrer">魔法笑女マジカル☆うっちー</a></li>
             <li>Pile: <a href="https://ch.nicovideo.jp/Pile" target="_blank" rel="noreferrer">PileちゃんのチャンネルPile</a></li>
+            <li>아이다 리카코: <a href="https://ch.nicovideo.jp/rikakoaida-thetv" target="_blank" rel="noreferrer">逢田梨香子×ザテレビジョン「逢いたい！」</a></li>
             <li>코바야시 아이카: <a href="https://ch.nicovideo.jp/kobayashiaikanohamuriha" target="_blank" rel="noreferrer">小林愛香の「公開リハーサル」</a></li>
             <li>후리하타 아이: <a href="https://ch.nicovideo.jp/furirin" target="_blank" rel="noreferrer">ふりりんは文化</a></li>
             <li>사토 히나타: <a href="https://ch.nicovideo.jp/createvoice" target="_blank" rel="noreferrer">佐藤さん家の日向ちゃん</a></li>
             <li>오오니시 아구리: <a href="https://ch.nicovideo.jp/phonon" target="_blank" rel="noreferrer">大西亜玖璃のあなたにアグリー♥</a></li>
             <li>사가라 마유: <a href="https://ch.nicovideo.jp/ikemayu" target="_blank" rel="noreferrer">相良茉優の『いけません！茉優お嬢さま！』</a></li>
             <li>사가라 마유: <a href="https://ch.nicovideo.jp/mayuchigame" target="_blank" rel="noreferrer">まゆちのおそとゲーム</a></li>
-            <li>마에다 카오리: <a href="https://agonp.jp/programs/view/194" target="_blank" rel="noreferrer">AG-ON Premiumアワー 小山百代と前田佳織里のA＆Geee！</a></li>
             <li>마에다 카오리: <a href="https://ch.nicovideo.jp/kaorin-kokuo" target="_blank" rel="noreferrer">かおりんがゆく〜王国奮闘日誌〜</a></li>
             <li>쿠보타 미유: <a href="https://ch.nicovideo.jp/meatyou" target="_blank" rel="noreferrer">久保田未夢のNice to MEAT you ＆ YOU</a></li>
             <li>무라카미 나츠미: <a href="https://ch.nicovideo.jp/natyaaaaaaan" target="_blank" rel="noreferrer">村上奈津実のなっチャンネル</a></li>
@@ -193,6 +195,7 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
             <li>타나카 치에미: <a href="https://ch.nicovideo.jp/snack-chiemi" target="_blank" rel="noreferrer">田中ちえ美の「スナックちえみ倶楽部」</a></li>
             <li>타나카 치에미: <a href="https://ch.nicovideo.jp/kochimite" target="_blank" rel="noreferrer">吉田有里と田中ちえ美の “仲間になりたそうにこちらを見ている”</a></li>
             <li>코이즈미 모에카: <a href="https://ch.nicovideo.jp/iwata-koizumi" target="_blank" rel="noreferrer">岩田陽葵・小泉萌香 気の向くままに思うがままにっ！</a></li>
+            <li>코이즈미 모에카: <a href="https://ch.nicovideo.jp/moe-note" target="_blank" rel="noreferrer">小泉萌香のもえの～と~moe&#39;s note~</a></li>
           </ul>
           {/* eslint-enable react/jsx-one-expression-per-line, max-len */}
         </div>
