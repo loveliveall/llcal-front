@@ -95,6 +95,8 @@ export const birthdayList: IBirthday[] = [
   { id: 49, name: '텐노지 리나', birthMonth: 11, birthDay: 13, voiceActorId: 29, isLoveLive: true },
   { id: 410, name: '미후네 시오리코', birthMonth: 10, birthDay: 5, voiceActorId: 210, isLoveLive: true },
   // Add you takasaki's birthday
+  // Add mia taylor's birthday
+  // Add shou ranjyu's birthday
   { id: 51, name: '오오니시 아구리', birthMonth: 5, birthDay: 2, voiceActorId: 21, isLoveLive: false },
   { id: 52, name: '사가라 마유', birthMonth: 4, birthDay: 17, voiceActorId: 22, isLoveLive: false },
   { id: 53, name: '마에다 카오리', birthMonth: 4, birthDay: 25, voiceActorId: 23, isLoveLive: false },
@@ -106,6 +108,8 @@ export const birthdayList: IBirthday[] = [
   { id: 59, name: '타나카 치에미', birthMonth: 10, birthDay: 6, voiceActorId: 29, isLoveLive: false },
   { id: 510, name: '코이즈미 모에카', birthMonth: 2, birthDay: 27, voiceActorId: 210, isLoveLive: false },
   { id: 511, name: '야노 히나키', birthMonth: 3, birthDay: 5, voiceActorId: 211, isLoveLive: false },
+  { id: 512, name: '우치다 슈우', birthMonth: 5, birthDay: 24, voiceActorId: 212, isLoveLive: false },
+  { id: 513, name: '호모토 아키나', birthMonth: 8, birthDay: 5, voiceActorId: 213, isLoveLive: false },
   { id: 61, name: '사쿠라가와 메구', birthMonth: 10, birthDay: 24, voiceActorId: 31, isLoveLive: false },
   { id: 62, name: '오오하시 아유루', birthMonth: 4, birthDay: 28, voiceActorId: 32, isLoveLive: false },
   { id: 63, name: '마츠나가 마호', birthMonth: 1, birthDay: 23, voiceActorId: 33, isLoveLive: false },
@@ -167,6 +171,8 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 29, name: '타나카 치에미', character: '텐노지 리나', groupId: 3, colorHex: '#969fb5' },
   { id: 210, name: '코이즈미 모에카', character: '미후네 시오리코', groupId: 3, colorHex: '#36b482' },
   { id: 211, name: '야노 히나키', character: '타카사키 유우', groupId: 3, colorHex: '#000000' },
+  { id: 212, name: '우치다 슈우', character: '미아 테일러', groupId: 3, colorHex: '' }, // Colorhex unknown
+  { id: 213, name: '호모토 아키나', character: '쇼우 란쥬', groupId: 3, colorHex: '' }, // Colorhex unknown
   { id: 31, name: '사쿠라가와 메구', character: '키라 츠바사', groupId: 4, colorHex: '' }, // Colorhex unknown
   { id: 32, name: '오오하시 아유루', character: '유키 안쥬', groupId: 4, colorHex: '' }, // Colorhex unknown
   { id: 33, name: '마츠나가 마호', character: '토도 에레나', groupId: 4, colorHex: '' }, // Colorhex unknown
