@@ -196,7 +196,7 @@ const EventDetailDialog: React.FC = () => {
           {event.link !== null && event.link !== '' && (
             <ListItem disableGutters>
               <ListItemIcon>
-                <Tooltip title="링크" arrow><LinkIcon /></Tooltip>
+                <Tooltip title="일정 관련 URL" arrow><LinkIcon /></Tooltip>
               </ListItemIcon>
               <ListItemText
                 disableTypography
