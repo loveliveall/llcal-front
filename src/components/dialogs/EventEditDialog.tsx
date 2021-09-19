@@ -282,7 +282,10 @@ const EventEditDialog: React.FC = () => {
         {/* Category */}
         <CategoryEditor
           categoryId={categoryId}
-          setCategoryId={setCategoryId}
+          setCategoryId={(newV) => {
+            setCategoryId(newV);
+            if (newV === 102) setIsLoveLive(true);
+          }}
         />
         {/* Is LoveLive */}
         <GridContainer>
