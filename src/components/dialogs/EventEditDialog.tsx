@@ -120,6 +120,7 @@ const EventEditDialog: React.FC = () => {
     setCategoryId(origEvent === null ? null : origEvent.categoryId);
     setIsLoveLive(origEvent === null ? false : origEvent.isLoveLive);
     setIsRepeating(origEvent === null ? false : origEvent.isRepeating);
+    setLink(origEvent === null ? '' : (origEvent.link ?? ''));
     setVAIdList(origEvent === null ? [] : origEvent.voiceActorIds);
   }, [open]);
 
