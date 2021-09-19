@@ -17,7 +17,8 @@ interface IEventCategory extends IEventCategoryRaw, IID<number> {}
 /* eslint-disable object-curly-newline, max-len */
 export const eventCategoryList: IEventCategory[] = [
   { id: 1, name: '방송(TV/라디오 등)', description: '방송 출연 정보', colorHex: '#d81b60', groupId: null, frozen: false },
-  { id: 101, name: '이벤트', description: '캐스트가 참여하는 이벤트', colorHex: '#f4511e', groupId: null, frozen: false },
+  { id: 101, name: '이벤트', description: '캐스트가 참여하는 유료 이벤트', colorHex: '#f4511e', groupId: 3, frozen: false },
+  { id: 102, name: '러브 라이브', description: '러브라이브 공식 라이브', colorHex: '#f6bf26', groupId: 3, frozen: false },
   { id: 201, name: '발매 일정', description: '공식 굿즈 관련 발매 정보', colorHex: '#7cb342', groupId: null, frozen: false },
 
   { id: 301, name: '굿즈 예약', description: '공식 굿즈 예약 기간 정보', colorHex: blue[500], groupId: 1, frozen: false },
@@ -32,6 +33,7 @@ export const eventCategoryList: IEventCategory[] = [
 /* eslint-enable object-curly-newline */
 
 export const categoryGroupList = [
+  { id: 3, name: '이벤트' },
   { id: 1, name: '예약/알림' },
   { id: 2, name: '비공식 일정' },
 ];
