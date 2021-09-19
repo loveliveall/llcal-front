@@ -44,6 +44,7 @@ import {
   DateInfoEditor,
   DescriptionEditor,
   CategoryEditor,
+  LinkEditor,
 } from './EventEditDialogComp';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -96,6 +97,7 @@ const EventEditDialog: React.FC = () => {
   const [categoryId, setCategoryId] = React.useState<number | null>(null);
   const [isLoveLive, setIsLoveLive] = React.useState(false);
   const [isRepeating, setIsRepeating] = React.useState(false);
+  const [link, setLink] = React.useState('');
   const [vaIdList, setVAIdList] = React.useState<number[]>([]);
   const isEditRepeat = origEvent !== null && origEvent.rrule !== '';
 
@@ -146,6 +148,7 @@ const EventEditDialog: React.FC = () => {
             token,
             title, place, desc, start, end, allDay, rrule,
             categoryId, vaIdList, isLoveLive, isRepeating,
+            link === '' ? null : link,
           );
         }
         const { serverId } = origEvent;
@@ -156,6 +159,7 @@ const EventEditDialog: React.FC = () => {
             token,
             serverId, title, place, desc, start, end, allDay, rrule,
             categoryId, vaIdList, isLoveLive, isRepeating,
+            link === '' ? null : link,
           );
         }
         if (editRange === 'this') {
@@ -164,6 +168,7 @@ const EventEditDialog: React.FC = () => {
             token, origEvent.startTime,
             serverId, title, place, desc, start, end, allDay,
             categoryId, vaIdList, isLoveLive, isRepeating,
+            link === '' ? null : link,
           );
         }
         if (editRange === 'after' && !isEqual(origEvent.dtstart, origEvent.startTime)) {
@@ -174,6 +179,7 @@ const EventEditDialog: React.FC = () => {
             token, origEvent.dtstart, origEvent.rrule, origDuration,
             serverId, title, place, desc, start, end, allDay, rrule,
             categoryId, vaIdList, isLoveLive, isRepeating,
+            link === '' ? null : link,
           );
         }
         if (editRange === 'all' || (editRange === 'after' && isEqual(origEvent.dtstart, origEvent.startTime))) {
@@ -182,6 +188,7 @@ const EventEditDialog: React.FC = () => {
             token, origEvent.startTime, origEvent.dtstart,
             serverId, title, place, desc, start, end, allDay, rrule,
             categoryId, vaIdList, isLoveLive, isRepeating,
+            link === '' ? null : link,
           );
         }
         return false;
@@ -260,6 +267,11 @@ const EventEditDialog: React.FC = () => {
           setIsRepeating={setIsRepeating}
           isFreqEditDisabled={isEditRepeat}
           isEditOnlyThis={editRange === 'this'}
+        />
+        {/* Link */}
+        <LinkEditor
+          link={link}
+          setLink={setLink}
         />
         {/* Description */}
         <DescriptionEditor

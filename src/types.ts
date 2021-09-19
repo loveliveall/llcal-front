@@ -17,6 +17,7 @@ export interface ClientEvent {
   isRepeating: boolean,
   dtstart: Date,
   colorCode: string,
+  link: string | null,
 }
 
 export interface ServerEvent {
@@ -34,6 +35,7 @@ export interface ServerEvent {
   voiceActorIds: number[],
   isLoveLive: boolean,
   isRepeating: boolean,
+  link: string | null,
 }
 
 export interface ClientConcertGroup {

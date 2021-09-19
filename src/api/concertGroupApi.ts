@@ -45,6 +45,7 @@ export async function getEventsByIds(idList: string[]): Promise<ClientEvent[]> {
       isRepeating: curr.isRepeating,
       dtstart: eventStart,
       colorCode,
+      link: curr.link,
     }]);
   }, [] as ClientEvent[]);
 }

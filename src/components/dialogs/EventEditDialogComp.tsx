@@ -104,6 +104,33 @@ const PlaceEditorComp: React.FC<PlaceEditorProps> = ({
 );
 export const PlaceEditor = PlaceEditorComp;
 
+export type LinkEditorProps = {
+  link: string,
+  setLink: (newValue: string) => void,
+};
+const LinkEditorComp: React.FC<LinkEditorProps> = ({
+  link, setLink,
+}) => (
+  <GridContainer>
+    <Grid item xs={2}>
+      <Typography>URL</Typography>
+    </Grid>
+    <Grid item xs>
+      <Input
+        id="link"
+        value={link}
+        onChange={(e) => setLink(e.target.value)}
+        fullWidth
+        inputProps={{
+          autoCapitalize: 'none',
+          autoCorrect: 'off',
+        }}
+      />
+    </Grid>
+  </GridContainer>
+);
+export const LinkEditor = LinkEditorComp;
+
 const jsDayToWeekday = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA];
 export type DateInfoEditorProps = {
   allDay: boolean,

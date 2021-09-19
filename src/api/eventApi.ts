@@ -29,6 +29,7 @@ const birthdayEvents: ServerEvent[] = birthdayList.map((birthday, idx) => {
     voiceActorIds: [birthday.voiceActorId],
     isLoveLive: birthday.isLoveLive,
     isRepeating: true,
+    link: null,
   };
 });
 
@@ -77,6 +78,7 @@ export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]
           isRepeating: curr.isRepeating,
           dtstart: eventStart,
           colorCode,
+          link: curr.link,
         };
       }));
     }
@@ -97,6 +99,7 @@ export async function callGetEvents(from: Date, to: Date): Promise<ClientEvent[]
       isRepeating: curr.isRepeating,
       dtstart: eventStart,
       colorCode,
+      link: curr.link,
     }]);
   }, [] as ClientEvent[]);
   return eventsInRange;
@@ -213,6 +216,7 @@ export async function addNewEvent(
   token: string,
   title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
   rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+  link: string | null,
 ): Promise<boolean> {
   // Convert dates for server
   const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, rrule);
@@ -233,6 +237,7 @@ export async function addNewEvent(
       voiceActorIds,
       isLoveLive,
       isRepeating,
+      link,
     }),
   });
   return ret.status === 200;
@@ -242,6 +247,7 @@ export async function editNonRepeatEvent(
   token: string,
   id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
   rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+  link: string | null,
 ): Promise<boolean> {
   const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, rrule);
   const ret = await fetch(`${API_ENDPOINT}/event/edit`, {
@@ -264,6 +270,7 @@ export async function editNonRepeatEvent(
         voiceActorIds,
         isLoveLive,
         isRepeating,
+        link,
       },
     }),
   });
@@ -274,6 +281,7 @@ export async function editRepeatEventOnlyThis(
   token: string, origStart: Date,
   id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
   categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+  link: string | null,
 ): Promise<boolean> {
   const { startTs, duration, rangeEndTs } = convertToServerInfo(start, end, allDay, '');
   const origStartTs = getTimestampForServer(origStart);
@@ -299,6 +307,7 @@ export async function editRepeatEventOnlyThis(
         voiceActorIds,
         isLoveLive,
         isRepeating,
+        link,
       },
     }),
   });
@@ -309,6 +318,7 @@ export async function editRepeatEventAfter(
   token: string, origDtStart: Date, origRRule: string, origDuration: number,
   id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
   rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+  link: string | null,
 ): Promise<boolean> {
   // Edit rrule of original event and Add new event
   // First, calculate new rrule of original event
@@ -355,6 +365,7 @@ export async function editRepeatEventAfter(
         voiceActorIds,
         isLoveLive,
         isRepeating,
+        link,
       },
     }),
   });
@@ -365,6 +376,7 @@ export async function editRepeatEventAll(
   token: string, origStart: Date, origDtStart: Date,
   id: string, title: string, place: string, description: string, start: Date, end: Date, allDay: boolean,
   rrule: string, categoryId: number, voiceActorIds: number[], isLoveLive: boolean, isRepeating: boolean,
+  link: string | null,
 ): Promise<boolean> {
   const startOffset = start.getTime() - origStart.getTime();
   const newDtStart = new Date(origDtStart.getTime() + startOffset);
@@ -403,6 +415,7 @@ export async function editRepeatEventAll(
         voiceActorIds,
         isLoveLive,
         isRepeating,
+        link,
       },
     }),
   });

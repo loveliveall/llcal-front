@@ -21,6 +21,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import LabelIcon from '@material-ui/icons/Label';
+import LinkIcon from '@material-ui/icons/Link';
 import NotesIcon from '@material-ui/icons/Notes';
 import PersonIcon from '@material-ui/icons/Person';
 import PlaceIcon from '@material-ui/icons/Place';
@@ -191,6 +192,22 @@ const EventDetailDialog: React.FC = () => {
               )}
             />
           </ListItem>
+          {/* Link */}
+          {event.link !== null && event.link !== '' && (
+            <ListItem disableGutters>
+              <ListItemIcon>
+                <Tooltip title="링크" arrow><LinkIcon /></Tooltip>
+              </ListItemIcon>
+              <ListItemText
+                disableTypography
+                primary={(
+                  <Linkify componentDecorator={linkifyDecorator}>
+                    <Typography variant="body2">{event.link}</Typography>
+                  </Linkify>
+                )}
+              />
+            </ListItem>
+          )}
           {/* Description */}
           <ListItem disableGutters>
             <ListItemIcon>
