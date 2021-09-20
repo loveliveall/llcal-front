@@ -181,11 +181,12 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 33, name: '마츠나가 마호', character: '토도 에레나', groupId: 4, colorHex: '' }, // Colorhex unknown
   { id: 41, name: '타노 아사미', character: '카즈노 세이라', groupId: 5, colorHex: '#87ceeb' },
   { id: 42, name: '사토 히나타', character: '카즈노 리아', groupId: 5, colorHex: '#eeede6' },
-  { id: 501, name: '다테 사유리', character: '시부야 카논', groupId: 6, colorHex: '#fe6d00' },
-  { id: 502, name: 'Liyuu', character: '탕 쿠쿠', groupId: 6, colorHex: '#87ceeb' },
-  { id: 503, name: '미사키 나코', character: '아라시 치사토', groupId: 6, colorHex: '#ff1493' },
-  { id: 504, name: '페이튼 나오미', character: '헤안나 스미레', groupId: 6, colorHex: '#99dd88' },
-  { id: 505, name: '아오야마 나기사', character: '하즈키 렌', groupId: 6, colorHex: '#0000ff' },
+  // Hex color from https://lovelive-anime.jp/yuigaoka/member/contents.css
+  { id: 501, name: '다테 사유리', character: '시부야 카논', groupId: 6, colorHex: '#ff7f27' },
+  { id: 502, name: 'Liyuu', character: '탕 쿠쿠', groupId: 6, colorHex: '#a0fff9' },
+  { id: 503, name: '미사키 나코', character: '아라시 치사토', groupId: 6, colorHex: '#ff6e90' },
+  { id: 504, name: '페이튼 나오미', character: '헤안나 스미레', groupId: 6, colorHex: '#74f466' },
+  { id: 505, name: '아오야마 나기사', character: '하즈키 렌', groupId: 6, colorHex: '#0000a0' },
 ];
 /* eslint-enable object-curly-newline */
 
