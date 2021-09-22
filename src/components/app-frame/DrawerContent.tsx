@@ -21,6 +21,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/HelpOutline';
 import InfoIcon from '@material-ui/icons/Info';
+import LinkIcon from '@material-ui/icons/Link';
 import LocalATMIcon from '@material-ui/icons/LocalAtm';
 import SearchIcon from '@material-ui/icons/Search';
 import SendIcon from '@material-ui/icons/Send';
@@ -288,6 +289,23 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           </ListItemIcon>
           <ListItemText
             primary="일정 추가 요청 보내기"
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            const newWindow = window.open('https://lovelivec.kr', '_blank', 'noopener,noreferrer');
+            if (newWindow) newWindow.opener = null;
+          }}
+        >
+          <ListItemIcon className={classes.denseIcon}>
+            <LinkIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="러브라이브! 콜표"
             primaryTypographyProps={{
               variant: 'body2',
             }}
