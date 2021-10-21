@@ -191,11 +191,14 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
               setRRule(RRule.optionsToString(opt));
             }
           }
-        }
-        /* Case 2. BYMONTHDAY specified
-        else {
+        } else {
+          // Case 2. No BYDAY specified but BYMONTHDAY specified
           const match2 = /BYMONTHDAY=(.*?)(;|$)/m.exec(rrule);
-        } */
+          if (match2) {
+            opt.bymonthday = [purifiedDate.getDate()];
+            setRRule(RRule.optionsToString(opt));
+          }
+        }
       }
     }
   };

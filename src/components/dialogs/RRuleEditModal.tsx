@@ -122,7 +122,7 @@ function getEndType(rrOpts: RRuleOptions) {
   return '';
 }
 
-type MonthlyDetail = 'weekday_positive' | 'weekday_negative' | 'weekday_monthday';
+type MonthlyDetail = 'weekday_positive' | 'weekday_negative' | 'weekday_monthday' | 'single_monthday';
 function getMonthlyDetail(rrOpts: RRuleOptions): MonthlyDetail | '' {
   if (rrOpts.freq === RRule.MONTHLY) {
     const { byweekday, bymonthday } = rrOpts;
@@ -131,6 +131,9 @@ function getMonthlyDetail(rrOpts: RRuleOptions): MonthlyDetail | '' {
       const { n } = byweekday[0];
       if (n !== undefined && n > 0) return 'weekday_positive';
       if (n !== undefined && n < 0) return 'weekday_negative';
+    }
+    if (byweekday === undefined || byweekday.length === 0) {
+      if (bymonthday !== undefined && bymonthday.length === 1) return 'single_monthday';
     }
     // Handle bymonthday?
   }
@@ -295,6 +298,12 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
                         byweekday: [jsDayToWeekday[start.getDay()]],
                         bymonthday: [start.getDate()],
                       });
+                    } else if (selected === 'single_monthday') {
+                      setLocalRRule({
+                        ...localRRule,
+                        byweekday: undefined,
+                        bymonthday: [start.getDate()],
+                      });
                     }
                   }}
                   disabled={isFreqEditDisabled}
@@ -307,6 +316,9 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
                   </MenuItem>
                   <MenuItem value="weekday_monthday">
                     {`조건을 만족하는 ${jsDayToKor[start.getDay()]}요일`}
+                  </MenuItem>
+                  <MenuItem value="single_monthday">
+                    {`${start.getDate()}일`}
                   </MenuItem>
                 </Select>
               </Grid>
