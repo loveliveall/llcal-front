@@ -129,6 +129,9 @@ export const birthdayList: IBirthday[] = [
   { id: 903, name: '미사키 나코', birthMonth: 3, birthDay: 8, voiceActorId: 503, isLoveLive: false },
   { id: 904, name: '페이튼 나오미', birthMonth: 7, birthDay: 1, voiceActorId: 504, isLoveLive: false },
   { id: 905, name: '아오야마 나기사', birthMonth: 5, birthDay: 16, voiceActorId: 505, isLoveLive: false },
+  // Add mao & yuuna birthday
+  { id: 1101, name: '유우키 유나', birthMonth: 6, birthDay: 9, voiceActorId: 601, isLoveLive: false },
+  { id: 1102, name: '요시타케 치하야', birthMonth: 3, birthDay: 28, voiceActorId: 602, isLoveLive: false },
 ];
 /* eslint-enable object-curly-newline */
 
@@ -187,6 +190,8 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 503, name: '미사키 나코', character: '아라시 치사토', groupId: 6, colorHex: '#ff6e90' },
   { id: 504, name: '페이튼 나오미', character: '헤안나 스미레', groupId: 6, colorHex: '#74f466' },
   { id: 505, name: '아오야마 나기사', character: '하즈키 렌', groupId: 6, colorHex: '#0000a0' },
+  { id: 601, name: '유우키 유나', character: '히이라기 마오', groupId: 7, colorHex: '' }, // Colorhex unknown
+  { id: 602, name: '요시타케 치하야', character: '히지리사와 유우나', groupId: 7, colorHex: '' }, // Colorhex unknown
 ];
 /* eslint-enable object-curly-newline */
 
@@ -205,4 +210,5 @@ export const groupInfoList: IGroupInfo[] = [
   { id: 6, name: 'Liella!', colorHex: '#0cd20c' }, // Colorhex from http://www.lovelive-anime.jp/yuigaoka/, will may change
   { id: 4, name: 'A-RISE', colorHex: '' }, // Colorhex unknown
   { id: 5, name: 'Saint Snow', colorHex: '' }, // Colorhex unknown
+  { id: 7, name: 'Sunny Passion', colorHex: '' }, // Colorhex unknown
 ];
