@@ -1,7 +1,6 @@
 /* eslint-disable */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (_, argv) => {
@@ -19,9 +18,10 @@ module.exports = (_, argv) => {
     entry: path.resolve(__dirname, 'src/index'),
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: '[name].[hash].bundle.js',
+      filename: '[name].[contenthash].bundle.js',
       chunkFilename: '[name].[chunkhash].bundle.js',
       publicPath: '/',
+      clean: true,
     },
     module: {
       rules: [
@@ -44,10 +44,14 @@ module.exports = (_, argv) => {
       },
     },
     plugins: [
-      new CleanWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
-          { from: 'public' },
+          {
+            from: 'public',
+            globOptions: {
+              ignore: ['**/index.html'],
+            },
+          },
         ],
       }),
       new HtmlWebpackPlugin({
@@ -62,8 +66,9 @@ module.exports = (_, argv) => {
   return {
     ...baseConfig,
     devServer: {
-      contentBase: './build',
-      open: true,
+      static: {
+        directory: path.resolve(__dirname, 'build'),
+      },
       hot: true,
       compress: true,
       historyApiFallback: true,
