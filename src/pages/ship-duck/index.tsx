@@ -2,42 +2,36 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import MuiPaper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import { AppState } from '@/store';
 import { saveToken } from '@/store/auth/actions';
 import { tryLogin } from '@/api';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'center',
-  },
-  paper: {
-    flexGrow: 1,
-    margin: theme.spacing(3),
-    padding: theme.spacing(2),
-    maxWidth: theme.breakpoints.values.sm,
-  },
-  singleRow: {
-    display: 'flex',
-    width: '100%',
-    padding: theme.spacing(0.5),
-    justifyContent: 'center',
-  },
-  error: {
-    color: 'red',
-  },
+const Root = styled('div')`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+`;
+const Paper = styled(MuiPaper)(({ theme }) => ({
+  flexGrow: 1,
+  margin: theme.spacing(3),
+  padding: theme.spacing(2),
+  maxWidth: theme.breakpoints.values.sm,
+}));
+const Row = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  padding: theme.spacing(0.5),
+  justifyContent: 'center',
 }));
 
 const ShipDuck: React.FC = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [loading, setLoading] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
@@ -72,17 +66,17 @@ const ShipDuck: React.FC = () => {
   };
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <div className={classes.singleRow}>
+    <Root>
+      <Paper>
+        <Row>
           <Typography variant="h6">정보 입력</Typography>
-        </div>
+        </Row>
         {errMsg !== '' && (
-          <div className={classes.singleRow}>
-            <Typography variant="body2" className={classes.error}>{errMsg}</Typography>
-          </div>
+          <Row>
+            <Typography variant="body2" sx={{ color: 'red' }}>{errMsg}</Typography>
+          </Row>
         )}
-        <div className={classes.singleRow}>
+        <Row>
           <TextField
             id="id"
             label="ID"
@@ -96,8 +90,8 @@ const ShipDuck: React.FC = () => {
               autoCorrect: 'off',
             }}
           />
-        </div>
-        <div className={classes.singleRow}>
+        </Row>
+        <Row>
           <TextField
             id="token"
             label="Token"
@@ -111,8 +105,8 @@ const ShipDuck: React.FC = () => {
               autoCorrect: 'off',
             }}
           />
-        </div>
-        <div className={classes.singleRow}>
+        </Row>
+        <Row>
           <Button
             color="primary"
             variant="contained"
@@ -121,9 +115,9 @@ const ShipDuck: React.FC = () => {
           >
             {loading ? <CircularProgress size="1.75em" /> : 'Login!'}
           </Button>
-        </div>
+        </Row>
       </Paper>
-    </div>
+    </Root>
   );
 };
 

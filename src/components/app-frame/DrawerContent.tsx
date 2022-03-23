@@ -4,30 +4,30 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import areEqual from 'fast-deep-equal';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { styled, SxProps } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import AddIcon from '@material-ui/icons/Add';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import HelpIcon from '@material-ui/icons/HelpOutline';
-import InfoIcon from '@material-ui/icons/Info';
-import LinkIcon from '@material-ui/icons/Link';
-import LocalATMIcon from '@material-ui/icons/LocalAtm';
-import SearchIcon from '@material-ui/icons/Search';
-import SendIcon from '@material-ui/icons/Send';
-import ViewAgendaIcon from '@material-ui/icons/ViewAgenda';
-import ViewDayIcon from '@material-ui/icons/ViewDay';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AddIcon from '@mui/icons-material/Add';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import HelpIcon from '@mui/icons-material/HelpOutline';
+import InfoIcon from '@mui/icons-material/Info';
+import LinkIcon from '@mui/icons-material/Link';
+import LocalATMIcon from '@mui/icons-material/LocalAtm';
+import SearchIcon from '@mui/icons-material/Search';
+import SendIcon from '@mui/icons-material/Send';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+import ViewDayIcon from '@mui/icons-material/ViewDay';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 import ETCCheckList from '@/components/common/ETCCheckList';
 import VACheckList from '@/components/common/VACheckList';
@@ -56,25 +56,20 @@ import {
   AppViewType,
 } from '@/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-  },
-  denseIcon: {
-    minWidth: theme.spacing(5),
-  },
-  sectionHeaderText: {
-    fontWeight: 'bold',
-  },
-  spaced: {
-    paddingLeft: theme.spacing(2),
-  },
-  center: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'center',
-  },
+const Root = styled('div')`
+  width: 100%;
+`;
+const DenseListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+  minWidth: theme.spacing(5),
+}));
+const sectionHeaderTextStyle: SxProps = {
+  fontWeight: 'bold',
+};
+const Center = styled('div')(({ theme }) => ({
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  display: 'flex',
+  justifyContent: 'center',
 }));
 
 interface IOwnProps {
@@ -94,7 +89,6 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   currView, setCurrView, etcFilter, setETCFilter,
   vaFilter, setVAFilter, categoryFilter, setCategoryFilter, setMobileDrawerOpen,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
@@ -181,15 +175,15 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   };
 
   return (
-    <div className={classes.root}>
+    <Root>
       <List component="nav">
         <ListItem
           button
           onClick={onAboutClick}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             <HelpIcon />
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="캘린더에 대해"
             primaryTypographyProps={{
@@ -203,9 +197,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               button
               onClick={onLogoutClick}
             >
-              <ListItemIcon className={classes.denseIcon}>
+              <DenseListItemIcon>
                 <ExitToAppIcon />
-              </ListItemIcon>
+              </DenseListItemIcon>
               <ListItemText
                 primary="로그아웃"
                 primaryTypographyProps={{
@@ -217,9 +211,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               button
               onClick={onNewEventClick}
             >
-              <ListItemIcon className={classes.denseIcon}>
+              <DenseListItemIcon>
                 <AddIcon />
-              </ListItemIcon>
+              </DenseListItemIcon>
               <ListItemText
                 primary="새 일정 추가"
                 primaryTypographyProps={{
@@ -233,9 +227,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           button
           onClick={onNoticeClick}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             <InfoIcon />
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="최근 변경 및 공지"
             primaryTypographyProps={{
@@ -257,9 +251,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               selected={currView === viewType}
               onClick={onClick}
             >
-              <ListItemIcon className={classes.denseIcon}>
+              <DenseListItemIcon>
                 <Icon />
-              </ListItemIcon>
+              </DenseListItemIcon>
               <ListItemText
                 primary={label}
                 primaryTypographyProps={{
@@ -270,9 +264,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           );
         })}
         <ListItem button component={Link} to="/search">
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             <SearchIcon />
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="검색"
             primaryTypographyProps={{
@@ -284,9 +278,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           button
           onClick={onReportClick}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             <SendIcon />
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="일정 추가 요청 보내기"
             primaryTypographyProps={{
@@ -301,9 +295,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             if (newWindow) newWindow.opener = null;
           }}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             <LinkIcon />
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="러브라이브! 콜표"
             primaryTypographyProps={{
@@ -316,9 +310,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           button
           onClick={() => setDayStartDialogOpen(true)}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             <AccessTimeIcon />
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary={`하루 범위: ${`0${dayStartHour}`.slice(-2)}:00 - ${dayStartHour + 24}:00`}
             primaryTypographyProps={{
@@ -331,13 +325,13 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           button
           onClick={() => setOpenVAFilter(!openVAFilter)}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             {openVAFilter ? <ExpandLess /> : <ExpandMore />}
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="성우/캐릭터 필터"
             primaryTypographyProps={{
-              className: classes.sectionHeaderText,
+              sx: sectionHeaderTextStyle,
               variant: 'body2',
             }}
           />
@@ -353,13 +347,13 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           button
           onClick={() => setOpenCategoryFilter(!openCategoryFilter)}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             {openCategoryFilter ? <ExpandLess /> : <ExpandMore />}
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="분류 필터"
             primaryTypographyProps={{
-              className: classes.sectionHeaderText,
+              sx: sectionHeaderTextStyle,
               variant: 'body2',
             }}
           />
@@ -375,13 +369,13 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           button
           onClick={() => setOpenETCFilter(!openETCFilter)}
         >
-          <ListItemIcon className={classes.denseIcon}>
+          <DenseListItemIcon>
             {openETCFilter ? <ExpandLess /> : <ExpandMore />}
-          </ListItemIcon>
+          </DenseListItemIcon>
           <ListItemText
             primary="기타 필터"
             primaryTypographyProps={{
-              className: classes.sectionHeaderText,
+              sx: sectionHeaderTextStyle,
               variant: 'body2',
             }}
           />
@@ -392,16 +386,16 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             setCheckState={setETCFilter}
           />
         </Collapse>
-        <div className={classes.center}>
+        <Center>
           <Button onClick={onSaveSettingsClick} variant="outlined">
             캘린더 설정 저장
           </Button>
-        </div>
-        <div className={classes.center}>
+        </Center>
+        <Center>
           <Button onClick={onExportClick} variant="outlined" color="primary">
             캘린더 내보내기
           </Button>
-        </div>
+        </Center>
       </List>
       <AboutDialog
         open={aboutDialogOpen}
@@ -426,7 +420,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
         open={noticesOpen}
         setOpen={setNoticesOpen}
       />
-    </div>
+    </Root>
   );
 };
 

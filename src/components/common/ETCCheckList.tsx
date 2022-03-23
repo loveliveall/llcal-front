@@ -1,20 +1,15 @@
 import React from 'react';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import { styled } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
 
 import { ETCCheckState } from '@/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-  spaced: {
-    paddingLeft: theme.spacing(2),
-  },
+const ItemTextSpaced = styled(ListItemText)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
 }));
 
 interface IOwnProps {
@@ -26,7 +21,6 @@ type ETCCheckListProps = IOwnProps;
 const ETCCheckList: React.FC<ETCCheckListProps> = ({
   checkState, setCheckState,
 }) => {
-  const classes = useStyles();
   const onToggleIncludeRepeating = () => {
     setCheckState({
       ...checkState,
@@ -47,8 +41,7 @@ const ETCCheckList: React.FC<ETCCheckListProps> = ({
   };
   return (
     <List component="nav" dense>
-      <ListItem
-        button
+      <ListItemButton
         onClick={onToggleIncludeRepeating}
       >
         <Checkbox
@@ -58,16 +51,14 @@ const ETCCheckList: React.FC<ETCCheckListProps> = ({
           edge="start"
           disableRipple
         />
-        <ListItemText
-          className={classes.spaced}
+        <ItemTextSpaced
           primary="정기 일정 포함"
           primaryTypographyProps={{
             variant: 'body2',
           }}
         />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={onToggleShowLoveLive}
       >
         <Checkbox
@@ -77,16 +68,14 @@ const ETCCheckList: React.FC<ETCCheckListProps> = ({
           edge="start"
           disableRipple
         />
-        <ListItemText
-          className={classes.spaced}
+        <ItemTextSpaced
           primary="LoveLive! 관련"
           primaryTypographyProps={{
             variant: 'body2',
           }}
         />
-      </ListItem>
-      <ListItem
-        button
+      </ListItemButton>
+      <ListItemButton
         onClick={onToggleShowNonLoveLive}
       >
         <Checkbox
@@ -96,14 +85,13 @@ const ETCCheckList: React.FC<ETCCheckListProps> = ({
           edge="start"
           disableRipple
         />
-        <ListItemText
-          className={classes.spaced}
+        <ItemTextSpaced
           primary="LoveLive! 비관련"
           primaryTypographyProps={{
             variant: 'body2',
           }}
         />
-      </ListItem>
+      </ListItemButton>
     </List>
   );
 };

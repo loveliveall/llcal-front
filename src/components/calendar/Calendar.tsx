@@ -2,8 +2,8 @@ import React from 'react';
 import startOfMonth from 'date-fns/startOfMonth';
 import addMonths from 'date-fns/addMonths';
 
-import { createMuiTheme, ThemeProvider, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import MonthView from './month-view/MonthView';
 import DayView from './day-view/DayView';
@@ -42,11 +42,11 @@ function Calendar<TEvent extends ICalendarEvent>({
   const onEventClickInternal = (event: ICalendarEvent) => onEventClick && onEventClick(event as TEvent);
   const onMonthDateClickInternal = (date: Date) => onMonthDateClick && onMonthDateClick(date);
   const MOBILE_MONTH_SCALING = 0.75;
-  const mobileMonthViewTheme = createMuiTheme({
+  const mobileMonthViewTheme = createTheme({
     ...theme,
-    spacing: 8 * MOBILE_MONTH_SCALING, // https://material-ui.com/customization/spacing/
+    spacing: 8 * MOBILE_MONTH_SCALING, // https://mui.com/customization/spacing/
     typography: {
-      fontSize: 14 * MOBILE_MONTH_SCALING, // https://material-ui.com/customization/typography/#font-size
+      fontSize: 14 * MOBILE_MONTH_SCALING, // https://mui.com/customization/typography/#font-size
     },
   });
 

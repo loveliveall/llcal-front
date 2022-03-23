@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Tooltip from '@material-ui/core/Tooltip';
+import { styled } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { CategoryCheckState } from '@/types';
 import { eventCategoryList, categoryGroupList } from '@/commonData';
@@ -33,13 +33,11 @@ function isAllIndeterminate(checkState: CategoryCheckState) {
   return !eventCategoryList.every((cat) => checkState[cat.id] === checkState[eventCategoryList[0].id]);
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-  spaced: {
-    paddingLeft: theme.spacing(2),
-  },
+const NestedItem = styled(ListItemButton)(({ theme }) => ({
+  paddingLeft: theme.spacing(4),
+}));
+const ItemTextSpaced = styled(ListItemText)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
 }));
 
 interface IOwnProps {
@@ -55,8 +53,6 @@ type SubListOpenState = {
 const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
   checkState, setCheckState,
 }) => {
-  const classes = useStyles();
-
   const [subListOpen, setSubListOpen] = React.useState<SubListOpenState>(categoryGroupList.reduce((acc, curr) => ({
     ...acc,
     [curr.id]: true,
@@ -94,8 +90,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
 
   return (
     <List component="nav" dense>
-      <ListItem
-        button
+      <ListItemButton
         onClick={onAllToggle}
       >
         <Checkbox
@@ -106,14 +101,13 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
           edge="start"
           disableRipple
         />
-        <ListItemText
-          className={classes.spaced}
+        <ItemTextSpaced
           primary="전체 선택"
           primaryTypographyProps={{
             variant: 'body2',
           }}
         />
-      </ListItem>
+      </ListItemButton>
       <List component="nav" dense disablePadding>
         {eventCategoryList.filter((cat) => cat.groupId === null).map((cat) => {
           const categoryId = cat.id;
@@ -122,8 +116,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
               key={`category-${categoryId}`}
               title={cat.description}
             >
-              <ListItem
-                button
+              <ListItemButton
                 onClick={() => onCategoryToggle(categoryId)}
               >
                 <Checkbox
@@ -135,14 +128,13 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
                     color: cat.colorHex,
                   }}
                 />
-                <ListItemText
-                  className={classes.spaced}
+                <ItemTextSpaced
                   primary={cat.name}
                   primaryTypographyProps={{
                     variant: 'body2',
                   }}
                 />
-              </ListItem>
+              </ListItemButton>
             </Tooltip>
           );
         })}
@@ -150,8 +142,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
           const groupId = groupInfo.id;
           return (
             <React.Fragment key={`category-group-${groupId}`}>
-              <ListItem
-                button
+              <ListItemButton
                 onClick={() => onGroupToggle(groupId)}
               >
                 <Checkbox
@@ -162,8 +153,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
                   disableRipple
                   color="default"
                 />
-                <ListItemText
-                  className={classes.spaced}
+                <ItemTextSpaced
                   primary={groupInfo.name}
                   primaryTypographyProps={{
                     variant: 'body2',
@@ -174,7 +164,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
                     {subListOpen[groupId] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                   </IconButton>
                 </ListItemSecondaryAction>
-              </ListItem>
+              </ListItemButton>
               {/* SubList */}
               <Collapse in={subListOpen[groupId]} timeout="auto" unmountOnExit>
                 <List component="nav" dense disablePadding>
@@ -185,10 +175,8 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
                         key={`category-${categoryId}`}
                         title={cat.description}
                       >
-                        <ListItem
+                        <NestedItem
                           key={`category-${categoryId}`}
-                          className={classes.nested}
-                          button
                           onClick={() => onCategoryToggle(categoryId)}
                         >
                           <Checkbox
@@ -200,14 +188,13 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
                               color: cat.colorHex,
                             }}
                           />
-                          <ListItemText
-                            className={classes.spaced}
+                          <ItemTextSpaced
                             primary={cat.name}
                             primaryTypographyProps={{
                               variant: 'body2',
                             }}
                           />
-                        </ListItem>
+                        </NestedItem>
                       </Tooltip>
                     );
                   })}

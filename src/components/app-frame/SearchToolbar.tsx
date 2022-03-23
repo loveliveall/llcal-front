@@ -1,23 +1,21 @@
 import React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
 
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import SearchIcon from '@material-ui/icons/Search';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import SearchIcon from '@mui/icons-material/Search';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  padded: {
-    flexGrow: 1,
-  },
-  maxSm: {
-    width: '100%',
-    maxWidth: theme.breakpoints.values.sm,
-  },
+const PaddedDiv = styled('div')`
+  flex-grow: 1;
+`;
+const MaxSMForm = styled('form')(({ theme }) => ({
+  width: '100%',
+  maxWidth: theme.breakpoints.values.sm,
 }));
 
 interface IOwnProps {
@@ -28,7 +26,6 @@ export type SearchToolbarProps = IOwnProps;
 const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
   onSearchTrigger, history,
 }) => {
-  const classes = useStyles();
   const [text, setText] = React.useState('');
   const onBackClick = () => {
     history.goBack();
@@ -56,8 +53,8 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
           <ChevronLeftIcon />
         </IconButton>
       </Tooltip>
-      <div className={classes.padded} />
-      <form className={classes.maxSm} action="." onSubmit={onFormSubmit}>
+      <PaddedDiv />
+      <MaxSMForm action="." onSubmit={onFormSubmit}>
         <Input
           name="search"
           type="search"
@@ -72,7 +69,7 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
           autoFocus
           fullWidth
         />
-      </form>
+      </MaxSMForm>
       <Tooltip title="검색">
         <IconButton
           color="inherit"
@@ -82,7 +79,7 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
           <SearchIcon />
         </IconButton>
       </Tooltip>
-      <div className={classes.padded} />
+      <PaddedDiv />
     </Toolbar>
   );
 };

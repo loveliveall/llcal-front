@@ -4,7 +4,7 @@ import addDays from 'date-fns/addDays';
 import startOfDay from 'date-fns/startOfDay';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { styled } from '@mui/material/styles';
 
 import {
   ICalendarEvent,
@@ -20,29 +20,27 @@ import WeekEventRow from './WeekEventRow';
 
 const isMidnight = (date: Date) => date.getHours() === 0 && date.getMinutes() === 0;
 
-const useStyles = makeStyles((theme) => ({
-  row: {
-    display: 'flex',
-    position: 'relative',
-    overflow: 'hidden',
-    flex: '1 1 0%',
-    boxSizing: 'border-box',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  cellFrame: {
-    display: 'flex',
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
-    bottom: 0,
-  },
-  eventOverlay: {
-    display: 'flex',
-    width: '100%',
-    fontSize: theme.typography.body2.fontSize, // Let line-height em work correctly
-    marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)}px + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
-  },
+const Row = styled('div')(({ theme }) => ({
+  display: 'flex',
+  position: 'relative',
+  overflow: 'hidden',
+  flex: '1 1 0%',
+  boxSizing: 'border-box',
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+const CellFrame = styled('div')`
+  display: flex;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+`;
+const EventOverlay = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  fontSize: theme.typography.body2.fontSize, // Let line-height em work correctly
+  marginTop: `calc(1px + ${theme.spacing(headerMarginUnit * 2)} + ${theme.typography.body2.lineHeight}em)`, // Border, top/bot margin, line-height
 }));
 
 interface IOwnProps {
@@ -59,8 +57,6 @@ type WeekRowProps = IOwnProps;
 const WeekRow: React.FC<WeekRowProps> = ({
   isMobile, dayStartHour, rangeStart, events, currDate, onEventClick, onMonthDateClick,
 }) => {
-  const classes = useStyles();
-
   const rangeEnd = addDays(rangeStart, 7); // Exlusive
   const eventRenderGrid = getEventsInRange(events, rangeStart, rangeEnd).map((event) => {
     const visibleStartV = event.startTimeV < rangeStart ? rangeStart : event.startTimeV;
@@ -137,7 +133,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
     return acc.map((item, idx) => (idx !== emptySlotIdx ? item : fillRow(item)));
   }, [] as TMonthEventGrid);
   return (
-    <div className={classes.row}>
+    <Row>
       {/* Cell display */}
       <WeekCellFrame
         dayStartHour={dayStartHour}
@@ -147,7 +143,7 @@ const WeekRow: React.FC<WeekRowProps> = ({
       />
       {/* Dummy overlay for mobile click */}
       {isMobile && (
-        <div className={classes.cellFrame} style={{ zIndex: 1 }}>
+        <CellFrame sx={{ zIndex: 1 }}>
           {new Array(7).fill(null).map((_, idx) => {
             const cellDate = addDays(rangeStart, idx);
             const onClick = () => onMonthDateClick(cellDate);
@@ -171,17 +167,17 @@ const WeekRow: React.FC<WeekRowProps> = ({
               />
             );
           })}
-        </div>
+        </CellFrame>
       )}
-      <div className={classes.eventOverlay}>
+      <EventOverlay>
         <WeekEventRow
           isMobile={isMobile}
           dayStartHour={dayStartHour}
           eventRenderGrid={eventRenderGrid}
           onEventClick={onEventClick}
         />
-      </div>
-    </div>
+      </EventOverlay>
+    </Row>
   );
 };
 

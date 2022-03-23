@@ -14,11 +14,11 @@ import subMonths from 'date-fns/subMonths';
 import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { styled } from '@mui/material/styles';
+import MuiAppBar from '@mui/material/AppBar';
+import Drawer from '@mui/material/Drawer';
+import Hidden from '@mui/material/Hidden';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import Calendar, { AVAILABLE_VIEWS, ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
@@ -44,48 +44,43 @@ import Dashboard from './Dashboard';
 const VirtualizeSwipeableViews = virtualize(SwipeableViews);
 const DRAWER_WIDTH = 280;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  drawer: {
-    [theme.breakpoints.up('md')]: {
-      width: DRAWER_WIDTH,
-      flexShrink: 0,
-    },
-  },
-  drawerPaper: {
+const Root = styled('div')`
+  display: flex;
+`;
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+}));
+const DrawerNav = styled('nav')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
     width: DRAWER_WIDTH,
-  },
-  content: {
-    flex: '1 1 100%',
-    [theme.breakpoints.up('md')]: {
-      maxWidth: `calc(100% - ${DRAWER_WIDTH}px)`,
-    },
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%',
-    },
-  },
-  toolbar: theme.mixins.toolbar,
-  calendarWrapper: {
-    minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
-    [theme.breakpoints.down('xs')]: {
-      minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
-    },
-  },
-  monthViewWrapper: {
-    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)}px)`,
-    [theme.breakpoints.down('xs')]: {
-      height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
-    },
-  },
-  progress: {
-    height: 2,
+    flexShrink: 0,
   },
 }));
+const ToolbarSpace = styled('div')(({ theme }) => ({
+  ...theme.mixins.toolbar as any,
+}));
+const Content = styled('main')(({ theme }) => ({
+  flex: '1 1 100%',
+  [theme.breakpoints.up('md')]: {
+    maxWidth: `calc(100% - ${DRAWER_WIDTH}px)`,
+  },
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '100%',
+  },
+}));
+const CalendarWrapper = styled('div')(({ theme }) => ({
+  minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)})`,
+  [theme.breakpoints.down('xs')]: {
+    minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
+  },
+}));
+const MonthViewWrapper = styled(CalendarWrapper)(({ theme }) => ({
+  height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)})`,
+  [theme.breakpoints.down('xs')]: {
+    height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
+  },
+}));
+
 
 function getCacheKey(currDate: Date, viewType: AppViewType) {
   if (AVAILABLE_VIEWS.includes(viewType as any)) {
@@ -121,7 +116,6 @@ function getRange(currDate: Date, viewType: AppViewType): [Date, Date] | null {
 }
 
 const Main: React.FC = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
@@ -284,8 +278,8 @@ const Main: React.FC = () => {
   );
 
   return (
-    <div className={classes.root}>
-      <AppBar color="default" elevation={0} position="fixed" className={classes.appBar}>
+    <Root>
+      <AppBar color="default" elevation={0} position="fixed">
         <MainToolbar
           currDate={currDate}
           setCurrDate={setCurrDate}
@@ -295,16 +289,18 @@ const Main: React.FC = () => {
           handlePrevDate={handlePrevDate}
           handleNextDate={handleNextDate}
         />
-        {loading && <LinearProgress className={classes.progress} />}
+        {loading && <LinearProgress sx={{ height: 2 }} />}
       </AppBar>
-      <nav className={classes.drawer}>
+      <DrawerNav>
         <Hidden mdUp>
           <Drawer
             variant="temporary"
             open={mobileOpen}
             onClose={toggleMobileDrawer}
-            classes={{
-              paper: classes.drawerPaper,
+            sx={{
+              '& .MuiDrawer-paper': {
+                width: DRAWER_WIDTH,
+              },
             }}
             ModalProps={{
               keepMounted: true,
@@ -315,19 +311,21 @@ const Main: React.FC = () => {
         </Hidden>
         <Hidden smDown>
           <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
             variant="permanent"
             open
+            sx={{
+              '& .MuiDrawer-paper': {
+                width: DRAWER_WIDTH,
+              },
+            }}
           >
-            <div className={classes.toolbar} />
+            <ToolbarSpace />
             {drawer}
           </Drawer>
         </Hidden>
-      </nav>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+      </DrawerNav>
+      <Content>
+        <ToolbarSpace />
         {AVAILABLE_VIEWS.includes(view.currType as any) && (
           <VirtualizeSwipeableViews
             overscanSlideAfter={1}
@@ -340,10 +338,10 @@ const Main: React.FC = () => {
             slideRenderer={({ index, key }) => {
               const isCurrIndex = index === viewIndex;
               const dateFn = view.currType === 'month' ? addMonths : addDays;
+              const Wrapper = view.currType === 'month' ? MonthViewWrapper : CalendarWrapper;
               return (
-                <div
+                <Wrapper
                   key={key}
-                  className={`${classes.calendarWrapper} ${view.currType === 'month' && classes.monthViewWrapper}`}
                   onWheel={onCalendarWheel}
                 >
                   <Calendar
@@ -355,13 +353,13 @@ const Main: React.FC = () => {
                     onMonthDateClick={onMonthDateClick}
                     onEventClick={onEventClick}
                   />
-                </div>
+                </Wrapper>
               );
             }}
           />
         )}
         {view.currType === 'dashboard' && (
-          <div className={`${classes.calendarWrapper}`}>
+          <CalendarWrapper>
             <Dashboard
               isLoading={loading}
               vaFilter={vaFilter}
@@ -369,19 +367,19 @@ const Main: React.FC = () => {
               events={events}
               onEventClick={onEventClick}
             />
-          </div>
+          </CalendarWrapper>
         )}
         {view.currType === 'concert' && (
-          <div className={`${classes.calendarWrapper}`}>
+          <CalendarWrapper>
             <Concert
               vaFilter={vaFilter}
               etcFilter={etcFilter}
               onEventClick={onEventClick}
             />
-          </div>
+          </CalendarWrapper>
         )}
-      </main>
-    </div>
+      </Content>
+    </Root>
   );
 };
 

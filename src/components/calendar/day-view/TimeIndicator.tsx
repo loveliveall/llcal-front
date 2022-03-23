@@ -1,29 +1,27 @@
 import React from 'react';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { getCellHeightCalc } from './styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    width: '100%',
-  },
-  leftGutter: {
-    flex: '1 1 0%',
-  },
-  rightGutter: {
-    width: theme.spacing(1),
-  },
-  cellHeight: {
-    height: `calc(${getCellHeightCalc(theme)})`,
-  },
-  timeText: {
-    position: 'relative',
-    top: `calc((-1) * ${theme.typography.body2.lineHeight}em / 2 + 1px)`,
-    color: theme.palette.text.hint,
-  },
+const Root = styled('div')`
+  display: flex;
+  width: 100%;
+`;
+const LeftGutter = styled('div')`
+  flex: 1 1 0%;
+`;
+const RightGutter = styled('div')(({ theme }) => ({
+  width: theme.spacing(1),
+}));
+const Cell = styled('div')(({ theme }) => ({
+  height: `calc(${getCellHeightCalc(theme)})`,
+}));
+const TimeTextTypo = styled(Typography)(({ theme }) => ({
+  position: 'relative',
+  top: `calc((-1) * ${theme.typography.body2.lineHeight}em / 2 + 1px)`,
+  color: theme.palette.text.disabled,
 }));
 
 interface OwnProps {
@@ -32,35 +30,32 @@ interface OwnProps {
 type TimeIndicatorProps = OwnProps;
 
 const TimeIndicator: React.FC<TimeIndicatorProps> = ({ dayStartHour }) => {
-  const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <div className={classes.leftGutter} />
+    <Root>
+      <LeftGutter />
       <div>
         {new Array(24).fill(null).map((_, idx) => {
           const hour = `0${idx + dayStartHour}`.slice(-2);
           return (
-            <div key={hour} className={classes.cellHeight}>
-              <Typography
-                className={classes.timeText}
+            <Cell key={hour}>
+              <TimeTextTypo
                 variant="body2"
               >
                 {`${hour}:00`}
-              </Typography>
-            </div>
+              </TimeTextTypo>
+            </Cell>
           );
         })}
         <div>
-          <Typography
-            className={classes.timeText}
+          <TimeTextTypo
             variant="body2"
           >
             {`${24 + dayStartHour}:00`}
-          </Typography>
+          </TimeTextTypo>
         </div>
       </div>
-      <div className={classes.rightGutter} />
-    </div>
+      <RightGutter />
+    </Root>
   );
 };
 

@@ -2,24 +2,22 @@ import React from 'react';
 import addDays from 'date-fns/addDays';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
-import EventAvailableIcon from '@material-ui/icons/EventAvailable';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 import SingleDateView from './SingleDateView';
 import { getEventsInRange } from '../utils/utils';
 import { ICalendarEvent, IEventInfo } from '../utils/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-  },
-  innerBox: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-  },
+const Root = styled('div')`
+  width: 100%;
+`;
+const InnerBoxDiv = styled('div')(({ theme }) => ({
+  padding: theme.spacing(2),
+  textAlign: 'center',
 }));
 
 interface IOwnProps {
@@ -36,26 +34,24 @@ type AgendaViewProps = IOwnProps;
 const AgendaView: React.FC<AgendaViewProps> = ({
   isLoading, isMobile, dayStartHour, events, rangeStart, rangeEnd, onEventClick,
 }) => {
-  const classes = useStyles();
-
   const eventsInRange = getEventsInRange(events, rangeStart, rangeEnd);
   return (
-    <div className={classes.root}>
+    <Root>
       {isLoading && (
-        <div className={classes.innerBox}>
+        <InnerBoxDiv>
           <HourglassEmptyIcon fontSize="large" color="inherit" />
           <Typography variant="h6">
             일정을 불러오는 중입니다.
           </Typography>
-        </div>
+        </InnerBoxDiv>
       )}
       {!isLoading && (eventsInRange.length === 0 ? (
-        <div className={classes.innerBox}>
+        <InnerBoxDiv>
           <EventAvailableIcon fontSize="large" color="inherit" />
           <Typography variant="h6">
             기간 내에 일정이 없습니다.
           </Typography>
-        </div>
+        </InnerBoxDiv>
       ) : (
         new Array(differenceInCalendarDays(rangeEnd, rangeStart)).fill(null).map((_, idx) => {
           const targetDate = addDays(rangeStart, idx);
@@ -72,7 +68,7 @@ const AgendaView: React.FC<AgendaViewProps> = ({
           );
         })
       ))}
-    </div>
+    </Root>
   );
 };
 

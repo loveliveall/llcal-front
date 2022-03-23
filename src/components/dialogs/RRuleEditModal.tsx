@@ -1,18 +1,18 @@
 import React from 'react';
 import RRule, { Frequency, Weekday } from 'rrule';
 
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import Input from '@mui/material/Input';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectProps } from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
 
 import { DatePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
@@ -166,7 +166,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
       interval: Number(ev.target.value),
     });
   };
-  const onEndTypeChange = (ev: React.ChangeEvent<{ value: unknown, }>) => {
+  const onEndTypeChange: SelectProps['onChange'] = (ev) => {
     const selected = ev.target.value as 'none' | 'count' | 'until';
     if (selected === 'none') {
       setLocalRRule({
@@ -207,11 +207,12 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
   return (
     <Dialog
       open={open}
-      onClose={onCloseDialog}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') onCloseDialog();
+      }}
       scroll="paper"
       keepMounted
       fullWidth
-      disableBackdropClick
     >
       <DialogTitle>반복 설정</DialogTitle>
       <DialogContent>

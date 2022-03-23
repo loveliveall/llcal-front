@@ -1,40 +1,37 @@
 import React from 'react';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { styled, useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { DIMMED_FILTER, getTimeString } from '../utils/utils';
 import { ICalendarEvent, IEventInfo } from '../utils/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  eventInstance: {
-    display: 'flex',
-    padding: theme.spacing(0.5),
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    margin: theme.spacing(0.25),
-    borderRadius: theme.spacing(0.5),
-    cursor: 'pointer',
-    '&:hover': {
-      boxShadow: 'inset 0px 0px 0px 1000px rgba(0, 0, 0, 0.1)',
-    },
-  },
-  eventCircle: {
-    borderRadius: theme.spacing(1.5),
-    border: `${theme.spacing(0.75)}px solid`,
-  },
-  circleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: theme.typography.body2.fontSize,
-    height: `${theme.typography.body2.lineHeight}em`,
-    paddingRight: theme.spacing(3),
-  },
-  timeText: {
-    minWidth: theme.spacing(14),
+const EventInstance = styled('div')(({ theme }) => ({
+  display: 'flex',
+  padding: theme.spacing(0.5),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  margin: theme.spacing(0.25),
+  borderRadius: theme.spacing(0.5),
+  alignItems: 'center',
+  cursor: 'pointer',
+  '&:hover': {
+    boxShadow: 'inset 0px 0px 0px 1000px rgba(0, 0, 0, 0.1)',
   },
 }));
+const EventCategoryCircle = styled('div')(({ theme }) => ({
+  borderRadius: theme.spacing(1.5),
+  border: `${theme.spacing(0.75)} solid`,
+}));
+const CircleWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  paddingRight: theme.spacing(3),
+}));
+const TimeTextTypo = styled(Typography)(({ theme }) => ({
+  minWidth: theme.spacing(14),
+})) as typeof Typography;
 
 interface IOwnProps {
   isMobile: boolean,
@@ -49,7 +46,6 @@ type SingleEventRowProps = IOwnProps;
 const SingleEventRow: React.FC<SingleEventRowProps> = ({
   isMobile, dayStartHour, event, onEventClick, startOfDay, nextDayStart,
 }) => {
-  const classes = useStyles();
   const theme = useTheme();
   const now = new Date();
 
@@ -77,11 +73,10 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
   const eventText = `${event.orig.title}${timeString === '종일' && fullLength !== 1
     ? ` (${currLength}/${fullLength})` : ''}`;
   return (
-    <div
-      className={classes.eventInstance}
+    <EventInstance
       role="button"
       tabIndex={0}
-      style={{
+      sx={{
         filter: event.orig.endTime <= now ? DIMMED_FILTER : undefined,
         backgroundColor: isMobile ? event.orig.colorCode : undefined,
       }}
@@ -90,26 +85,23 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
     >
       {!isMobile && (
         <>
-          <div className={classes.circleWrapper}>
-            <div
-              className={classes.eventCircle}
-              style={{ borderColor: event.orig.colorCode }}
+          <CircleWrapper>
+            <EventCategoryCircle
+              sx={{ borderColor: event.orig.colorCode }}
             />
-          </div>
-          <div className={classes.timeText}>
-            <Typography
-              component="span"
-              variant="body2"
-            >
-              {timeString}
-            </Typography>
-          </div>
+          </CircleWrapper>
+          <TimeTextTypo
+            component="span"
+            variant="body2"
+          >
+            {timeString}
+          </TimeTextTypo>
         </>
       )}
       <div>
         <Typography
           variant="body2"
-          style={isMobile ? {
+          sx={isMobile ? {
             color: theme.palette.getContrastText(event.orig.colorCode),
           } : undefined}
         >
@@ -118,7 +110,7 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
         {isMobile && timeString !== '종일' && (
           <Typography
             variant="body2"
-            style={{
+            sx={{
               color: theme.palette.getContrastText(event.orig.colorCode),
             }}
           >
@@ -126,7 +118,7 @@ const SingleEventRow: React.FC<SingleEventRowProps> = ({
           </Typography>
         )}
       </div>
-    </div>
+    </EventInstance>
   );
 };
 

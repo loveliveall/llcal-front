@@ -9,12 +9,12 @@ import endOfMonth from 'date-fns/endOfMonth';
 import startOfMonth from 'date-fns/startOfMonth';
 import subMonths from 'date-fns/subMonths';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Typography from '@material-ui/core/Typography';
+import { styled, SxProps, Theme, useTheme } from '@mui/material/styles';
+import MuiAppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
@@ -27,36 +27,34 @@ import SearchToolbar, { SearchToolbarProps } from '@/components/app-frame/Search
 import { normalizeEvents } from '@/components/calendar';
 import SingleDateResult from './SingleDateResult';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  content: {
-    flex: '1 1 100%',
-    maxWidth: '100%',
-  },
-  toolbar: theme.mixins.toolbar,
-  resultWrapper: {
-    margin: 'auto',
-    maxWidth: theme.breakpoints.values.md,
-  },
-  fitParent: {
-    width: '100%',
-    textAlign: 'center',
-    margin: theme.spacing(1),
-  },
-  progress: {
-    height: 2,
-  },
+const Root = styled('div')`
+  display: flex;
+`;
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1,
 }));
+const Content = styled('main')`
+  flex: 1 1 100%;
+  max-width: 100%;
+`;
+const ToolbarSpace = styled('div')(({ theme }) => ({
+  ...theme.mixins.toolbar as any,
+}));
+const ResultWrapper = styled('div')(({ theme }) => ({
+  margin: 'auto',
+  maxWidth: theme.breakpoints.values.md,
+}));
+
+const sxFitParent: SxProps<Theme> = (theme) => ({
+  width: '100%',
+  textAlign: 'center',
+  margin: theme.spacing(1),
+});
 
 const LOAD_INTERVAL = 6; // Months
 
 const SearchPage: React.FC = () => {
-  const classes = useStyles();
+  const theme = useTheme();
   const dispatch = useDispatch();
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
@@ -148,26 +146,26 @@ const SearchPage: React.FC = () => {
   const diff = differenceInCalendarDays(searchRange[1], searchRange[0]);
 
   return (
-    <div className={classes.root}>
-      <AppBar color="default" elevation={0} position="fixed" className={classes.appBar}>
+    <Root>
+      <AppBar color="default" elevation={0} position="fixed">
         <SearchToolbar onSearchTrigger={onSearchTrigger} />
-        {loading && <LinearProgress className={classes.progress} />}
+        {loading && <LinearProgress sx={{ height: 2 }} />}
       </AppBar>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <div className={classes.resultWrapper}>
+      <Content>
+        <ToolbarSpace />
+        <ResultWrapper>
           {events.length !== 0 && (
             <>
               <Button
-                className={classes.fitParent}
                 disabled={loading}
                 onClick={onLoadPrevClick}
+                sx={sxFitParent(theme)}
               >
                 더 보기
               </Button>
               <Typography
-                className={classes.fitParent}
                 variant="body2"
+                sx={sxFitParent(theme)}
               >
                 {`${getDateString(searchRange[0])}부터의 결과입니다.`}
               </Typography>
@@ -188,23 +186,23 @@ const SearchPage: React.FC = () => {
             <>
               <Divider />
               <Typography
-                className={classes.fitParent}
                 variant="body2"
+                sx={sxFitParent(theme)}
               >
                 {`${getDateString(searchRange[1])}까지의 결과입니다.`}
               </Typography>
               <Button
-                className={classes.fitParent}
                 disabled={loading}
                 onClick={onLoadNextClick}
+                sx={sxFitParent(theme)}
               >
                 더 보기
               </Button>
             </>
           )}
-        </div>
-      </main>
-    </div>
+        </ResultWrapper>
+      </Content>
+    </Root>
   );
 };
 

@@ -4,55 +4,32 @@ import isSameDay from 'date-fns/isSameDay';
 import isSameMonth from 'date-fns/isSameMonth';
 import subHours from 'date-fns/subHours';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { styled, useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import { headerMarginUnit } from './styles';
 
-const useStyles = makeStyles((theme) => {
-  const circleDiameter = `calc(${theme.spacing(headerMarginUnit / 2)}px + ${theme.typography.body2.lineHeight}em)`;
-  return {
-    cellFrame: {
-      display: 'flex',
-      position: 'absolute',
-      width: '100%',
-      top: 0,
-      left: 0,
-      bottom: 0,
-    },
-    cell: {
-      flex: '1 1 0%',
-      boxSizing: 'border-box',
-      borderRight: `1px solid ${theme.palette.divider}`,
-      textAlign: 'center',
-    },
-    diffMonthCell: {
-      backgroundColor: theme.palette.grey[300],
-    },
-    cellWrap: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    todayDate: {
-      borderRadius: '50%',
-      width: circleDiameter,
-      height: circleDiameter,
-      color: theme.palette.getContrastText(theme.palette.primary.main),
-      backgroundColor: theme.palette.primary.main,
-      lineHeight: circleDiameter,
-      margin: `${theme.spacing(headerMarginUnit / 2)}px 0px ${theme.spacing(headerMarginUnit / 2)}px 0px`,
-      fontWeight: 'bold',
-    },
-    otherDate: {
-      margin: `${theme.spacing(headerMarginUnit)}px 0px ${theme.spacing(headerMarginUnit)}px 0px`,
-      fontWeight: 'bold',
-    },
-    diffMonthDate: {
-      color: theme.palette.grey[600],
-      fontWeight: 'inherit',
-    },
-  };
-});
+const CellFrame = styled('div')`
+  display: flex;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+`;
+const Cell = styled('div')(({ theme }) => ({
+  flex: '1 1 0%',
+  boxSizing: 'border-box',
+  borderRight: `1px solid ${theme.palette.divider}`,
+  textAlign: 'center',
+}));
+const DiffMonthCell = styled(Cell)(({ theme }) => ({
+  backgroundColor: theme.palette.grey[300],
+}));
+const CellWrapper = styled('div')`
+  display: flex;
+  justify-content: center;
+`;
 
 interface OwnProps {
   dayStartHour: number,
@@ -65,23 +42,40 @@ type WeekCellFrameProps = OwnProps;
 const WeekCellFrame: React.FC<WeekCellFrameProps> = ({
   dayStartHour, currDate, rangeStart, onMonthDateClick,
 }) => {
-  const classes = useStyles();
+  const theme = useTheme();
   const now = new Date();
+  const circleDiameter = `calc(${theme.spacing(headerMarginUnit / 2)} + ${theme.typography.body2.lineHeight}em)`;
 
   return (
-    <div className={classes.cellFrame}>
+    <CellFrame>
       {new Array(7).fill(null).map((_, idx) => {
         const cellDate = addDays(rangeStart, idx);
         const isToday = isSameDay(cellDate, subHours(now, dayStartHour));
         const isTargetMonth = isSameMonth(cellDate, currDate);
         const onClick = () => onMonthDateClick(cellDate);
+        const CellComp = isTargetMonth ? Cell : DiffMonthCell;
         return (
-          <div key={cellDate.toISOString()} className={`${classes.cell} ${!isTargetMonth && classes.diffMonthCell}`}>
-            <div className={classes.cellWrap}>
+          <CellComp key={cellDate.toISOString()}>
+            <CellWrapper>
               <Typography
-                className={`${isToday ? classes.todayDate : classes.otherDate}
-                  ${!isTargetMonth && classes.diffMonthDate}`}
-                style={{
+                sx={{
+                  ...(isToday ? {
+                    borderRadius: '50%',
+                    width: circleDiameter,
+                    height: circleDiameter,
+                    color: theme.palette.getContrastText(theme.palette.primary.main),
+                    backgroundColor: theme.palette.primary.main,
+                    lineHeight: circleDiameter,
+                    margin: `${theme.spacing(headerMarginUnit / 2)} 0px ${theme.spacing(headerMarginUnit / 2)} 0px`,
+                    fontWeight: 'bold',
+                  } : {
+                    margin: `${theme.spacing(headerMarginUnit)} 0px ${theme.spacing(headerMarginUnit)} 0px`,
+                    fontWeight: 'bold',
+                  }),
+                  ...(!isTargetMonth && {
+                    color: theme.palette.grey[600],
+                    fontWeight: 'inherit',
+                  }),
                   cursor: 'pointer',
                 }}
                 component="span"
@@ -90,11 +84,11 @@ const WeekCellFrame: React.FC<WeekCellFrameProps> = ({
               >
                 {cellDate.getDate()}
               </Typography>
-            </div>
-          </div>
+            </CellWrapper>
+          </CellComp>
         );
       })}
-    </div>
+    </CellFrame>
   );
 };
 

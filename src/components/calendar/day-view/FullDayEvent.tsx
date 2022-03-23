@@ -1,10 +1,9 @@
 import React from 'react';
 import differenceInCalendarDays from 'date-fns/differenceInCalendarDays';
 
-import { useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { useTheme } from '@mui/material/styles';
 
-import { useCommonStyles } from '../month-view/styles';
+import { EventInstanceDiv, EventTextTypo } from '../month-view/styles';
 import { ICalendarEvent, IEventInfo } from '../utils/types';
 import { DIMMED_FILTER } from '../utils/utils';
 
@@ -18,7 +17,6 @@ type FullDayEventProps = IOwnProps;
 const FullDayEvent: React.FC<FullDayEventProps> = ({
   event, currDate, onEventClick,
 }) => {
-  const commonClasses = useCommonStyles();
   const theme = useTheme();
   const now = new Date();
 
@@ -32,27 +30,25 @@ const FullDayEvent: React.FC<FullDayEventProps> = ({
   const currLength = differenceInCalendarDays(currDate, event.startTimeV) + 1;
   const prefix = fullLength === 1 ? '' : `(${currLength}/${fullLength}) `;
   return (
-    <div
-      className={commonClasses.eventInstance}
+    <EventInstanceDiv
       role="button"
       tabIndex={0}
-      style={{
+      sx={{
         filter: event.endTimeV <= now ? DIMMED_FILTER : undefined,
         backgroundColor: event.orig.colorCode,
       }}
       onClick={() => onEventClick(event.orig)}
       onKeyUp={onKeyUp}
     >
-      <Typography
-        className={commonClasses.eventText}
+      <EventTextTypo
         variant="body2"
-        style={{
+        sx={{
           color: theme.palette.getContrastText(event.orig.colorCode),
         }}
       >
         {`${prefix}${event.orig.title}`}
-      </Typography>
-    </div>
+      </EventTextTypo>
+    </EventInstanceDiv>
   );
 };
 

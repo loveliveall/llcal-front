@@ -1,21 +1,21 @@
 import React from 'react';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogContent from '@mui/material/DialogContent';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { FadeTransition } from '@/components/common/Transitions';
 
@@ -23,28 +23,26 @@ import { eventCategoryList } from '@/commonData';
 import { getDateString, getObjWithProp } from '@/utils';
 import { getRecentlyCreatedEvents, getRecentlyUpdatedEvents, RecentlyReturn } from '@/api';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogTitle: {
-    display: 'flex',
-    width: '100%',
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    alignItems: 'center',
-  },
-  tableHead: {
-    fontWeight: 'bolder',
-  },
-  row: {
-    padding: theme.spacing(1),
-  },
-  dialogContent: {
-    paddingBottom: theme.spacing(2),
-  },
-  grow: {
-    flexGrow: 1,
-  },
+const DialogTitle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  alignItems: 'center',
 }));
+const DialogContent = styled(MuiDialogContent)(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+}));
+const Spacer = styled('div')`
+  flex-grow: 1;
+`;
+const Row = styled('div')(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
+const TableHeadCell = styled(TableCell)`
+  font-weight: bolder;
+`;
 
 interface UpdatesTableProps {
   isLoading: boolean,
@@ -53,7 +51,6 @@ interface UpdatesTableProps {
 const UpdatesTable: React.FC<UpdatesTableProps> = ({
   isLoading, data,
 }) => {
-  const classes = useStyles();
   if (isLoading) return <CircularProgress />;
 
   return (
@@ -61,12 +58,12 @@ const UpdatesTable: React.FC<UpdatesTableProps> = ({
       <Table style={{ whiteSpace: 'nowrap' }}>
         <TableHead>
           <TableRow>
-            <TableCell className={classes.tableHead}>제목</TableCell>
-            <TableCell className={classes.tableHead}>개요</TableCell>
-            <TableCell className={classes.tableHead}>첫 일정 시작</TableCell>
-            <TableCell className={classes.tableHead}>분류</TableCell>
-            <TableCell className={classes.tableHead}>생성일</TableCell>
-            <TableCell className={classes.tableHead}>수정일</TableCell>
+            <TableHeadCell>제목</TableHeadCell>
+            <TableHeadCell>개요</TableHeadCell>
+            <TableHeadCell>첫 일정 시작</TableHeadCell>
+            <TableHeadCell>분류</TableHeadCell>
+            <TableHeadCell>생성일</TableHeadCell>
+            <TableHeadCell>수정일</TableHeadCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -105,7 +102,6 @@ export type UpdatesAndNoticesProps = OwnProps;
 const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
   open, setOpen,
 }) => {
-  const classes = useStyles();
   const [recentlyCreated, setRecentlyCreated] = React.useState<{
     isLoading: boolean,
     data: RecentlyReturn,
@@ -153,26 +149,26 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
       TransitionComponent={FadeTransition}
       fullScreen
     >
-      <div id="about-dialog-title" className={classes.dialogTitle}>
+      <DialogTitle id="about-dialog-title">
         <Typography variant="h6">최근 변경 및 공지</Typography>
-        <div className={classes.grow} />
+        <Spacer />
         <Tooltip title="닫기">
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>
         </Tooltip>
-      </div>
-      <DialogContent className={classes.dialogContent}>
-        {/* <div className={classes.row}>
+      </DialogTitle>
+      <DialogContent>
+        {/* <Row>
           <Typography variant="h6">
             공지 사항
           </Typography>
           <Typography>
             공지 내용이 여기 들어간다.
           </Typography>
-        </div>
+        </Row>
         <Divider /> */}
-        <div className={classes.row}>
+        <Row>
           <Typography variant="h6">
             확인 중인 개인 비정기 방송 (별도 언급 없을시 니코동 방송)
           </Typography>
@@ -198,9 +194,9 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
             <li>코이즈미 모에카: <a href="https://ch.nicovideo.jp/moe-note" target="_blank" rel="noreferrer">小泉萌香のもえの～と~moe&#39;s note~</a></li>
           </ul>
           {/* eslint-enable react/jsx-one-expression-per-line, max-len */}
-        </div>
+        </Row>
         <Divider />
-        <div className={classes.row}>
+        <Row>
           <Typography variant="h6">
             최근 생성된 일정
           </Typography>
@@ -208,9 +204,9 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
             isLoading={recentlyCreated.isLoading}
             data={recentlyCreated.data}
           />
-        </div>
+        </Row>
         <Divider />
-        <div className={classes.row}>
+        <Row>
           <Typography variant="h6">
             최근 수정된 일정
           </Typography>
@@ -218,7 +214,7 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
             isLoading={recentlyUpdated.isLoading}
             data={recentlyUpdated.data}
           />
-        </div>
+        </Row>
       </DialogContent>
     </Dialog>
   );

@@ -3,18 +3,18 @@ import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import subHours from 'date-fns/subHours';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuIcon from '@material-ui/icons/Menu';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import TodayIcon from '@material-ui/icons/Today';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MenuIcon from '@mui/icons-material/Menu';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import TodayIcon from '@mui/icons-material/Today';
 
 import { AVAILABLE_VIEWS } from '@/components/calendar';
 
@@ -22,22 +22,17 @@ import { refreshHash } from '@/store/flags/actions';
 import { ViewInfo } from '@/types';
 import { AppState } from '@/store';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  menuIcon: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
+const MenuIconButton = styled(IconButton)(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'none',
   },
-  padded: {
-    flexGrow: 1,
-  },
-  desktopLeftIcon: {
-    [theme.breakpoints.up('md')]: { // https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/IconButton/IconButton.js#L36
-      marginLeft: -12,
-      '$sizeSmall&': {
-        marginLeft: -3,
-      },
-    },
+}));
+const PaddedDiv = styled('div')`
+  flex-grow: 1;
+`;
+const LeftMostIconButton = styled(IconButton)(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    marginLeft: -12,
   },
 }));
 
@@ -55,7 +50,6 @@ type MainToolbarProps = IOwnProps;
 const MainToolbar: React.FC<MainToolbarProps> = ({
   currDate, setCurrDate, view, onBackClick, toggleDrawer, handlePrevDate, handleNextDate,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const currView = view.currType;
@@ -100,37 +94,34 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
   return (
     <Toolbar>
       {view.showBack ? (
-        <IconButton
-          className={classes.menuIcon}
+        <MenuIconButton
           color="inherit"
           aria-label="go back to prev view"
           edge="start"
           onClick={onBackClick}
         >
           <ArrowBackIcon />
-        </IconButton>
+        </MenuIconButton>
       ) : (
-        <IconButton
-          className={classes.menuIcon}
+        <MenuIconButton
           color="inherit"
           aria-label="open drawer"
           edge="start"
           onClick={toggleDrawer}
         >
           <MenuIcon />
-        </IconButton>
+        </MenuIconButton>
       )}
       {AVAILABLE_VIEWS.includes(currView as any) && (
         <>
           <Tooltip title="오늘">
-            <IconButton
-              className={classes.desktopLeftIcon}
+            <LeftMostIconButton
               color="inherit"
               aria-label="show today"
               onClick={onTodayClick}
             >
               <TodayIcon />
-            </IconButton>
+            </LeftMostIconButton>
           </Tooltip>
           <Tooltip title={prevDateTooltip}>
             <IconButton
@@ -157,7 +148,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
       >
         {titleText}
       </Typography>
-      <div className={classes.padded} />
+      <PaddedDiv />
       <Tooltip title="새로고침">
         <IconButton
           color="inherit"

@@ -1,30 +1,27 @@
 import React from 'react';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Popover from '@mui/material/Popover';
 
 import SingleEvent from './SingleEvent';
 import WeekEventSingleRow from './WeekEventSingleRow';
-import { useCommonStyles } from './styles';
+import { EventInstanceDiv, EventTextTypo } from './styles';
 import { TMonthEventGrid, ICalendarEvent, ISingleEventRenderInfo } from '../utils/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    overflow: 'hidden',
-    width: '100%',
-    zIndex: 0,
-  },
-  singleRow: {
-    display: 'flex',
-    width: '100%',
-  },
-  singleSlot: {
-    width: `${100 / 7}%`,
-  },
-  pad: {
-    padding: theme.spacing(1),
-  },
+const Root = styled('div')`
+  overflow: hidden;
+  width: 100%;
+  z-index: 0;
+`;
+const MoreRow = styled('div')`
+  display: flex;
+  width: 100%;
+`;
+const SingleSlot = styled('div')`
+  width: ${100 / 7}%;
+`;
+const PaddedDiv = styled('div')(({ theme }) => ({
+  padding: theme.spacing(1),
 }));
 
 interface IOwnProps {
@@ -38,9 +35,6 @@ type WeekEventRowProps = IOwnProps;
 const WeekEventRow: React.FC<WeekEventRowProps> = ({
   isMobile, dayStartHour, eventRenderGrid, onEventClick,
 }) => {
-  const classes = useStyles();
-  const classesCommon = useCommonStyles();
-
   const [morePopup, setMorePopup] = React.useState<{
     anchorEl: HTMLDivElement | null,
     eventGrid: ISingleEventRenderInfo[],
@@ -96,7 +90,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
     return visibleCount >= totalRow ? totalRow : Math.max(visibleCount - 1, 0);
   })();
   return (
-    <div ref={ref} className={classes.root}>
+    <Root ref={ref}>
       {(sliceRowAt === -1 ? eventRenderGrid : eventRenderGrid.slice(0, sliceRowAt)).map((row, idx) => (
         <WeekEventSingleRow
           key={idx} // eslint-disable-line react/no-array-index-key
@@ -107,7 +101,7 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
         />
       ))}
       {/* `more` button */}
-      <div className={classes.singleRow}>
+      <MoreRow>
         {sliceRowAt !== -1 && new Array(7).fill(null).map((_, idx) => {
           const reactKey = `button-wrapper-${idx}`;
           const invisibleCount = eventRenderGrid.slice(sliceRowAt).reduce(
@@ -132,25 +126,23 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
             }
           };
           return (
-            <div key={reactKey} className={classes.singleSlot}>
-              <div
-                className={classesCommon.eventInstance}
+            <SingleSlot key={reactKey}>
+              <EventInstanceDiv
                 role="button"
                 tabIndex={0}
                 onClick={onMoreClick}
                 onKeyUp={onMoreKeyUp}
               >
-                <Typography
-                  className={classesCommon.eventText}
+                <EventTextTypo
                   variant="body2"
                 >
                   {`+${invisibleCount} more`}
-                </Typography>
-              </div>
-            </div>
+                </EventTextTypo>
+              </EventInstanceDiv>
+            </SingleSlot>
           );
         })}
-      </div>
+      </MoreRow>
       {/* `more` popover */}
       <Popover
         open={morePopup.anchorEl !== null}
@@ -167,11 +159,11 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
           vertical: 'center',
           horizontal: 'center',
         }}
-        style={{
+        sx={{
           width: '20%',
         }}
       >
-        <div className={classes.pad}>
+        <PaddedDiv>
           {morePopup.eventGrid.map((instance) => {
             const { event } = instance;
             const onInstanceClick = (e: ICalendarEvent) => {
@@ -192,9 +184,9 @@ const WeekEventRow: React.FC<WeekEventRowProps> = ({
               />
             );
           })}
-        </div>
+        </PaddedDiv>
       </Popover>
-    </div>
+    </Root>
   );
 };
 

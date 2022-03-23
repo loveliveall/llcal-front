@@ -4,8 +4,8 @@ import addDays from 'date-fns/addDays';
 import subHours from 'date-fns/subHours';
 import startOfDay from 'date-fns/startOfDay';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 
 import Calendar, { normalizeEvents } from '@/components/calendar';
 import { getEventsInRange } from '@/components/calendar/utils/utils';
@@ -43,16 +43,11 @@ const ONLY_ALERTS: CategoryCheckState = {
   }), {}),
 };
 
-const useStyles = makeStyles((theme) => ({
-  center: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    padding: theme.spacing(1),
-  },
-  content: {
-    padding: theme.spacing(1),
-  },
+const Center = styled('div')(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  padding: theme.spacing(1),
 }));
 
 interface OwnProps {
@@ -67,7 +62,6 @@ type DashboardProps = OwnProps;
 const Dashboard: React.FC<DashboardProps> = ({
   isLoading, vaFilter, etcFilter, events, onEventClick,
 }) => {
-  const classes = useStyles();
   const isMobile = useMobileCheck();
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const now = subHours(new Date(), dayStartHour);
@@ -84,11 +78,11 @@ const Dashboard: React.FC<DashboardProps> = ({
     <>
       {urgentAlerts.length !== 0 && (
         <>
-          <div className={classes.center}>
+          <Center>
             <Typography variant="h6">
               종료 임박 예약/알림
             </Typography>
-          </div>
+          </Center>
           {urgentAlerts.map((e) => (
             <SingleEventRow
               key={Math.random()}
@@ -104,11 +98,11 @@ const Dashboard: React.FC<DashboardProps> = ({
       )}
       {otherAlerts.length !== 0 && (
         <>
-          <div className={classes.center}>
+          <Center>
             <Typography variant="h6">
               예약/알림
             </Typography>
-          </div>
+          </Center>
           {otherAlerts.map((e) => (
             <SingleEventRow
               key={Math.random()}
@@ -122,11 +116,11 @@ const Dashboard: React.FC<DashboardProps> = ({
           ))}
         </>
       )}
-      <div className={classes.center}>
+      <Center>
         <Typography variant="h6">
           다가오는 일정
         </Typography>
-      </div>
+      </Center>
       <Calendar
         isLoading={isLoading}
         events={filterEvents(events, vaFilter, EXCEPT_ALERTS, etcFilter)}

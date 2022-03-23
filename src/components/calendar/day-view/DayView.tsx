@@ -7,7 +7,7 @@ import minDate from 'date-fns/min';
 import startOfDay from 'date-fns/startOfDay';
 import subMinutes from 'date-fns/subMinutes';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { styled } from '@mui/material/styles';
 
 import TimeIndicator from './TimeIndicator';
 import FullDayEvent from './FullDayEvent';
@@ -18,36 +18,34 @@ import { getRenderInfo } from './algorithm';
 import { getEventsInRange } from '../utils/utils';
 import { ICalendarEvent, IEventInfo } from '../utils/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-  },
-  flex: {
-    display: 'flex',
-    width: '100%',
-  },
-  timeIndicator: {
-    minWidth: theme.spacing(7),
-  },
-  fullEvent: {
-    flex: '1 1 100%',
-    maxWidth: `calc(100% - ${theme.spacing(7)}px)`,
-  },
-  topGutter: {
-    height: `calc(${theme.typography.body2.lineHeight}em / 2)`,
-  },
-  timeGrid: {
-    position: 'relative',
-    flex: '1 1 100%',
-    boxSizing: 'border-box',
-    borderTop: `1px solid ${theme.palette.divider}`,
-  },
-  timeCell: {
-    boxSizing: 'border-box',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    height: `calc(${getCellHeightCalc(theme)})`,
-    width: '100%',
-  },
+const Root = styled('div')`
+  width: 100%;
+`;
+const Flex = styled('div')`
+  display: flex;
+  width: 100%;
+`;
+const TimeIndicatorSpace = styled('div')(({ theme }) => ({
+  minWidth: theme.spacing(7),
+}));
+const FullDayEvents = styled('div')(({ theme }) => ({
+  flex: '1 1 100%',
+  maxWidth: `calc(100% - ${theme.spacing(7)})`,
+}));
+const TopGutter = styled('div')(({ theme }) => ({
+  height: `calc(${theme.typography.body2.lineHeight}em / 2)`,
+}));
+const TimeGrid = styled('div')(({ theme }) => ({
+  position: 'relative',
+  flex: '1 1 100%',
+  boxSizing: 'border-box',
+  borderTop: `1px solid ${theme.palette.divider}`,
+}));
+const TimeCell = styled('div')(({ theme }) => ({
+  boxSizing: 'border-box',
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  height: `calc(${getCellHeightCalc(theme)})`,
+  width: '100%',
 }));
 
 interface IOwnProps {
@@ -61,8 +59,6 @@ type DayViewPorps = IOwnProps;
 const DayView: React.FC<DayViewPorps> = ({
   dayStartHour, events, onEventClick, currDate,
 }) => {
-  const classes = useStyles();
-
   const dayStart = startOfDay(currDate);
   const dayEnd = addDays(dayStart, 1); // Exclusive
   const visibleEventsInfo = getEventsInRange(events, dayStart, dayEnd).sort((a, b) => {
@@ -103,14 +99,14 @@ const DayView: React.FC<DayViewPorps> = ({
   const partDayEventsInfo = visibleEventsInfo.filter((item) => !item.fullDay);
   const partDayRenderInfo = getRenderInfo(partDayEventsInfo);
   return (
-    <div className={classes.root}>
+    <Root>
       {/* Fullday events view */}
-      <div className={classes.flex}>
+      <Flex>
         {/* Left gutter for spacing time indicator column */}
-        <div className={classes.timeIndicator} />
+        <TimeIndicatorSpace />
         {/* Render fullday events. If none, render top gutter */}
-        {fullDayEventsInfo.length === 0 ? <div className={classes.topGutter} /> : (
-          <div className={classes.fullEvent}>
+        {fullDayEventsInfo.length === 0 ? <TopGutter /> : (
+          <FullDayEvents>
             {fullDayEventsInfo.map((item) => (
               <FullDayEvent
                 key={item.event.orig.id}
@@ -119,15 +115,15 @@ const DayView: React.FC<DayViewPorps> = ({
                 onEventClick={onEventClick}
               />
             ))}
-          </div>
+          </FullDayEvents>
         )}
-      </div>
+      </Flex>
       {/* TimeGrid view */}
-      <div className={classes.flex}>
-        <div className={classes.timeIndicator}>
+      <Flex>
+        <TimeIndicatorSpace>
           <TimeIndicator dayStartHour={dayStartHour} />
-        </div>
-        <div className={classes.timeGrid}>
+        </TimeIndicatorSpace>
+        <TimeGrid>
           {partDayRenderInfo.map((info) => (
             <PartDayEvent
               key={info.event.orig.id}
@@ -144,11 +140,11 @@ const DayView: React.FC<DayViewPorps> = ({
           ))}
           {/* Draw time line */}
           {new Array(24).fill(null).map((_, idx) => (
-            <div key={idx} className={classes.timeCell} /> // eslint-disable-line react/no-array-index-key
+            <TimeCell key={idx} /> // eslint-disable-line react/no-array-index-key
           ))}
-        </div>
-      </div>
-    </div>
+        </TimeGrid>
+      </Flex>
+    </Root>
   );
 };
 

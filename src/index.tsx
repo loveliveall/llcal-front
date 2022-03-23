@@ -5,9 +5,9 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import format from 'date-fns/format';
 import koLocale from 'date-fns/locale/ko';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -30,7 +30,7 @@ class LocalizedUtils extends DateFnsUtils {
   }
 }
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#ffa400',

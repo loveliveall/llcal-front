@@ -1,26 +1,24 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Input from '@material-ui/core/Input';
+import { styled } from '@mui/material/styles';
+import MuiBackdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Input from '@mui/material/Input';
 
 import { FadeTransition } from '@/components/common/Transitions';
 import { sendReport } from '@/api';
 
 import { openSnackbar } from '@/store/snackbar/actions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 10,
-    color: '#fff',
-  },
+const Backdrop = styled(MuiBackdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 10,
+  color: '#fff',
 }));
 
 interface OwnProps {
@@ -32,7 +30,6 @@ export type ReportDialogProps = OwnProps;
 const ReportDialog: React.FC<ReportDialogProps> = ({
   open, setOpen,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [loading, setLoading] = React.useState(false);
   const [content, setContent] = React.useState('');
@@ -57,12 +54,13 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
   return (
     <Dialog
       open={open}
-      onClose={onCloseDialog}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') onCloseDialog();
+      }}
       scroll="paper"
       TransitionComponent={FadeTransition}
       keepMounted
       fullWidth
-      disableBackdropClick
     >
       <DialogTitle>일정 추가 요청</DialogTitle>
       <DialogContent>
@@ -84,7 +82,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
         <Button onClick={onSendClick}>보내기</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
-      <Backdrop className={classes.backdrop} open={loading}>
+      <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </Dialog>

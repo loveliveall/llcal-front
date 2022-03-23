@@ -1,36 +1,34 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { ClockView } from '@material-ui/pickers';
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { FadeTransition } from '@/components/common/Transitions';
 import { AppState } from '@/store';
 import { setDayStartHour } from '@/store/settings/actions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogTitle: {
-    display: 'flex',
-    width: '100%',
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    alignItems: 'center',
-  },
-  dialogContent: {
-    paddingBottom: theme.spacing(2),
-  },
-  grow: {
-    flexGrow: 1,
-  },
+const DialogTitle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  alignItems: 'center',
 }));
+const DialogContent = styled(MuiDialogContent)(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+}));
+const Spacer = styled('div')`
+  flex-grow: 1;
+`;
 
 interface OwnProps {
   open: boolean,
@@ -41,7 +39,6 @@ export type DayStartHourDialogProps = OwnProps;
 const DayStartHourDialog: React.FC<DayStartHourDialogProps> = ({
   open, setOpen,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
 
@@ -56,16 +53,16 @@ const DayStartHourDialog: React.FC<DayStartHourDialogProps> = ({
       TransitionComponent={FadeTransition}
       fullWidth
     >
-      <div id="about-dialog-title" className={classes.dialogTitle}>
+      <DialogTitle id="about-dialog-title">
         <Typography variant="h6">하루 시작 기준 시간 변경</Typography>
-        <div className={classes.grow} />
+        <Spacer />
         <Tooltip title="닫기">
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>
         </Tooltip>
-      </div>
-      <DialogContent className={classes.dialogContent}>
+      </DialogTitle>
+      <DialogContent>
         <ClockView
           type="hours"
           ampm={false}

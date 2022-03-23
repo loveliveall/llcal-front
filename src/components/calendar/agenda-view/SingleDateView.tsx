@@ -3,28 +3,23 @@ import addDays from 'date-fns/addDays';
 import isSameDay from 'date-fns/isSameDay';
 import subHours from 'date-fns/subHours';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 
 import SingleEventRow from './SingleEventRow';
 
 import { getEventsInRange, WEEKDAY_SHORT_NAMES } from '../utils/utils';
 import { ICalendarEvent, IEventInfo } from '../utils/types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  row: {
-    width: '100%',
-  },
-  content: {
-    padding: theme.spacing(1),
-  },
-  dayTitle: {
-    paddingBottom: theme.spacing(0.5),
-  },
-  today: {
-    backgroundColor: 'lightblue',
-  },
+const Row = styled('div')`
+  width: 100%;
+`;
+const Content = styled('div')(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
+const TitleTypo = styled(Typography)(({ theme }) => ({
+  paddingBottom: theme.spacing(0.5),
 }));
 
 interface IOwnProps {
@@ -40,8 +35,6 @@ type SingleDateViewProps = IOwnProps;
 const SingleDateView: React.FC<SingleDateViewProps> = ({
   isMobile, showFullDate, dayStartHour, startOfDay, events, onEventClick,
 }) => {
-  const classes = useStyles();
-
   const now = new Date();
   const rangeEnd = addDays(startOfDay, 1);
   const visibleEvents = getEventsInRange(events, startOfDay, rangeEnd).sort((a, b) => {
@@ -75,15 +68,17 @@ const SingleDateView: React.FC<SingleDateViewProps> = ({
     return `${year}.${month}.${date}. (${weekday})`;
   })();
   return (
-    <div
+    <Row
       id={`date-${startOfDay.getTime()}`}
-      className={`${classes.row} ${isSameDay(startOfDay, subHours(now, dayStartHour)) && classes.today}`}
+      sx={isSameDay(startOfDay, subHours(now, dayStartHour)) ? {
+        backgroundColor: 'lightblue',
+      } : undefined}
     >
       <Divider />
-      <div className={classes.content}>
-        <Typography variant="subtitle1" className={classes.dayTitle}>
+      <Content>
+        <TitleTypo variant="subtitle1">
           {dateText}
-        </Typography>
+        </TitleTypo>
         {visibleEvents.map((event) => (
           <SingleEventRow
             key={Math.random()}
@@ -95,8 +90,8 @@ const SingleDateView: React.FC<SingleDateViewProps> = ({
             nextDayStart={rangeEnd}
           />
         ))}
-      </div>
-    </div>
+      </Content>
+    </Row>
   );
 };
 

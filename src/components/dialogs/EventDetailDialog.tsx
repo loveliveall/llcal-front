@@ -2,30 +2,30 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Linkify, { Props as LinkifyProps } from 'react-linkify';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import MuiButton from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
-import CloseIcon from '@material-ui/icons/Close';
-import DateRangeIcon from '@material-ui/icons/DateRange';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import LabelIcon from '@material-ui/icons/Label';
-import LinkIcon from '@material-ui/icons/Link';
-import NotesIcon from '@material-ui/icons/Notes';
-import PersonIcon from '@material-ui/icons/Person';
-import PlaceIcon from '@material-ui/icons/Place';
-import RepeatIcon from '@material-ui/icons/Repeat';
+import CloseIcon from '@mui/icons-material/Close';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import LabelIcon from '@mui/icons-material/Label';
+import LinkIcon from '@mui/icons-material/Link';
+import NotesIcon from '@mui/icons-material/Notes';
+import PersonIcon from '@mui/icons-material/Person';
+import PlaceIcon from '@mui/icons-material/Place';
+import RepeatIcon from '@mui/icons-material/Repeat';
 
 import { FadeTransition } from '@/components/common/Transitions';
 
@@ -49,35 +49,31 @@ const linkifyDecorator: LinkifyProps['componentDecorator'] = (href, text, key) =
   </a>
 );
 
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogTitle: {
-    display: 'flex',
-    width: '100%',
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    alignItems: 'center',
-    wordBreak: 'keep-all',
-  },
-  buttonDiv: {
-    display: 'flex',
-    width: '100%',
-  },
-  button: {
-    flexGrow: 1,
-    marginLeft: theme.spacing(0.5),
-    marginRight: theme.spacing(0.5),
-  },
-  dialogContent: {
-    paddingBottom: theme.spacing(2),
-  },
-  grow: {
-    flexGrow: 1,
-  },
+const DialogTitle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  alignItems: 'center',
+}));
+const DialogContent = styled(MuiDialogContent)(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+}));
+const Spacer = styled('div')`
+  flex-grow: 1;
+`;
+const ButtonDiv = styled('div')`
+  display: flex;
+  width: 100%;
+`;
+const Button = styled(MuiButton)(({ theme }) => ({
+  flexGrow: 1,
+  marginLeft: theme.spacing(0.5),
+  marginRight: theme.spacing(0.5),
 }));
 
 const EventDetailDialog: React.FC = () => {
-  const classes = useStyles();
   const isMobile = useMobileCheck();
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
@@ -114,20 +110,19 @@ const EventDetailDialog: React.FC = () => {
       fullScreen={isMobile}
       fullWidth
     >
-      <div id="event-dialog-title" className={classes.dialogTitle}>
+      <DialogTitle id="event-dialog-title">
         <Typography variant="h6">{event.title}</Typography>
-        <div className={classes.grow} />
+        <Spacer />
         <Tooltip title="닫기">
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>
         </Tooltip>
-      </div>
-      <DialogContent className={classes.dialogContent}>
+      </DialogTitle>
+      <DialogContent>
         {authorized && category?.frozen === false && (
-          <div className={classes.buttonDiv}>
+          <ButtonDiv>
             <Button
-              className={classes.button}
               variant="outlined"
               onClick={onDeleteClick}
               startIcon={<DeleteIcon />}
@@ -139,7 +134,6 @@ const EventDetailDialog: React.FC = () => {
               삭제
             </Button>
             <Button
-              className={classes.button}
               color="secondary"
               variant="outlined"
               onClick={onDuplicateClick}
@@ -148,14 +142,17 @@ const EventDetailDialog: React.FC = () => {
               복제
             </Button>
             <Button
-              className={classes.button}
               variant="outlined"
               onClick={onEditClick}
               startIcon={<EditIcon />}
+              style={{
+                color: 'black',
+                border: '1px solid grey',
+              }}
             >
               수정
             </Button>
-          </div>
+          </ButtonDiv>
         )}
         <List dense disablePadding>
           {authorized && (

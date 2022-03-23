@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
+import { styled } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import ListItemText from '@mui/material/ListItemText';
 
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { VACheckState } from '@/types';
 import {
@@ -22,13 +22,11 @@ import {
 
 import { voiceActorList, groupInfoList } from '@/commonData';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
-  spaced: {
-    paddingLeft: theme.spacing(2),
-  },
+const NestedItem = styled(ListItemButton)(({ theme }) => ({
+  paddingLeft: theme.spacing(4),
+}));
+const ItemTextSpaced = styled(ListItemText)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
 }));
 
 interface IOwnProps {
@@ -44,8 +42,6 @@ type SubListOpenState = {
 const VACheckList: React.FC<VACheckListProps> = ({
   checkState, setCheckState,
 }) => {
-  const classes = useStyles();
-
   const [subListOpen, setSubListOpen] = React.useState<SubListOpenState>(groupInfoList.reduce((acc, curr) => ({
     ...acc,
     [curr.id]: false,
@@ -83,8 +79,7 @@ const VACheckList: React.FC<VACheckListProps> = ({
 
   return (
     <List component="nav" dense>
-      <ListItem
-        button
+      <ListItemButton
         onClick={onAllToggle}
       >
         <Checkbox
@@ -95,20 +90,18 @@ const VACheckList: React.FC<VACheckListProps> = ({
           edge="start"
           disableRipple
         />
-        <ListItemText
-          className={classes.spaced}
+        <ItemTextSpaced
           primary="전체 선택"
           primaryTypographyProps={{
             variant: 'body2',
           }}
         />
-      </ListItem>
+      </ListItemButton>
       {groupInfoList.map((groupInfo) => {
         const groupId = groupInfo.id;
         return (
           <React.Fragment key={`group-${groupId}`}>
-            <ListItem
-              button
+            <ListItemButton
               onClick={() => onGroupToggle(groupId)}
             >
               <Checkbox
@@ -121,8 +114,7 @@ const VACheckList: React.FC<VACheckListProps> = ({
                   color: groupInfo.colorHex,
                 }}
               />
-              <ListItemText
-                className={classes.spaced}
+              <ItemTextSpaced
                 primary={groupInfo.name}
                 primaryTypographyProps={{
                   variant: 'body2',
@@ -133,17 +125,15 @@ const VACheckList: React.FC<VACheckListProps> = ({
                   {subListOpen[groupId] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </IconButton>
               </ListItemSecondaryAction>
-            </ListItem>
+            </ListItemButton>
             {/* SubList */}
             <Collapse in={subListOpen[groupId]} timeout="auto" unmountOnExit>
               <List component="nav" dense disablePadding>
                 {voiceActorList.filter((va) => va.groupId === groupId).map((va) => {
                   const vaId = va.id;
                   return (
-                    <ListItem
+                    <NestedItem
                       key={`va-${vaId}`}
-                      className={classes.nested}
-                      button
                       onClick={() => onVAToggle(vaId)}
                     >
                       <Checkbox
@@ -155,8 +145,7 @@ const VACheckList: React.FC<VACheckListProps> = ({
                           color: va.colorHex,
                         }}
                       />
-                      <ListItemText
-                        className={classes.spaced}
+                      <ItemTextSpaced
                         primary={va.name}
                         primaryTypographyProps={{
                           variant: 'body2',
@@ -166,7 +155,7 @@ const VACheckList: React.FC<VACheckListProps> = ({
                           variant: 'caption',
                         }}
                       />
-                    </ListItem>
+                    </NestedItem>
                   );
                 })}
               </List>

@@ -1,23 +1,17 @@
 import React from 'react';
 import areEqual from 'fast-deep-equal';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { styled, useTheme } from '@mui/material/styles';
 
-import { useCommonStyles } from './styles';
+import { EventInstanceDiv, EventTextTypo } from './styles';
 import { ICalendarEvent } from '../utils/types';
 import { DIMMED_FILTER, getTimeString } from '../utils/utils';
 
-const useStyles = makeStyles((theme) => ({
-  eventCircle: {
-    display: 'inline-block',
-    borderRadius: theme.spacing(1),
-    border: `${theme.spacing(0.5)}px solid`,
-    marginRight: theme.spacing(0.25),
-  },
-  textClip: {
-    textOverflow: 'clip',
-  },
+const EventCircle = styled('div')(({ theme }) => ({
+  display: 'inline-block',
+  borderRadius: theme.spacing(1),
+  border: `${theme.spacing(0.5)} solid`,
+  marginRight: theme.spacing(0.25),
 }));
 
 interface OwnProps {
@@ -32,8 +26,6 @@ type SingleEventProps = OwnProps;
 const SingleEvent: React.FC<SingleEventProps> = ({
   isMobile, dayStartHour, event, isBlock, onEventClick,
 }) => {
-  const classes = useStyles();
-  const classesCommon = useCommonStyles();
   const theme = useTheme();
   const now = new Date();
 
@@ -50,11 +42,10 @@ const SingleEvent: React.FC<SingleEventProps> = ({
   };
 
   return (
-    <div
-      className={classesCommon.eventInstance}
+    <EventInstanceDiv
       role="button"
       tabIndex={0}
-      style={{
+      sx={{
         filter: event.endTime <= now ? DIMMED_FILTER : undefined,
         backgroundColor: (isBlock || isMobile) ? event.colorCode : 'transparent',
       }}
@@ -62,21 +53,24 @@ const SingleEvent: React.FC<SingleEventProps> = ({
       onKeyUp={onKeyUp}
     >
       {(!isBlock && !isMobile) && (
-        <div
-          className={classes.eventCircle}
-          style={{ borderColor: event.colorCode }}
+        <EventCircle
+          sx={{ borderColor: event.colorCode }}
         />
       )}
-      <Typography
-        className={`${classesCommon.eventText} ${isMobile && classes.textClip}`}
+      <EventTextTypo
         variant="body2"
-        style={(isBlock || isMobile) ? {
-          color: theme.palette.getContrastText(event.colorCode),
-        } : undefined}
+        sx={{
+          ...(isMobile && {
+            textOverflow: 'clip',
+          }),
+          ...((isBlock || isMobile) && {
+            color: theme.palette.getContrastText(event.colorCode),
+          }),
+        }}
       >
         {eventText}
-      </Typography>
-    </div>
+      </EventTextTypo>
+    </EventInstanceDiv>
   );
 };
 

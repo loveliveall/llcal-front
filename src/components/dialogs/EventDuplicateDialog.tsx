@@ -1,17 +1,17 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Backdrop from '@material-ui/core/Backdrop';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import MuiBackdrop from '@mui/material/Backdrop';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Grid from '@mui/material/Grid';
+import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
 
 import { FadeTransition } from '@/components/common/Transitions';
 import GridContainer from '@/components/common/GridContainer';
@@ -24,18 +24,12 @@ import { closeEventDuplicateDialog } from '@/store/duplicate-dialog/actions';
 import { refreshHash } from '@/store/flags/actions';
 import { openSnackbar } from '@/store/snackbar/actions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 10,
-    color: '#fff',
-  },
-  error: {
-    color: 'red',
-  },
+const Backdrop = styled(MuiBackdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 10,
+  color: '#fff',
 }));
 
 const EventDuplicateDialog: React.FC = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const token = useSelector((state: AppState) => state.auth.token);
   const open = useSelector((state: AppState) => state.duplicateDialog.open);
@@ -73,12 +67,13 @@ const EventDuplicateDialog: React.FC = () => {
   return (
     <Dialog
       open={open}
-      onClose={onCloseDialog}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') onCloseDialog();
+      }}
       scroll="paper"
       TransitionComponent={FadeTransition}
       keepMounted
       fullWidth
-      disableBackdropClick
     >
       <DialogTitle>일정 복제</DialogTitle>
       <DialogContent>
@@ -106,7 +101,7 @@ const EventDuplicateDialog: React.FC = () => {
         <Button onClick={onDuplicateClick}>복제</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
-      <Backdrop className={classes.backdrop} open={loading}>
+      <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </Dialog>

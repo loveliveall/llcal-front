@@ -3,20 +3,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import addYears from 'date-fns/addYears';
 import startOfDay from 'date-fns/startOfDay';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import ExpansionPanel, { ExpansionPanelProps } from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetail from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelAction from '@material-ui/core/ExpansionPanelActions';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Accordion, { AccordionProps } from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionActions from '@mui/material/AccordionActions';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import EventBusyIcon from '@material-ui/icons/EventBusy';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 import { DIMMED_FILTER } from '@/components/calendar/utils/utils';
 import { AppState } from '@/store';
@@ -33,30 +33,24 @@ import {
 import { voiceActorList } from '@/commonData';
 import { getConcertGroups, getEventsByIds } from '@/api';
 
-const useStyles = makeStyles((theme) => ({
-  fullWidth: {
-    width: '100%',
-  },
-  padded: {
-    padding: theme.spacing(1),
-  },
-  paddedCenter: {
-    padding: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  textSecondary: {
-    color: theme.palette.text.secondary,
-    fontSize: 'small',
-  },
+const PaddedCenter = styled('div')(({ theme }) => ({
+  padding: theme.spacing(1),
+  display: 'flex',
+  justifyContent: 'center',
+}));
+const PaddedDiv = styled('div')(({ theme }) => ({
+  padding: theme.spacing(1),
+}));
+const SecondaryTypo = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontSize: 'small',
 }));
 
 const CentralCircularProgress: React.FC = () => {
-  const classes = useStyles();
   return (
-    <div className={classes.paddedCenter}>
+    <PaddedCenter>
       <CircularProgress />
-    </div>
+    </PaddedCenter>
   );
 };
 
@@ -69,19 +63,18 @@ interface EventListProps {
 const EventList: React.FC<EventListProps> = ({
   isLoading, events, onEventClick,
 }) => {
-  const classes = useStyles();
   const now = new Date();
   if (isLoading) {
     return <CentralCircularProgress />;
   }
   if (events.length === 0) {
     return (
-      <div className={classes.paddedCenter}>
+      <PaddedCenter>
         <div style={{ textAlign: 'center' }}>
           <EventBusyIcon fontSize="large" color="inherit" />
           <Typography>일정 미등록</Typography>
         </div>
-      </div>
+      </PaddedCenter>
     );
   }
   return (
@@ -96,7 +89,7 @@ const EventList: React.FC<EventListProps> = ({
               backgroundColor: isActive ? 'lightblue' : undefined,
             }}
           >
-            <ListItem button onClick={() => onEventClick(ev)}>
+            <ListItemButton onClick={() => onEventClick(ev)}>
               <ListItemText
                 style={{
                   filter: ev.endTime <= now ? DIMMED_FILTER : undefined,
@@ -104,7 +97,7 @@ const EventList: React.FC<EventListProps> = ({
                 primary={ev.title}
                 secondary={getDateRangeStr(ev.startTime, ev.endTime, ev.allDay)}
               />
-            </ListItem>
+            </ListItemButton>
           </div>
         );
       })}
@@ -120,7 +113,6 @@ interface SingleConcertProps {
 const SingleConcert: React.FC<SingleConcertProps> = ({
   concert, onEventClick,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const {
     title, mainEventIds, subEventIds, startTime, endTime, isLoveLive, voiceActorIds,
@@ -158,32 +150,32 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
     }
   }, [expanded]);
 
-  const onPanelChange: ExpansionPanelProps['onChange'] = (_, isExpanded) => {
+  const onPanelChange: AccordionProps['onChange'] = (_, isExpanded) => {
     setExpanded(isExpanded);
   };
   const prefix = isLoveLive ? '[LoveLive!] ' : '';
 
   return (
-    <ExpansionPanel expanded={expanded} onChange={onPanelChange}>
-      <ExpansionPanelSummary
+    <Accordion expanded={expanded} onChange={onPanelChange}>
+      <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
       >
         <div>
           <Typography>{`${prefix}${title}`}</Typography>
-          <Typography className={classes.textSecondary}>{getDateRangeStr(startTime, endTime, false)}</Typography>
+          <SecondaryTypo>{getDateRangeStr(startTime, endTime, false)}</SecondaryTypo>
         </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetail>
-        <div className={classes.fullWidth}>
+      </AccordionSummary>
+      <AccordionDetails>
+        <div style={{ width: '100%' }}>
           <div>
             <Typography variant="h6">출연 성우</Typography>
-            <div className={classes.padded}>
+            <PaddedDiv>
               <Typography>
                 {voiceActorIds.sort((a, b) => a - b).map(
                   (va) => getObjWithProp(voiceActorList, 'id', va)?.name,
                 ).filter((e) => e !== undefined).join(', ')}
               </Typography>
-            </div>
+            </PaddedDiv>
           </div>
           <div>
             <Typography variant="h6">이벤트 일정 목록</Typography>
@@ -202,14 +194,14 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
             />
           </div>
         </div>
-      </ExpansionPanelDetail>
+      </AccordionDetails>
       {authorized && (
-        <ExpansionPanelAction>
+        <AccordionActions>
           <Button onClick={() => dispatch(openConcertEditDialog(concert))}>수정</Button>
           <Button onClick={() => dispatch(openConcertDeleteDialog(concert))} color="primary">삭제</Button>
-        </ExpansionPanelAction>
+        </AccordionActions>
       )}
-    </ExpansionPanel>
+    </Accordion>
   );
 };
 
@@ -224,7 +216,6 @@ type PageType = 'new' | 'old';
 const Concert: React.FC<ConcertProps> = ({
   vaFilter, etcFilter, onEventClick,
 }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
@@ -275,19 +266,19 @@ const Concert: React.FC<ConcertProps> = ({
   ));
 
   return (
-    <div className={classes.padded}>
+    <PaddedDiv>
       {authorized && (
-        <div className={classes.paddedCenter}>
+        <PaddedCenter>
           <Button variant="outlined" onClick={() => dispatch(openConcertEditDialog(null))}>새 정보 추가</Button>
-        </div>
+        </PaddedCenter>
       )}
       {groups.length === 0 ? (
-        <div className={classes.paddedCenter}>
+        <PaddedCenter>
           <div style={{ textAlign: 'center' }}>
             <EventBusyIcon fontSize="large" color="inherit" />
             <Typography>공연 정보가 없습니다</Typography>
           </div>
-        </div>
+        </PaddedCenter>
       ) : groups.map((g) => (
         <SingleConcert
           key={g.id}
@@ -296,13 +287,13 @@ const Concert: React.FC<ConcertProps> = ({
         />
       ))}
       {authorized && (
-        <div className={classes.paddedCenter}>
+        <PaddedCenter>
           <Button variant="outlined" onClick={() => togglePage()}>
             {page === 'new' ? '과거 공연 보기' : '현재 공연 보기'}
           </Button>
-        </div>
+        </PaddedCenter>
       )}
-    </div>
+    </PaddedDiv>
   );
 };
 

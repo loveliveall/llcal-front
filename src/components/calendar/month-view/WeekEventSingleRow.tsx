@@ -1,20 +1,18 @@
 import React from 'react';
 import areEqual from 'fast-deep-equal';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { styled } from '@mui/material/styles';
 
 import SingleEvent from './SingleEvent';
 import { ICalendarEvent, ISingleEventRenderInfo } from '../utils/types';
 
-const useStyles = makeStyles(() => ({
-  singleRow: {
-    display: 'flex',
-    width: '100%',
-  },
-  singleSlot: {
-    width: `${100 / 7}%`,
-  },
-}));
+const SingleRow = styled('div')`
+  display: flex;
+  width: 100%;
+`;
+const SingleSlot = styled('div')`
+  width: ${100 / 7}%;
+`;
 
 interface OwnProps {
   isMobile: boolean,
@@ -27,12 +25,10 @@ type WeekEventSingleRowProps = OwnProps;
 const WeekEventSingleRow: React.FC<WeekEventSingleRowProps> = ({
   isMobile, dayStartHour, row, onEventClick,
 }) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.singleRow}>
+    <SingleRow>
       {row.map((instance) => {
-        if (instance === null) return <div key={Math.random()} className={classes.singleSlot} />; // Render empty slot
+        if (instance === null) return <SingleSlot key={Math.random()} />; // Render empty slot
         if (instance.startSlotIdx === -1) return null; // Do not render
         const { event } = instance;
         return (
@@ -52,7 +48,7 @@ const WeekEventSingleRow: React.FC<WeekEventSingleRowProps> = ({
           </div>
         );
       })}
-    </div>
+    </SingleRow>
   );
 };
 

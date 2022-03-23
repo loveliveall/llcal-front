@@ -1,16 +1,16 @@
 import React from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import Input from '@mui/material/Input';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { FadeTransition } from '@/components/common/Transitions';
 
@@ -33,30 +33,24 @@ function getICSFeedLink(vaFilter: VACheckState, catFilter: CategoryCheckState, e
   return `http://cal-api.llasfans.net/api/ics${filterStr === '' ? '' : `?${filterStr}`}`;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  centerDiv: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  padding: {
-    width: '100%',
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  dialogTitle: {
-    display: 'flex',
-    width: '100%',
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    alignItems: 'center',
-  },
-  dialogContent: {
-    paddingBottom: theme.spacing(2),
-  },
-  grow: {
-    flexGrow: 1,
-  },
+const DialogTitle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  alignItems: 'center',
+}));
+const DialogContent = styled(MuiDialogContent)(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+}));
+const Spacer = styled('div')`
+  flex-grow: 1;
+`;
+const PaddedDiv = styled('div')(({ theme }) => ({
+  width: '100%',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
 }));
 
 interface OwnProps {
@@ -71,7 +65,6 @@ export type ExportDialogProps = OwnProps;
 const ExportDialog: React.FC<ExportDialogProps> = ({
   open, setOpen, vaFilter, catFilter, etcFilter,
 }) => {
-  const classes = useStyles();
   const [isCopied, setIsCopied] = React.useState(false);
   const icsFeedLink = getICSFeedLink(vaFilter, catFilter, etcFilter);
 
@@ -85,39 +78,45 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
   return (
     <Dialog
       open={open}
-      onClose={onCloseDialog}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') onCloseDialog();
+      }}
       scroll="paper"
       TransitionComponent={FadeTransition}
       fullWidth
       keepMounted
-      disableBackdropClick
     >
-      <div id="export-dialog-title" className={classes.dialogTitle}>
+      <DialogTitle id="export-dialog-title">
         <Typography variant="h6">일정 내보내기</Typography>
-        <div className={classes.grow} />
+        <Spacer />
         <Tooltip title="닫기">
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>
         </Tooltip>
-      </div>
-      <DialogContent className={classes.dialogContent}>
+      </DialogTitle>
+      <DialogContent>
         <Typography variant="body2">
           현재 필터 설정으로 캘린더를 내보냅니다. 사용하는 캘린더 앱에서 &#39;URL로 추가&#39;등의 기능에 아래 링크를 붙여 넣으세요.
         </Typography>
-        <div className={classes.padding}>
+        <PaddedDiv>
           <Input
             value={icsFeedLink}
             onFocus={(ev) => ev.target.select()} // Select whole value on focus
             readOnly
             fullWidth
           />
-        </div>
-        <div className={`${classes.centerDiv} ${classes.padding}`}>
+        </PaddedDiv>
+        <PaddedDiv
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
           <CopyToClipboard text={icsFeedLink} onCopy={() => setIsCopied(true)}>
             <Button variant="outlined">{isCopied ? '복사됨!' : '링크 복사하기'}</Button>
           </CopyToClipboard>
-        </div>
+        </PaddedDiv>
         <Typography variant="body2">
           이 링크는 항상 최신 DB 상태를 반영합니다. 다만, 캘린더 앱의 설정에 따라 갱신 주기가 길어질 수 있습니다.
         </Typography>

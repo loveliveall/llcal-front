@@ -3,19 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import addMinutes from 'date-fns/addMinutes';
 import isEqual from 'date-fns/isEqual';
 
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Switch from '@material-ui/core/Switch';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
+import { styled } from '@mui/material/styles';
+import MuiBackdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import MuiDialogContent from '@mui/material/DialogContent';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 
-import CloseIcon from '@material-ui/icons/Close';
-import SaveIcon from '@material-ui/icons/Save';
+import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { FadeTransition } from '@/components/common/Transitions';
 import GridContainer from '@/components/common/GridContainer';
@@ -47,32 +47,26 @@ import {
   LinkEditor,
 } from './EventEditDialogComp';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  dialogTitle: {
-    display: 'flex',
-    width: '100%',
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    alignItems: 'center',
-  },
-  dialogContent: {
-    paddingBottom: theme.spacing(2),
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  error: {
-    color: 'red',
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 10,
-    color: '#fff',
-  },
+const DialogTitle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  padding: theme.spacing(1),
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  alignItems: 'center',
+}));
+const DialogContent = styled(MuiDialogContent)(({ theme }) => ({
+  paddingBottom: theme.spacing(2),
+}));
+const Spacer = styled('div')`
+  flex-grow: 1;
+`;
+const Backdrop = styled(MuiBackdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 10,
+  color: '#fff',
 }));
 
 const EventEditDialog: React.FC = () => {
-  const classes = useStyles();
   const isMobile = useMobileCheck();
   const now = new Date();
   const min = now.getMinutes();
@@ -213,16 +207,17 @@ const EventEditDialog: React.FC = () => {
   return (
     <Dialog
       open={open}
-      onClose={onCloseDialog}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') onCloseDialog();
+      }}
       scroll="paper"
       TransitionComponent={FadeTransition}
       fullScreen={isMobile}
       fullWidth
-      disableBackdropClick
     >
-      <div id="event-dialog-title" className={classes.dialogTitle}>
+      <DialogTitle id="event-dialog-title">
         <Typography variant="h6">{origEvent === null ? '새 일정 생성' : '일정 수정'}</Typography>
-        <div className={classes.grow} />
+        <Spacer />
         <Tooltip title="저장">
           <IconButton onClick={onSaveClick} disabled={loading}>
             <SaveIcon />
@@ -233,10 +228,10 @@ const EventEditDialog: React.FC = () => {
             <CloseIcon />
           </IconButton>
         </Tooltip>
-      </div>
-      <DialogContent className={classes.dialogContent}>
+      </DialogTitle>
+      <DialogContent>
         {errMsg !== '' && (
-          <Typography className={classes.error}>{errMsg}</Typography>
+          <Typography sx={{ color: 'red' }}>{errMsg}</Typography>
         )}
         {/* Edit range */}
         {isEditRepeat && (
@@ -327,7 +322,7 @@ const EventEditDialog: React.FC = () => {
           </Grid>
         </GridContainer>
       </DialogContent>
-      <Backdrop className={classes.backdrop} open={loading}>
+      <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </Dialog>
