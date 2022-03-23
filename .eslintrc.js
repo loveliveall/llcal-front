@@ -4,7 +4,12 @@ module.exports = {
     ecmaVersion: 6,
     project: './tsconfig.json',
   },
-  plugins: ["@typescript-eslint"],
+  plugins: [
+    "import",
+    "react",
+    "jsx-a11y",
+    "@typescript-eslint",
+  ],
   extends: [
     "airbnb-typescript",
     "plugin:@typescript-eslint/recommended",
