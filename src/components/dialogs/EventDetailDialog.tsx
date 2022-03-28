@@ -113,7 +113,7 @@ const EventDetailDialog: React.FC = () => {
       <DialogTitle id="event-dialog-title">
         <Typography variant="h6">{event.title}</Typography>
         <Spacer />
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableInteractive>
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>
@@ -158,7 +158,7 @@ const EventDetailDialog: React.FC = () => {
           {authorized && (
             <ListItem disableGutters>
               <ListItemIcon>
-                <Tooltip title="ID" arrow><NotesIcon /></Tooltip>
+                <Tooltip title="ID" arrow disableInteractive><NotesIcon /></Tooltip>
               </ListItemIcon>
               <ListItemText
                 primary={event.serverId}
@@ -168,7 +168,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Date range */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="시간" arrow><DateRangeIcon /></Tooltip>
+              <Tooltip title="시간" arrow disableInteractive><DateRangeIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={dateRangeStr}
@@ -178,7 +178,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Place */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="장소" arrow><PlaceIcon /></Tooltip>
+              <Tooltip title="장소" arrow disableInteractive><PlaceIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               disableTypography
@@ -193,7 +193,7 @@ const EventDetailDialog: React.FC = () => {
           {event.link !== null && event.link !== '' && (
             <ListItem disableGutters>
               <ListItemIcon>
-                <Tooltip title="일정 관련 URL" arrow><LinkIcon /></Tooltip>
+                <Tooltip title="일정 관련 URL" arrow disableInteractive><LinkIcon /></Tooltip>
               </ListItemIcon>
               <ListItemText
                 disableTypography
@@ -208,7 +208,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Description */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="상세 설명" arrow><NotesIcon /></Tooltip>
+              <Tooltip title="상세 설명" arrow disableInteractive><NotesIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               disableTypography
@@ -227,7 +227,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Category */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="분류" arrow><LabelIcon /></Tooltip>
+              <Tooltip title="분류" arrow disableInteractive><LabelIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={category?.name}
@@ -236,7 +236,7 @@ const EventDetailDialog: React.FC = () => {
           {/* VA List */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="관련 성우" arrow><PersonIcon /></Tooltip>
+              <Tooltip title="관련 성우" arrow disableInteractive><PersonIcon /></Tooltip>
             </ListItemIcon>
             <div style={{ maxHeight: 150, overflowY: 'auto', flex: 1 }}>
               <List dense disablePadding>
@@ -263,7 +263,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Is LoveLive */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="러브라이브 관련 여부" arrow><FavoriteIcon /></Tooltip>
+              <Tooltip title="러브라이브 관련 여부" arrow disableInteractive><FavoriteIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={event.isLoveLive ? 'LoveLive! 관련' : 'LoveLive! 비관련'}
@@ -272,7 +272,7 @@ const EventDetailDialog: React.FC = () => {
           {/* Is Repeating */}
           <ListItem disableGutters>
             <ListItemIcon>
-              <Tooltip title="정기 일정 여부" arrow><RepeatIcon /></Tooltip>
+              <Tooltip title="정기 일정 여부" arrow disableInteractive><RepeatIcon /></Tooltip>
             </ListItemIcon>
             <ListItemText
               primary={event.isRepeating ? '정기 일정' : '비정기 일정'}

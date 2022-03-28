@@ -44,7 +44,7 @@ const SearchToolbar: React.FC<SearchToolbarProps> = ({
 
   return (
     <Toolbar>
-      <Tooltip title="뒤로 가기">
+      <Tooltip title="뒤로 가기" disableInteractive>
         <IconButton
           color="inherit"
           aria-label="back to calendar"
@@ -71,7 +71,7 @@ const SearchToolbar: React.FC<SearchToolbarProps> = ({
           fullWidth
         />
       </MaxSMForm>
-      <Tooltip title="검색">
+      <Tooltip title="검색" disableInteractive>
         <IconButton
           color="inherit"
           aria-label="trigger search"

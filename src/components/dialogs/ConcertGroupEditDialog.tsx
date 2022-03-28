@@ -121,12 +121,12 @@ const ConcertGroupEditDialog: React.FC = () => {
       <DialogTitle id="event-dialog-title">
         <Typography variant="h6">{origConcert === null ? '새 공연 정보 생성' : '공연 정보 수정'}</Typography>
         <Spacer />
-        <Tooltip title="저장">
+        <Tooltip title="저장" disableInteractive>
           <IconButton onClick={onSaveClick} disabled={loading}>
             <SaveIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableInteractive>
           <IconButton onClick={onCloseDialog} disabled={loading}>
             <CloseIcon />
           </IconButton>

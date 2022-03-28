@@ -115,6 +115,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
             <Tooltip
               key={`category-${categoryId}`}
               title={cat.description}
+              disableInteractive
             >
               <ListItemButton
                 onClick={() => onCategoryToggle(categoryId)}
@@ -174,6 +175,7 @@ const CategoryCheckList: React.FC<CategoryCheckListProps> = ({
                       <Tooltip
                         key={`category-${categoryId}`}
                         title={cat.description}
+                        disableInteractive
                       >
                         <NestedItem
                           key={`category-${categoryId}`}

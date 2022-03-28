@@ -56,7 +56,7 @@ const DayStartHourDialog: React.FC<DayStartHourDialogProps> = ({
       <DialogTitle id="about-dialog-title">
         <Typography variant="h6">하루 시작 기준 시간 변경</Typography>
         <Spacer />
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableInteractive>
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>

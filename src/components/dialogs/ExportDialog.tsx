@@ -89,7 +89,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
       <DialogTitle id="export-dialog-title">
         <Typography variant="h6">일정 내보내기</Typography>
         <Spacer />
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableInteractive>
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>

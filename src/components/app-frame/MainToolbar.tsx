@@ -114,7 +114,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
       )}
       {AVAILABLE_VIEWS.includes(currView as any) && (
         <>
-          <Tooltip title="오늘">
+          <Tooltip title="오늘" disableInteractive>
             <LeftMostIconButton
               color="inherit"
               aria-label="show today"
@@ -123,7 +123,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
               <TodayIcon />
             </LeftMostIconButton>
           </Tooltip>
-          <Tooltip title={prevDateTooltip}>
+          <Tooltip title={prevDateTooltip} disableInteractive>
             <IconButton
               color="inherit"
               aria-label="prev day"
@@ -132,7 +132,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
               <ChevronLeftIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title={nextDateTooltip}>
+          <Tooltip title={nextDateTooltip} disableInteractive>
             <IconButton
               color="inherit"
               aria-label="next day"
@@ -149,7 +149,7 @@ const MainToolbar: React.FC<MainToolbarProps> = ({
         {titleText}
       </Typography>
       <PaddedDiv />
-      <Tooltip title="새로고침">
+      <Tooltip title="새로고침" disableInteractive>
         <IconButton
           color="inherit"
           aria-label="refresh"

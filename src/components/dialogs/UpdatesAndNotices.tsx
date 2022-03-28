@@ -152,7 +152,7 @@ const UpdatesAndNotices: React.FC<UpdatesAndNoticesProps> = ({
       <DialogTitle id="about-dialog-title">
         <Typography variant="h6">최근 변경 및 공지</Typography>
         <Spacer />
-        <Tooltip title="닫기">
+        <Tooltip title="닫기" disableInteractive>
           <IconButton onClick={onCloseDialog}>
             <CloseIcon />
           </IconButton>
