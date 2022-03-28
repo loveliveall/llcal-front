@@ -33,7 +33,7 @@ function Calendar<TEvent extends ICalendarEvent>({
   onEventClick, onMonthDateClick,
 }: CalendarProps<TEvent>): React.ReactElement | null {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const isLoadingInternal = !!isLoading;
   const dayStartHourInternal = dayStartHour ?? 0;

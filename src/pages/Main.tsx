@@ -17,12 +17,13 @@ import startOfMonth from 'date-fns/startOfMonth';
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Drawer from '@mui/material/Drawer';
-import Hidden from '@mui/material/Hidden';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import Calendar, { AVAILABLE_VIEWS, ViewType } from '@/components/calendar';
 import MainToolbar from '@/components/app-frame/MainToolbar';
 import DrawerContent from '@/components/app-frame/DrawerContent';
+
+import useMobileCheck from '@/hooks/useMobileCheck';
 
 import { AppState } from '@/store';
 import { openEventDetailDialog } from '@/store/detail-dialog/actions';
@@ -64,19 +65,19 @@ const Content = styled('main')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     maxWidth: `calc(100% - ${DRAWER_WIDTH}px)`,
   },
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     maxWidth: '100%',
   },
 }));
 const CalendarWrapper = styled('div')(({ theme }) => ({
   minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)})`,
-  [theme.breakpoints.down('xs')]: {
+  [theme.breakpoints.down('md')]: {
     minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
   },
 }));
 const MonthViewWrapper = styled(CalendarWrapper)(({ theme }) => ({
   height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - ${theme.spacing(1)})`,
-  [theme.breakpoints.down('xs')]: {
+  [theme.breakpoints.down('md')]: {
     height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, // fit to toolbar size changes
   },
 }));
@@ -117,6 +118,7 @@ function getRange(currDate: Date, viewType: AppViewType): [Date, Date] | null {
 
 const Main: React.FC = () => {
   const dispatch = useDispatch();
+  const isMobile = useMobileCheck();
   const refreshFlag = useSelector((state: AppState) => state.flags.refreshFlag);
   const dayStartHour = useSelector((state: AppState) => state.settings.dayStartHour);
   const [viewIndex, setViewIndex] = React.useState(0);
@@ -292,7 +294,7 @@ const Main: React.FC = () => {
         {loading && <LinearProgress sx={{ height: 2 }} />}
       </AppBar>
       <DrawerNav>
-        <Hidden mdUp>
+        {isMobile && (
           <Drawer
             variant="temporary"
             open={mobileOpen}
@@ -309,8 +311,8 @@ const Main: React.FC = () => {
           >
             {drawer}
           </Drawer>
-        </Hidden>
-        <Hidden smDown>
+        )}
+        {!isMobile && (
           <Drawer
             variant="permanent"
             open
@@ -323,7 +325,7 @@ const Main: React.FC = () => {
             <ToolbarSpace />
             {drawer}
           </Drawer>
-        </Hidden>
+        )}
       </DrawerNav>
       <Content>
         <ToolbarSpace />
