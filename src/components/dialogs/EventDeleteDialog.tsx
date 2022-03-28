@@ -117,12 +117,13 @@ const EventDeleteDialog: React.FC = () => {
           <Typography sx={{ color: 'red' }}>{errMsg}</Typography>
         )}
         {targetEvent.rrule !== '' && (
-          <GridContainer>
+          <GridContainer pb={1}>
             <Grid item xs={2}>
               <Typography>삭제 범위:</Typography>
             </Grid>
             <Grid item xs>
               <Select
+                variant="standard"
                 value={deleteRange === null ? 'None' : deleteRange}
                 error={deleteRange === null}
                 onChange={(e) => setDeleteRange(e.target.value as null | DeleteRange)}
@@ -142,7 +143,7 @@ const EventDeleteDialog: React.FC = () => {
         </GridContainer>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDeleteClick}>삭제</Button>
+        <Button color="inherit" onClick={onDeleteClick}>삭제</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
       <Backdrop open={loading}>

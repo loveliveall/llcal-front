@@ -30,12 +30,13 @@ export type EditRangeEditorProps = {
 const EditRangeEditorComp: React.FC<EditRangeEditorProps> = ({
   editRange, setEditRange,
 }) => (
-  <GridContainer>
+  <GridContainer pb={1}>
     <Grid item xs={2}>
       <Typography>수정 범위</Typography>
     </Grid>
     <Grid item xs>
       <Select
+        variant="standard"
         value={editRange === null ? 'None' : editRange}
         error={editRange === null}
         onChange={(e) => setEditRange(e.target.value as null | EditRange)}
@@ -57,7 +58,7 @@ export type TitleEditorProps = {
 const TitleEditorComp: React.FC<TitleEditorProps> = ({
   title, setTitle,
 }) => (
-  <GridContainer>
+  <GridContainer pb={1}>
     <Grid item xs={2}>
       <Typography>제목</Typography>
     </Grid>
@@ -85,7 +86,7 @@ export type PlaceEditorProps = {
 const PlaceEditorComp: React.FC<PlaceEditorProps> = ({
   place, setPlace,
 }) => (
-  <GridContainer>
+  <GridContainer pb={1}>
     <Grid item xs={2}>
       <Typography>장소</Typography>
     </Grid>
@@ -112,7 +113,7 @@ export type LinkEditorProps = {
 const LinkEditorComp: React.FC<LinkEditorProps> = ({
   link, setLink,
 }) => (
-  <GridContainer>
+  <GridContainer pb={1}>
     <Grid item xs={2}>
       <Typography>URL</Typography>
     </Grid>
@@ -232,20 +233,20 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
           />
         </Grid>
       </GridContainer>
-      <GridContainer>
+      <GridContainer pb={1}>
         <Grid item xs={2}>
           <Typography>시작</Typography>
         </Grid>
         <Grid item xs>
           {allDay ? (
             <MobileDatePicker
-              renderInput={(props) => <TextField {...props} />}
+              renderInput={(props) => <TextField variant="standard" {...props} />}
               value={start}
               onChange={handleStartChange}
             />
           ) : (
             <MobileDateTimePicker
-              renderInput={(props) => <TextField {...props} />}
+              renderInput={(props) => <TextField variant="standard" {...props} />}
               value={start}
               onChange={handleStartChange}
               ampm={false}
@@ -254,21 +255,21 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
           )}
         </Grid>
       </GridContainer>
-      <GridContainer>
+      <GridContainer pb={1}>
         <Grid item xs={2}>
           <Typography>종료</Typography>
         </Grid>
         <Grid item xs>
           {allDay ? (
             <MobileDatePicker
-              renderInput={(props) => <TextField {...props} />}
+              renderInput={(props) => <TextField variant="standard" {...props} />}
               value={end}
               minDate={start}
               onChange={handleEndChange}
             />
           ) : (
             <MobileDateTimePicker
-              renderInput={(props) => <TextField {...props} />}
+              renderInput={(props) => <TextField variant="standard" {...props} />}
               value={end}
               minDate={start}
               onChange={handleEndChange}
@@ -278,17 +279,17 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
           )}
         </Grid>
       </GridContainer>
-      <GridContainer>
+      <GridContainer pb={1}>
         <Grid item xs={2}>
           <Typography>반복</Typography>
         </Grid>
         <Grid item xs>
           {isEditOnlyThis ? (
-            <Button variant="outlined" disabled>
+            <Button color="inherit" variant="outlined" disabled>
               반복 없음
             </Button>
           ) : (
-            <Button variant="outlined" onClick={openRRuleModal}>
+            <Button color="inherit" variant="outlined" onClick={openRRuleModal}>
               {rrule === '' ? '반복 없음' : rruleToText(start, rrule)}
             </Button>
           )}
@@ -326,7 +327,7 @@ export type DescriptionEditorProps = {
 const DescriptionEditorComp: React.FC<DescriptionEditorProps> = ({
   description, setDescription,
 }) => (
-  <GridContainer>
+  <GridContainer pb={1}>
     <Grid item xs={2}>
       <Typography>상세 설명</Typography>
     </Grid>
@@ -355,12 +356,13 @@ export type CategoryEditorProps = {
 const CategoryEditorComp: React.FC<CategoryEditorProps> = ({
   categoryId, setCategoryId,
 }) => (
-  <GridContainer>
+  <GridContainer pb={1}>
     <Grid item xs={2}>
       <Typography>분류</Typography>
     </Grid>
     <Grid item xs>
       <Select
+        variant="standard"
         value={categoryId === null ? 'None' : categoryId}
         error={categoryId === null}
         onChange={(e) => setCategoryId(e.target.value as number | null)}

@@ -84,7 +84,7 @@ const EventDuplicateDialog: React.FC = () => {
         </GridContainer>
         {targetEvent.rrule !== '' && (
           <GridContainer>
-            <Grid item xs>
+            <Grid item xs={3}>
               <Typography>반복 예외 유지:</Typography>
             </Grid>
             <Grid item xs>
@@ -98,7 +98,7 @@ const EventDuplicateDialog: React.FC = () => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDuplicateClick}>복제</Button>
+        <Button color="inherit" onClick={onDuplicateClick}>복제</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
       <Backdrop open={loading}>

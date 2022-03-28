@@ -11,7 +11,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionActions from '@mui/material/AccordionActions';
 import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
@@ -197,7 +197,7 @@ const SingleConcert: React.FC<SingleConcertProps> = ({
       </AccordionDetails>
       {authorized && (
         <AccordionActions>
-          <Button onClick={() => dispatch(openConcertEditDialog(concert))}>수정</Button>
+          <Button onClick={() => dispatch(openConcertEditDialog(concert))} color="inherit">수정</Button>
           <Button onClick={() => dispatch(openConcertDeleteDialog(concert))} color="primary">삭제</Button>
         </AccordionActions>
       )}
@@ -269,7 +269,13 @@ const Concert: React.FC<ConcertProps> = ({
     <PaddedDiv>
       {authorized && (
         <PaddedCenter>
-          <Button variant="outlined" onClick={() => dispatch(openConcertEditDialog(null))}>새 정보 추가</Button>
+          <Button
+            color="inherit"
+            variant="outlined"
+            onClick={() => dispatch(openConcertEditDialog(null))}
+          >
+            새 정보 추가
+          </Button>
         </PaddedCenter>
       )}
       {groups.length === 0 ? (
@@ -288,7 +294,7 @@ const Concert: React.FC<ConcertProps> = ({
       ))}
       {authorized && (
         <PaddedCenter>
-          <Button variant="outlined" onClick={() => togglePage()}>
+          <Button color="inherit" variant="outlined" onClick={() => togglePage()}>
             {page === 'new' ? '과거 공연 보기' : '현재 공연 보기'}
           </Button>
         </PaddedCenter>

@@ -79,7 +79,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onSendClick}>보내기</Button>
+        <Button color="inherit" onClick={onSendClick}>보내기</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
       <Backdrop open={loading}>

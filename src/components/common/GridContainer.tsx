@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Grid from '@mui/material/Grid';
+import Grid, { GridProps } from '@mui/material/Grid';
 
-const GridContainer: React.FC = ({ children }) => (
-  <Grid container alignItems="center" spacing={2}>
+const GridContainer: React.FC<GridProps> = ({ children, ...props }) => (
+  <Grid container {...props} alignItems="center" spacing={2}>
     {children}
   </Grid>
 );

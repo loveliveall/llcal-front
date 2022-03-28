@@ -217,7 +217,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
       <DialogTitle>반복 설정</DialogTitle>
       <DialogContent>
         {/* Repeat frequency */}
-        <GridContainer>
+        <GridContainer pb={1}>
           <Grid item xs={2}>
             <Typography>반복 주기: </Typography>
           </Grid>
@@ -235,6 +235,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
           )}
           <Grid item xs>
             <Select
+              variant="standard"
               value={localRRule.freq ?? 'None'}
               onChange={(e) => {
                 const selected = e.target.value === 'None' ? undefined : e.target.value as Frequency;
@@ -272,12 +273,13 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
         {/* Weekday settings for Monthly freq */}
         {localRRule.freq === RRule.MONTHLY && (
           <>
-            <GridContainer>
+            <GridContainer pb={1}>
               <Grid item xs={2}>
                 <Typography>세부 설정: </Typography>
               </Grid>
               <Grid item xs>
                 <Select
+                  variant="standard"
                   value={getMonthlyDetail(localRRule)}
                   onChange={(e) => {
                     const selected = e.target.value as MonthlyDetail;
@@ -369,12 +371,13 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
         {/* Repeat end condition */}
         {localRRule.freq !== undefined && (
           <>
-            <GridContainer>
+            <GridContainer pb={1}>
               <Grid item xs={2}>
                 <Typography>반복 종료: </Typography>
               </Grid>
               <Grid item xs>
                 <Select
+                  variant="standard"
                   value={getEndType(localRRule)}
                   onChange={onEndTypeChange}
                 >
@@ -389,7 +392,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
               <GridContainer>
                 <Grid item>
                   <MobileDatePicker
-                    renderInput={(props) => <TextField {...props} />}
+                    renderInput={(props) => <TextField variant="standard" {...props} />}
                     label="종료일"
                     value={localRRule.until}
                     onChange={onUntilChange}
@@ -421,7 +424,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onSaveClick}>저장</Button>
+        <Button color="inherit" onClick={onSaveClick}>저장</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
     </Dialog>

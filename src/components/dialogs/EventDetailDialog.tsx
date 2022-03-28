@@ -58,6 +58,7 @@ const DialogTitle = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 const DialogContent = styled(MuiDialogContent)(({ theme }) => ({
+  paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(2),
 }));
 const Spacer = styled('div')`
@@ -123,13 +124,10 @@ const EventDetailDialog: React.FC = () => {
         {authorized && category?.frozen === false && (
           <ButtonDiv>
             <Button
+              color="error"
               variant="outlined"
               onClick={onDeleteClick}
               startIcon={<DeleteIcon />}
-              style={{
-                color: 'red',
-                border: '1px solid red',
-              }}
             >
               삭제
             </Button>
@@ -142,13 +140,10 @@ const EventDetailDialog: React.FC = () => {
               복제
             </Button>
             <Button
+              color="inherit"
               variant="outlined"
               onClick={onEditClick}
               startIcon={<EditIcon />}
-              style={{
-                color: 'black',
-                border: '1px solid grey',
-              }}
             >
               수정
             </Button>

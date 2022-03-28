@@ -157,6 +157,7 @@ const SearchPage: React.FC = () => {
           {events.length !== 0 && (
             <>
               <Button
+                color="inherit"
                 disabled={loading}
                 onClick={onLoadPrevClick}
                 sx={sxFitParent(theme)}
@@ -192,6 +193,7 @@ const SearchPage: React.FC = () => {
                 {`${getDateString(searchRange[1])}까지의 결과입니다.`}
               </Typography>
               <Button
+                color="inherit"
                 disabled={loading}
                 onClick={onLoadNextClick}
                 sx={sxFitParent(theme)}

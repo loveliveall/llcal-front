@@ -75,7 +75,7 @@ const ConcertGroupDeleteDialog: React.FC = () => {
         <Typography>정말로 해당 공연 정보를 삭제하시겠습니까?</Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onDeleteClick}>삭제</Button>
+        <Button color="inherit" onClick={onDeleteClick}>삭제</Button>
         <Button color="primary" onClick={onCloseDialog}>닫기</Button>
       </DialogActions>
       <Backdrop open={loading}>

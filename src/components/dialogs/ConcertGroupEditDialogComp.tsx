@@ -130,7 +130,7 @@ const EventIDListEditorComp: React.FC<EventIDListEditorProps> = ({
             autoCorrect: 'off',
           }}
         />
-        <Button onClick={onAddClick}>추가</Button>
+        <Button color="inherit" onClick={onAddClick}>추가</Button>
       </Grid>
     </GridContainer>
   );

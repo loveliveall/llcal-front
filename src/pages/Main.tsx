@@ -298,6 +298,7 @@ const Main: React.FC = () => {
             open={mobileOpen}
             onClose={toggleMobileDrawer}
             sx={{
+              zIndex: 1300,
               '& .MuiDrawer-paper': {
                 width: DRAWER_WIDTH,
               },

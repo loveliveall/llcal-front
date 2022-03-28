@@ -114,7 +114,7 @@ const ExportDialog: React.FC<ExportDialogProps> = ({
           }}
         >
           <CopyToClipboard text={icsFeedLink} onCopy={() => setIsCopied(true)}>
-            <Button variant="outlined">{isCopied ? '복사됨!' : '링크 복사하기'}</Button>
+            <Button color="inherit" variant="outlined">{isCopied ? '복사됨!' : '링크 복사하기'}</Button>
           </CopyToClipboard>
         </PaddedDiv>
         <Typography variant="body2">
