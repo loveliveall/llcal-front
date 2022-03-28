@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import Main from '@/pages/Main';
 import SearchPage from '@/pages/search';
@@ -15,18 +15,19 @@ import ConcertGroupEditDialog from '@/components/dialogs/ConcertGroupEditDialog'
 import ConcertGroupDeleteDialog from '@/components/dialogs/ConcertGroupDeleteDialog';
 
 const App: React.FC = () => {
-  const history = useHistory();
+  const location = useLocation();
 
-  React.useEffect(() => history.listen((location) => {
+  React.useEffect(() => {
     ReactGA.pageview(location.pathname + location.search);
-  }), [history]);
+  }, [location]);
+
   return (
     <>
-      <Switch>
-        <Route path="/search" component={SearchPage} />
-        <Route exact path="/ship-duck" component={ShipDuck} />
-        <Route component={Main} />
-      </Switch>
+      <Routes>
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/ship-duck" element={<ShipDuck />} />
+        <Route path="*" element={<Main />} />
+      </Routes>
       <EventDeleteDialog />
       <EventDetailDialog />
       <EventDuplicateDialog />

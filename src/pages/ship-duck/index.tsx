@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { styled } from '@mui/material/styles';
@@ -38,7 +38,7 @@ const ShipDuck: React.FC = () => {
   const [idText, setIdText] = React.useState('');
   const [tokenText, setTokenText] = React.useState('');
   const authorized = useSelector((state: AppState) => state.auth.token !== null);
-  if (authorized) return <Redirect to="/" />;
+  if (authorized) return <Navigate to="/" replace />;
 
   const onIDChange = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setIdText(ev.target.value);

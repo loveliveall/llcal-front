@@ -59,7 +59,7 @@
     "react-ga": "^3.3.0",
     "react-linkify": "^1.0.0-alpha",
     "react-redux": "^7.2.3",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^6.2.2",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
     "redux": "^4.0.5",

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -23,12 +23,13 @@ interface IOwnProps {
 }
 export type SearchToolbarProps = IOwnProps;
 
-const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
-  onSearchTrigger, history,
+const SearchToolbar: React.FC<SearchToolbarProps> = ({
+  onSearchTrigger,
 }) => {
+  const navigate = useNavigate();
   const [text, setText] = React.useState('');
   const onBackClick = () => {
-    history.goBack();
+    navigate(-1);
   };
   const onTextChange = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setText(ev.target.value);
@@ -84,4 +85,4 @@ const SearchToolbar: React.FC<SearchToolbarProps & RouteComponentProps> = ({
   );
 };
 
-export default withRouter(SearchToolbar);
+export default SearchToolbar;
