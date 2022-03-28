@@ -3,32 +3,33 @@ import ReactDOM from 'react-dom';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import format from 'date-fns/format';
+// import format from 'date-fns/format';
 import koLocale from 'date-fns/locale/ko';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import DateFnsUtils from '@date-io/date-fns';
+// import DateFnsUtils from '@date-io/date-fns';
 
 import App from '@/App';
 import store from '@/store';
 
 ReactGA.initialize('UA-142042916-3');
 
-class LocalizedUtils extends DateFnsUtils {
-  getDatePickerHeaderText(date: Date) {
-    return format(date, 'M.dd', { locale: this.locale });
-  }
+// class LocalizedUtils extends DateFnsUtils {
+//   getDatePickerHeaderText(date: Date) {
+//     return format(date, 'M.dd', { locale: this.locale });
+//   }
 
-  getDateTimePickerHeaderText(date: Date) {
-    return format(date, 'M.dd', { locale: this.locale });
-  }
+//   getDateTimePickerHeaderText(date: Date) {
+//     return format(date, 'M.dd', { locale: this.locale });
+//   }
 
-  getHourText(date: Date) {
-    return format(date, 'HH', { locale: this.locale });
-  }
-}
+//   getHourText(date: Date) {
+//     return format(date, 'HH', { locale: this.locale });
+//   }
+// }
 
 const theme = createTheme({
   palette: {
@@ -46,9 +47,9 @@ ReactDOM.render(
     <CssBaseline />
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={LocalizedUtils} locale={koLocale}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} locale={koLocale}>
           <App />
-        </MuiPickersUtilsProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </BrowserRouter>
   </Provider>,

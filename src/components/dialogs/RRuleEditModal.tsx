@@ -12,10 +12,10 @@ import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectProps } from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { DatePicker } from '@material-ui/pickers';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import MobileDatePicker from '@mui/lab/MobileDatePicker';
 
 import GridContainer from '@/components/common/GridContainer';
 import { getNth } from '@/utils';
@@ -188,7 +188,7 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
       });
     }
   };
-  const onUntilChange = (date: MaterialUiPickersDate) => {
+  const onUntilChange = (date: Date | null) => {
     if (date !== null) {
       const parsed = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59);
       setLocalRRule({
@@ -388,8 +388,8 @@ const RRuleEditModal: React.FC<RRuleEditModalProps> = ({
             {(localRRule.until !== undefined && localRRule.count === undefined) && (
               <GridContainer>
                 <Grid item>
-                  <DatePicker
-                    format="yyyy/MM/dd"
+                  <MobileDatePicker
+                    renderInput={(props) => <TextField {...props} />}
                     label="종료일"
                     value={localRRule.until}
                     onChange={onUntilChange}

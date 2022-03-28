@@ -9,10 +9,11 @@ import ListSubheader from '@mui/material/ListSubheader';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { DatePicker, DateTimePicker } from '@material-ui/pickers';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import MobileDatePicker from '@mui/lab/MobileDatePicker';
+import MobileDateTimePicker from '@mui/lab/MobileDateTimePicker';
 
 import GridContainer from '@/components/common/GridContainer';
 
@@ -151,7 +152,7 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
 }) => {
   const [rruleModalOpen, setRRuleModalOpen] = React.useState(false);
 
-  const handleStartChange = (date: MaterialUiPickersDate) => {
+  const handleStartChange = (date: Date | null) => {
     if (date !== null) {
       const purifiedDate = new Date(
         date.getFullYear(), date.getMonth(), date.getDate(),
@@ -202,7 +203,7 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
       }
     }
   };
-  const handleEndChange = (date: MaterialUiPickersDate) => {
+  const handleEndChange = (date: Date | null) => {
     if (date !== null) {
       const purifiedDate = new Date(
         date.getFullYear(), date.getMonth(), date.getDate(),
@@ -237,16 +238,16 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
         </Grid>
         <Grid item xs>
           {allDay ? (
-            <DatePicker
+            <MobileDatePicker
+              renderInput={(props) => <TextField {...props} />}
               value={start}
               onChange={handleStartChange}
-              format="yyyy/MM/dd"
             />
           ) : (
-            <DateTimePicker
+            <MobileDateTimePicker
+              renderInput={(props) => <TextField {...props} />}
               value={start}
               onChange={handleStartChange}
-              format="yyyy/MM/dd HH:mm"
               ampm={false}
               minutesStep={5}
             />
@@ -259,18 +260,18 @@ const DateInfoEditorComp: React.FC<DateInfoEditorProps> = ({
         </Grid>
         <Grid item xs>
           {allDay ? (
-            <DatePicker
+            <MobileDatePicker
+              renderInput={(props) => <TextField {...props} />}
               value={end}
               minDate={start}
               onChange={handleEndChange}
-              format="yyyy/MM/dd"
             />
           ) : (
-            <DateTimePicker
+            <MobileDateTimePicker
+              renderInput={(props) => <TextField {...props} />}
               value={end}
               minDate={start}
               onChange={handleEndChange}
-              format="yyyy/MM/dd HH:mm"
               ampm={false}
               minutesStep={5}
             />

@@ -7,7 +7,7 @@ import MuiDialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { ClockView } from '@material-ui/pickers';
+import ClockPicker from '@mui/lab/ClockPicker';
 
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -63,18 +63,15 @@ const DayStartHourDialog: React.FC<DayStartHourDialogProps> = ({
         </Tooltip>
       </DialogTitle>
       <DialogContent>
-        <ClockView
-          type="hours"
+        <ClockPicker
           ampm={false}
           date={new Date(2010, 5, 30, dayStartHour)} // Only hour matters
-          onHourChange={(date) => {
+          onChange={(date) => {
             if (date !== null) {
               dispatch(setDayStartHour(date.getHours()));
               setOpen(false);
             }
           }}
-          onMinutesChange={() => {}}
-          onSecondsChange={() => {}}
         />
       </DialogContent>
     </Dialog>
