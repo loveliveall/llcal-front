@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -177,8 +177,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
   return (
     <Root>
       <List component="nav">
-        <ListItem
-          button
+        <ListItemButton
           onClick={onAboutClick}
         >
           <DenseListItemIcon>
@@ -190,11 +189,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         {authorized && (
           <>
-            <ListItem
-              button
+            <ListItemButton
               onClick={onLogoutClick}
             >
               <DenseListItemIcon>
@@ -206,9 +204,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
                   variant: 'body2',
                 }}
               />
-            </ListItem>
-            <ListItem
-              button
+            </ListItemButton>
+            <ListItemButton
               onClick={onNewEventClick}
             >
               <DenseListItemIcon>
@@ -220,11 +217,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
                   variant: 'body2',
                 }}
               />
-            </ListItem>
+            </ListItemButton>
           </>
         )}
-        <ListItem
-          button
+        <ListItemButton
           onClick={onNoticeClick}
         >
           <DenseListItemIcon>
@@ -236,7 +232,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         {Object.keys(VIEW_TYPE_MENU).map((v) => {
           const viewType = v as AppViewType;
           const { icon: Icon, label } = VIEW_TYPE_MENU[viewType];
@@ -245,9 +241,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
             setMobileDrawerOpen(false); // Close mobile drawer on view selection
           };
           return (
-            <ListItem
+            <ListItemButton
               key={viewType}
-              button
               selected={currView === viewType}
               onClick={onClick}
             >
@@ -260,10 +255,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
                   variant: 'body2',
                 }}
               />
-            </ListItem>
+            </ListItemButton>
           );
         })}
-        <ListItem button component={Link} to="/search">
+        <ListItemButton component={Link} to="/search">
           <DenseListItemIcon>
             <SearchIcon />
           </DenseListItemIcon>
@@ -273,9 +268,8 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           onClick={onReportClick}
         >
           <DenseListItemIcon>
@@ -287,11 +281,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
-        <ListItem
-          button
+        </ListItemButton>
+        <ListItemButton
           onClick={() => {
-            const newWindow = window.open('https://lovelivec.kr', '_blank', 'noopener,noreferrer');
+            const newWindow = window.open('https://llct.sochiru.pw/', '_blank', 'noopener,noreferrer');
             if (newWindow) newWindow.opener = null;
           }}
         >
@@ -304,10 +297,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setDayStartDialogOpen(true)}
         >
           <DenseListItemIcon>
@@ -319,10 +311,9 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setOpenVAFilter(!openVAFilter)}
         >
           <DenseListItemIcon>
@@ -335,7 +326,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         <Collapse in={openVAFilter} timeout="auto" unmountOnExit>
           <VACheckList
             checkState={vaFilter}
@@ -343,8 +334,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           />
         </Collapse>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setOpenCategoryFilter(!openCategoryFilter)}
         >
           <DenseListItemIcon>
@@ -357,7 +347,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         <Collapse in={openCategoryFilter} timeout="auto" unmountOnExit>
           <CategoryCheckList
             checkState={categoryFilter}
@@ -365,8 +355,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           />
         </Collapse>
         <Divider />
-        <ListItem
-          button
+        <ListItemButton
           onClick={() => setOpenETCFilter(!openETCFilter)}
         >
           <DenseListItemIcon>
@@ -379,7 +368,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
               variant: 'body2',
             }}
           />
-        </ListItem>
+        </ListItemButton>
         <Collapse in={openETCFilter} timeout="auto" unmountOnExit>
           <ETCCheckList
             checkState={etcFilter}
@@ -387,7 +376,7 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           />
         </Collapse>
         <Center>
-          <Button onClick={onSaveSettingsClick} variant="outlined">
+          <Button onClick={onSaveSettingsClick} variant="outlined" color="inherit">
             캘린더 설정 저장
           </Button>
         </Center>

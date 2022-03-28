@@ -23,6 +23,20 @@ const theme = createTheme({
       main: '#ff7f32',
     },
   },
+  components: {
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+          },
+          '&.Mui-selected:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+          },
+        },
+      },
+    },
+  },
 });
 
 ReactDOM.render(
