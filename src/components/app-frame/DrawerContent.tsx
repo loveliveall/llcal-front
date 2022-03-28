@@ -23,6 +23,7 @@ import HelpIcon from '@mui/icons-material/HelpOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import LinkIcon from '@mui/icons-material/Link';
 import LocalATMIcon from '@mui/icons-material/LocalAtm';
+import PaidIcon from '@mui/icons-material/Paid';
 import SearchIcon from '@mui/icons-material/Search';
 import SendIcon from '@mui/icons-material/Send';
 import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
@@ -277,6 +278,22 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
           </DenseListItemIcon>
           <ListItemText
             primary="일정 추가 요청 보내기"
+            primaryTypographyProps={{
+              variant: 'body2',
+            }}
+          />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            const newWindow = window.open('https://toss.me/llcal', '_blank', 'noopener,noreferrer');
+            if (newWindow) newWindow.opener = null;
+          }}
+        >
+          <DenseListItemIcon>
+            <PaidIcon />
+          </DenseListItemIcon>
+          <ListItemText
+            primary="제작자 후원하기"
             primaryTypographyProps={{
               variant: 'body2',
             }}
