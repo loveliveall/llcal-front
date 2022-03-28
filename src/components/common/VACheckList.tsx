@@ -5,8 +5,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -101,31 +101,35 @@ const VACheckList: React.FC<VACheckListProps> = ({
         const groupId = groupInfo.id;
         return (
           <React.Fragment key={`group-${groupId}`}>
-            <ListItemButton
-              onClick={() => onGroupToggle(groupId)}
-            >
-              <Checkbox
-                onChange={() => onGroupToggle(groupId)}
-                checked={isGroupChecked(checkState, groupId)}
-                indeterminate={isGroupIndeterminate(checkState, groupId)}
-                edge="start"
-                disableRipple
-                style={{
-                  color: groupInfo.colorHex,
-                }}
-              />
-              <ItemTextSpaced
-                primary={groupInfo.name}
-                primaryTypographyProps={{
-                  variant: 'body2',
-                }}
-              />
-              <ListItemSecondaryAction>
+            <ListItem
+              secondaryAction={
                 <IconButton onClick={() => onSubListToggle(groupId)}>
                   {subListOpen[groupId] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </IconButton>
-              </ListItemSecondaryAction>
-            </ListItemButton>
+              }
+              disablePadding
+            >
+              <ListItemButton
+                onClick={() => onGroupToggle(groupId)}
+              >
+                <Checkbox
+                  onChange={() => onGroupToggle(groupId)}
+                  checked={isGroupChecked(checkState, groupId)}
+                  indeterminate={isGroupIndeterminate(checkState, groupId)}
+                  edge="start"
+                  disableRipple
+                  style={{
+                    color: groupInfo.colorHex,
+                  }}
+                />
+                <ItemTextSpaced
+                  primary={groupInfo.name}
+                  primaryTypographyProps={{
+                    variant: 'body2',
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
             {/* SubList */}
             <Collapse in={subListOpen[groupId]} timeout="auto" unmountOnExit>
               <List component="nav" dense disablePadding>
