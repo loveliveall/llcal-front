@@ -133,7 +133,10 @@ export const birthdayList: IBirthday[] = [
   { id: 903, name: '미사키 나코', birthMonth: 3, birthDay: 8, voiceActorId: 503, isLoveLive: false },
   { id: 904, name: '페이튼 나오미', birthMonth: 7, birthDay: 1, voiceActorId: 504, isLoveLive: false },
   { id: 905, name: '아오야마 나기사', birthMonth: 5, birthDay: 16, voiceActorId: 505, isLoveLive: false },
-  // Add birthday for liella! new CVs
+  // { id: 906, name: '스즈하라 노조미', birthMonth: , birthDay: , voiceActorId: 506, isLoveLive: false },
+  { id: 907, name: '야부시마 아카네', birthMonth: 7, birthDay: 18, voiceActorId: 507, isLoveLive: false },
+  { id: 908, name: '오오쿠마 와카나', birthMonth: 4, birthDay: 13, voiceActorId: 508, isLoveLive: false },
+  { id: 909, name: '에모리 아야', birthMonth: 2, birthDay: 23, voiceActorId: 509, isLoveLive: false },
   // Add mao & yuuna birthday
   { id: 1101, name: '유우키 유나', birthMonth: 6, birthDay: 9, voiceActorId: 601, isLoveLive: false },
   { id: 1102, name: '요시타케 치하야', birthMonth: 3, birthDay: 28, voiceActorId: 602, isLoveLive: false },
@@ -195,10 +198,10 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 503, name: '미사키 나코', character: '아라시 치사토', groupId: 6, colorHex: '#ff6e90' },
   { id: 504, name: '페이튼 나오미', character: '헤안나 스미레', groupId: 6, colorHex: '#74f466' },
   { id: 505, name: '아오야마 나기사', character: '하즈키 렌', groupId: 6, colorHex: '#0000a0' },
-  { id: 506, name: '몰?루', character: '사쿠라코지 키나코', groupId: 6, colorHex: '#fff442' },
-  { id: 507, name: '몰?루', character: '요네메 메이', groupId: 6, colorHex: '#ff3535' },
-  { id: 508, name: '몰?루', character: '와카나 시키', groupId: 6, colorHex: '#b2ffdd' },
-  { id: 509, name: '몰?루', character: '오니츠카 나츠미', groupId: 6, colorHex: '#ff51c4' },
+  { id: 506, name: '스즈하라 노조미', character: '사쿠라코지 키나코', groupId: 6, colorHex: '#fff442' },
+  { id: 507, name: '야부시마 아카네', character: '요네메 메이', groupId: 6, colorHex: '#ff3535' },
+  { id: 508, name: '오오쿠마 와카나', character: '와카나 시키', groupId: 6, colorHex: '#b2ffdd' },
+  { id: 509, name: '에모리 아야', character: '오니츠카 나츠미', groupId: 6, colorHex: '#ff51c4' },
   { id: 601, name: '유우키 유나', character: '히이라기 마오', groupId: 7, colorHex: '' }, // Colorhex unknown
   { id: 602, name: '요시타케 치하야', character: '히지리사와 유우나', groupId: 7, colorHex: '' }, // Colorhex unknown
 ];
