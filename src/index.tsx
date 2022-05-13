@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import koLocale from 'date-fns/locale/ko';
@@ -12,7 +12,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import App from '@/App';
 import store from '@/store';
 
-ReactGA.initialize('UA-142042916-3');
+ReactGA.initialize('G-V833VTTB6G');
 
 const theme = createTheme({
   palette: {

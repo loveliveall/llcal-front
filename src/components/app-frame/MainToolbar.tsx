@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { useDispatch, useSelector } from 'react-redux';
 import subHours from 'date-fns/subHours';
 

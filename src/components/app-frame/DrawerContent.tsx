@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import areEqual from 'fast-deep-equal';
