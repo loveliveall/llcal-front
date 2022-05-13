@@ -133,7 +133,7 @@ export const birthdayList: IBirthday[] = [
   { id: 903, name: '미사키 나코', birthMonth: 3, birthDay: 8, voiceActorId: 503, isLoveLive: false },
   { id: 904, name: '페이튼 나오미', birthMonth: 7, birthDay: 1, voiceActorId: 504, isLoveLive: false },
   { id: 905, name: '아오야마 나기사', birthMonth: 5, birthDay: 16, voiceActorId: 505, isLoveLive: false },
-  // { id: 906, name: '스즈하라 노조미', birthMonth: , birthDay: , voiceActorId: 506, isLoveLive: false },
+  { id: 906, name: '스즈하라 노조미', birthMonth: 11, birthDay: 1, voiceActorId: 506, isLoveLive: false },
   { id: 907, name: '야부시마 아카네', birthMonth: 7, birthDay: 18, voiceActorId: 507, isLoveLive: false },
   { id: 908, name: '오오쿠마 와카나', birthMonth: 4, birthDay: 13, voiceActorId: 508, isLoveLive: false },
   { id: 909, name: '에모리 아야', birthMonth: 2, birthDay: 23, voiceActorId: 509, isLoveLive: false },
