@@ -140,6 +140,8 @@ export const birthdayList: IBirthday[] = [
   // Add mao & yuuna birthday
   { id: 1101, name: '유우키 유나', birthMonth: 6, birthDay: 9, voiceActorId: 601, isLoveLive: false },
   { id: 1102, name: '요시타케 치하야', birthMonth: 3, birthDay: 28, voiceActorId: 602, isLoveLive: false },
+  // Add wein birthday
+  { id: 1301, name: '유이나', birthMonth: 9, birthDay: 27, voiceActorId: 701, isLoveLive: false },
 ];
 /* eslint-enable object-curly-newline */
 
@@ -204,6 +206,7 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 509, name: '에모리 아야', character: '오니츠카 나츠미', groupId: 6, colorHex: '#ff51c4' },
   { id: 601, name: '유우키 유나', character: '히이라기 마오', groupId: 7, colorHex: '' }, // Colorhex unknown
   { id: 602, name: '요시타케 치하야', character: '히지리사와 유우나', groupId: 7, colorHex: '' }, // Colorhex unknown
+  { id: 701, name: '유이나', character: '빈 마르가레테', groupId: 8, colorHex: '' }, // Colorhex unknown
 ];
 /* eslint-enable object-curly-newline */
 
@@ -223,4 +226,5 @@ export const groupInfoList: IGroupInfo[] = [
   { id: 4, name: 'A-RISE', colorHex: '' }, // Colorhex unknown
   { id: 5, name: 'Saint Snow', colorHex: '' }, // Colorhex unknown
   { id: 7, name: 'Sunny Passion', colorHex: '' }, // Colorhex unknown
+  { id: 8, name: '무소속', colorHex: '' }, // Colorhex unknown
 ];
