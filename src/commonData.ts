@@ -142,6 +142,17 @@ export const birthdayList: IBirthday[] = [
   { id: 1102, name: '요시타케 치하야', birthMonth: 3, birthDay: 28, voiceActorId: 602, isLoveLive: false },
   // Add wein birthday
   { id: 1301, name: '유이나', birthMonth: 9, birthDay: 27, voiceActorId: 701, isLoveLive: false },
+  // Add musical character birthday
+  { id: 1501, name: '호리우치 마리나', birthMonth: 4, birthDay: 29, voiceActorId: 801, isLoveLive: false },
+  { id: 1502, name: '아사이 나나미', birthMonth: 5, birthDay: 20, voiceActorId: 802, isLoveLive: false },
+  { id: 1503, name: '안 줄리아', birthMonth: 1, birthDay: 15, voiceActorId: 803, isLoveLive: false },
+  { id: 1504, name: '코야마 리나', birthMonth: 3, birthDay: 4, voiceActorId: 804, isLoveLive: false },
+  { id: 1505, name: '사토 미나미', birthMonth: 8, birthDay: 3, voiceActorId: 805, isLoveLive: false },
+  { id: 1506, name: '세키네 유우나', birthMonth: 9, birthDay: 28, voiceActorId: 806, isLoveLive: false },
+  { id: 1507, name: '사이바 미즈키', birthMonth: 4, birthDay: 27, voiceActorId: 807, isLoveLive: false },
+  { id: 1508, name: '호시모리 사나', birthMonth: 1, birthDay: 21, voiceActorId: 808, isLoveLive: false },
+  { id: 1509, name: '미타 이부키', birthMonth: 7, birthDay: 19, voiceActorId: 809, isLoveLive: false },
+  { id: 1510, name: '아오야마 루리', birthMonth: 1, birthDay: 31, voiceActorId: 810, isLoveLive: false },
 ];
 /* eslint-enable object-curly-newline */
 
@@ -207,6 +218,16 @@ export const voiceActorList: IVoiceActor[] = [
   { id: 601, name: '유우키 유나', character: '히이라기 마오', groupId: 7, colorHex: '' }, // Colorhex unknown
   { id: 602, name: '요시타케 치하야', character: '히지리사와 유우나', groupId: 7, colorHex: '' }, // Colorhex unknown
   { id: 701, name: '유이나', character: '빈 마르가레테', groupId: 8, colorHex: '' }, // Colorhex unknown
+  { id: 801, name: '호리우치 마리나', character: '츠바키 루리카', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 802, name: '아사이 나나미', character: '스메라기 유즈하', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 803, name: '안 줄리아', character: '호조 유키노', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 804, name: '코야마 리나', character: '아마쿠사 히카루', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 805, name: '사토 미나미', character: '미카사 마야', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 806, name: '세키네 유우나', character: '타키자와 안즈', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 807, name: '사이바 미즈키', character: '와카츠키 미스즈', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 808, name: '호시모리 사나', character: '쿠루스 토아', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 809, name: '미타 이부키', character: '스즈카 레나', groupId: 9, colorHex: '' }, // Colorhex unknown
+  { id: 810, name: '아오야마 루리', character: '하루카제 사야카', groupId: 9, colorHex: '' }, // Colorhex unknown
 ];
 /* eslint-enable object-curly-newline */
 
@@ -223,6 +244,7 @@ export const groupInfoList: IGroupInfo[] = [
   { id: 2, name: 'Aqours', colorHex: '#019fe8' },
   { id: 3, name: '니지동', colorHex: '#ffc94a' },
   { id: 6, name: 'Liella!', colorHex: '#0cd20c' }, // Colorhex from http://www.lovelive-anime.jp/yuigaoka/, will may change
+  { id: 9, name: '러브라이브 뮤지컬', colorHex: '' }, // Colorhex unknown
   { id: 4, name: 'A-RISE', colorHex: '' }, // Colorhex unknown
   { id: 5, name: 'Saint Snow', colorHex: '' }, // Colorhex unknown
   { id: 7, name: 'Sunny Passion', colorHex: '' }, // Colorhex unknown
