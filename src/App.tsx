@@ -14,6 +14,8 @@ import EventEditDialog from '@/components/dialogs/EventEditDialog';
 import ConcertGroupEditDialog from '@/components/dialogs/ConcertGroupEditDialog';
 import ConcertGroupDeleteDialog from '@/components/dialogs/ConcertGroupDeleteDialog';
 
+import DeprecatedDialog from './components/dialogs/DeprecatedDialog';
+
 const App: React.FC = () => {
   const location = useLocation();
 
@@ -35,6 +37,7 @@ const App: React.FC = () => {
       <ConcertGroupEditDialog />
       <ConcertGroupDeleteDialog />
       <GlobalSnackbar />
+      <DeprecatedDialog />
     </>
   );
 };
